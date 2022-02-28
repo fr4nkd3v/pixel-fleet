@@ -4,15 +4,63 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./css/styles.css">
   <title>Naval Battle</title>
 </head>
 <body>
 
   <main>
-    <section class="plane"></section>
-    <section class="info"></section>
-    <section class="commands-input"></section>
+    <section class="plane">
+
+      <article class="grid">
+
+      </article>
+
+    </section>
+
+    <section class="info">
+      <article class="myFleet">
+        <h3>Mi Flota</h3>
+        <dl>
+          <dt>Total de unidades</dt>
+          <dd>20</dd>
+          <dt>Unidades Eliminadas</dt>
+          <dd>6</dd>
+          <dt>Unidades Restantes</dt>
+          <dd>14</dd>
+        </dl>
+      </article>
+
+      <article class="enemyFleet">
+        <h3>Flota Enemiga</h3>
+        <dl>
+          <dt>Total de unidades</dt>
+          <dd>20</dd>
+          <dt>Unidades Eliminadas</dt>
+          <dd>6</dd>
+          <dt>Unidades Restantes</dt>
+          <dd>14</dd>
+        </dl>
+      </article>
+    </section>
+
+    <section class="commands-input">
+      <div class="weapons">
+        <div class="weapon" data-letter="A"><span>A.</span></div>
+        <div class="weapon" data-letter="B"><span>B.</span></div>
+        <div class="weapon" data-letter="C"><span>D.</span></div>
+        <div class="weapon" data-letter="D"><span>C.</span></div>
+      </div>
+
+      <div class="input">
+        <p>Ingrese la letra o número de su coordenada:</p>
+        <input type="text" id="coordinates">
+      </div>
+    </section>
+
   </main>
   
+  <script src="./js/game.js"></script>
 </body>
 </html>
