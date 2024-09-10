@@ -1,0 +1,1 @@
+export { Ship1 } from './Ship1'
