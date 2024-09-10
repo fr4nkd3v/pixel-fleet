@@ -1,0 +1,12 @@
+.GamePage {
+  height: 100%;
+  width: 100%;
+  padding: 2rem;
+
+  display: grid;
+  gap: var(--size-32);
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+
+  /* transition: opacity .5s ease-out; */
+}
