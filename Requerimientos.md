@@ -1,4 +1,0 @@
-- Grafico de la distribución de nuestra flota
-- Información de nuestra flota y de la flota enemiga
-- Elección de armas
-- La consola input donde ingresamos las coordenadas donde se dispara al enemigo
