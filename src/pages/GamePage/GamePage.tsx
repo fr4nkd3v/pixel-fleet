@@ -1,6 +1,7 @@
 import { FleetMenu } from '~/components/FleetInfoCard';
 import styles from './GamePage.module.css';
 import { type TShipNameKeys } from '~/types/game';
+import { BattleMap } from '~/components/BattleMap';
 
 export const GamePage = () => {
   const fleet: TShipNameKeys[] = [
@@ -14,9 +15,7 @@ export const GamePage = () => {
     <section className={styles['GamePage']}>
       <FleetMenu shipList={fleet} />
       <FleetMenu shipList={fleet} />
-      <div>
-        DESPLIEGA TU FLOTA
-      </div>
+      <BattleMap width={10} height={10} />
       <div>
         DESPLIEGA TU FLOTA
       </div>
