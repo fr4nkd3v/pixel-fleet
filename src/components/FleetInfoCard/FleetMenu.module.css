@@ -1,7 +1,7 @@
 .FleetMenu {
   padding: var(--size-16);
   background-color: var(--color-primary);
-  border: var(--color-dark1) 4px solid;
+  border: var(--color-dark-1) 4px solid;
 }
 .FleetMenu-mainText {
   font-size: var(--size-14);

@@ -1,6 +1,6 @@
 import type { IShipItemProps } from './ShipItem.types';
-import { SHIP_TYPES } from '../../constants/game';
-import { ShipIcon } from '../Icon';
+import { SHIP_TYPES } from '~/constants/game';
+import { ShipIcon } from '~/components/Icon';
 import styles from './ShipItem.module.css';
 
 export const ShipItem = ({ shipType }: IShipItemProps) => {

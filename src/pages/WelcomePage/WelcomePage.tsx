@@ -1,5 +1,5 @@
-import { Button } from '../../components/Button';
-import { Ship1 } from '../../components/Graph';
+import { Button } from '~/components/Button';
+import { Ship1 } from '~/components/Graph';
 import styles from './WelcomePage.module.css';
 
 export const WelcomePage = () => {
