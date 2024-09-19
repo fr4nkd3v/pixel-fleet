@@ -2,6 +2,8 @@
   display: grid;
   width: fit-content;
   height: fit-content;
+  position: relative;
+
   border-right: rgba(0, 0, 0, .15) 1px solid;
   border-bottom: rgba(0, 0, 0, .15) 1px solid;
 }
@@ -10,6 +12,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 1;
 
   color: var(--color-primary);
   text-shadow: 2px 2px 0 var(--color-dark-1);
@@ -17,4 +21,22 @@
   font-size: var(--size-18);
   border-left: rgba(0, 0, 0, .15) 1px solid;
   border-top: rgba(0, 0, 0, .15) 1px solid;
+}
+.BattleMap-tile.is-available {
+  background-color: var(--color-success-400);
+}
+.BattleMap-tile.is-unavailable {
+  background-color: var(--color-error-400);
+}
+
+.BattleMap-tile.is-covered {
+  background: var(--ship-pattern);
+}
+
+.BattleMap-background {
+  position: absolute;
+  bottom: 0; right: 0;
+  background-image: url(/src/assets/ocean-pattern.png);
+  background-size: 9.375rem;
+  opacity: 90%;
 }

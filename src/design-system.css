@@ -39,6 +39,22 @@
   --color-secondary: #63DCD2;
   --color-alternative: #1D3990;
 
+  --color-success: #A4F4E7;
+  --color-success-100: #E1FBF7;
+  --color-success-200: #C2F8EF;
+  --color-success-300: #6BEDD8;
+  --color-success-400: #32E6C9;
+  --color-success-500: #17C1A6;
+  --color-success-600: #108975;
+
+  --color-error: #E4626F;
+  --color-error-100: #F8D8DB;
+  --color-error-200: #F2B1B7;
+  --color-error-300: #EB8993;
+  --color-error-400: #DB2F40;
+  --color-error-500: #B01E2D;
+  --color-error-600: #7C1520;
+
   --color-light-1: #F6F6F6;
   --color-light-2: #F0F0F0;
   --color-dark-1: #2C2842;
@@ -78,14 +94,35 @@
   --size-88: 5.5rem;
   --size-96: 6rem;
 
-  --layer-1: 10;
-  --layer-2: 20;
-  --layer-3: 30;
-  --layer-4: 40;
-  --layer-5: 50;
-  --layer-6: 60;
-  --layer-7: 70;
-  --layer-8: 80;
-  --layer-9: 90;
-  --layer-10: 100;
+  /* Custom Variables */
+  --tile-size: var(--size-48);
+
+  --ship-pattern-diagonal-percentage: 8.5%;
+  --ship-pattern: linear-gradient(
+    135deg,
+    var(--gray-10),
+    var(--gray-10) var(--ship-pattern-diagonal-percentage),
+    var(--white) var(--ship-pattern-diagonal-percentage),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 2),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 2),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 3),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 3),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 4),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 4),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 5),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 5),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 6),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 6),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 7),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 7),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 8),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 8),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 9),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 9),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 10),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 10),
+    var(--gray-10) calc(var(--ship-pattern-diagonal-percentage) * 11),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 11),
+    var(--white) calc(var(--ship-pattern-diagonal-percentage) * 12)
+  );
 }

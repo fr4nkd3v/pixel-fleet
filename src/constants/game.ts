@@ -1,4 +1,6 @@
-export const SHIP_NAMES = [
+import { TOrientationType } from "~/pages/GamePage/GamePage.types";
+
+export const SHIP_IDS = [
   'missile_launcher',
   'battleship',
   'destroyer',
@@ -6,11 +8,9 @@ export const SHIP_NAMES = [
   'speedboat',
 ] as const;
 
-// type TShipNameKeys = ;
-
 type TShipType = {
   [key in (
-    typeof SHIP_NAMES[number]
+    typeof SHIP_IDS[number]
   )]: {
     name: string,
     length: number
@@ -39,3 +39,5 @@ export const SHIP_TYPES: TShipType = {
     length: 1,
   }
 };
+
+export const DEFAULT_ORIENTATION: TOrientationType = 'horizontal';

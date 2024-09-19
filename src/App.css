@@ -5,6 +5,6 @@
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, .7), rgba(255, 255, 255, .7)),
     url(./assets/ocean-pattern.png);
-  background-size: 150px 150px;
+  background-size: 9.375rem;
   background-repeat: repeat;
 }

@@ -1,0 +1,30 @@
+.CursorShadowShip {
+  position: absolute;
+  display: flex;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.CursorShadowShip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: solid var(--size-4) var(--white);
+}
+
+.CursorShadowShip.horizontal {
+  flex-direction: row;
+}
+.CursorShadowShip.vertical {
+  flex-direction: column;
+}
+.CursorShadowShip > div {
+  width: var(--tile-size);
+  aspect-ratio: 1 / 1;
+
+  background: var(--ship-pattern);
+}
+
+.CursorShadowShip > div:nth-last-child(n + 2) {
+  border-right: 1px solid rgba(0, 0, 0, .15);
+}
