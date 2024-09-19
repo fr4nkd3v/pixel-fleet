@@ -1,17 +1,16 @@
 import { FleetMenu } from '~/components/FleetInfoCard';
 import styles from './GamePage.module.css';
-import { type TShipNameKeys } from '~/types/game';
+import { TCurrentShipOnDeploy, TCursorLocation, TMapCoordinate, TOrientationType, TFleet, TShipId } from '~/types/game';
 import { BattleMap } from '~/components/BattleMap';
 import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
 import { useState } from 'react';
-import type { TCurrentShipDeploying, TCursorLocation, TOptionalCursorLocation, TOrientationType, TUserFleetState, TMapCoordinates } from './GamePage.types';
 import { CursorShadowShip } from '~/components/CursorShadowShip';
 import { getNextCoordinates } from '~/utils/utils';
 // import { useState } from 'react';
 
 export const GamePage = () => {
   // Fleet & map size for each player
-  const availableFleetIds: TShipNameKeys[] = [
+  const availableFleetIds: TShipId[] = [
     'missile_launcher',
     'destroyer',
     'battleship',
@@ -28,8 +27,8 @@ export const GamePage = () => {
       location: { x: null, y: null },
     }
   })
-  const playerFleetArr: TUserFleetState = [...commonFleetArr]
-  const enemyFleetArr: TUserFleetState = [...commonFleetArr]
+  const playerFleetArr: TFleet = [...commonFleetArr]
+  const enemyFleetArr: TFleet = [...commonFleetArr]
 
   // ? MapArr structure
   // Is an array of coordinate objects that have been covered or attacked
@@ -47,9 +46,9 @@ export const GamePage = () => {
   */
 
   const handleDeployingShip = (
-    shipId: TShipNameKeys, {locationX, locationY}: {locationX: number, locationY: number}
+    shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}
   ) => {
-    setCurrentShipDeploying({ shipId, orientation: DEFAULT_ORIENTATION});
+    setCurrentShipOnDeploy({ shipId, orientation: DEFAULT_ORIENTATION});
     setCursorLocation({
       x: locationX,
       y: locationY,
@@ -57,9 +56,9 @@ export const GamePage = () => {
   }
 
   const handleDeployedShip = (
-    shipId: TShipNameKeys, locationX: string, locationY: string
+    shipId: TShipId, locationX: string, locationY: string
   ) => {
-    if (!currentShipDeploying) return;
+    if (!currentShipOnDeploy) return;
 
     setPlayerFleet(playerFleet.map(ship => {
       if (ship.id === shipId) {
@@ -73,7 +72,7 @@ export const GamePage = () => {
     }));
 
     const length: number = SHIP_TYPES[shipId].length;
-    const coveredCoordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipDeploying.orientation)
+    const coveredCoordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation)
     const coordinatesInMap = coveredCoordinates.map(coor => ({
       x: coor.x,
       y: Number(coor.y),
@@ -84,14 +83,14 @@ export const GamePage = () => {
       ...playerMap,
       ...coordinatesInMap,
     ])
-    setCurrentShipDeploying(null);
+    setCurrentShipOnDeploy(null);
   }
 
   const handleChangeOrientation = (orientation: TOrientationType) => {
-    if (!currentShipDeploying) return;
+    if (!currentShipOnDeploy) return;
 
-    setCurrentShipDeploying({
-      ...currentShipDeploying,
+    setCurrentShipOnDeploy({
+      ...currentShipOnDeploy,
       orientation
     })
   }
@@ -102,32 +101,32 @@ export const GamePage = () => {
 
   const [ playerFleet, setPlayerFleet ] = useState(playerFleetArr);
   const [ enemyFleet, setEnemyFleet ] = useState(enemyFleetArr);
-  const [ playerMap, setPlayerMap ] = useState<TMapCoordinates>([]);
-  const [ enemyMap, setEnemyMap ] = useState<TMapCoordinates>([]);
-  const [ currentShipDeploying, setCurrentShipDeploying] = useState<TCurrentShipDeploying>(null);
-  const [ cursorLocation, setCursorLocation ] = useState<TOptionalCursorLocation>(null);
+  const [ playerMap, setPlayerMap ] = useState<TMapCoordinate[]>([]);
+  const [ enemyMap, setEnemyMap ] = useState<TMapCoordinate[]>([]);
+  const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
+  const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
   // TODO: add state for current player turn
   // TODO: add state for winner of game
 
-  const currentShipDeployingLength = currentShipDeploying ? SHIP_TYPES[currentShipDeploying.shipId].length : null;
+  const currentShipOnDeployLength = currentShipOnDeploy ? SHIP_TYPES[currentShipOnDeploy.shipId].length : null;
 
   return (
     <section className={styles['GamePage']}>
       <FleetMenu
         shipList={playerFleet}
         onDeployingShip={handleDeployingShip}
-        currentShipDeploying={currentShipDeploying}
+        currentShipOnDeploy={currentShipOnDeploy}
       />
       <FleetMenu
         shipList={enemyFleet}
         onDeployingShip={handleDeployingShip}
-        currentShipDeploying={currentShipDeploying}
+        currentShipOnDeploy={currentShipOnDeploy}
       />
       <BattleMap
         width={mapSize}
         height={mapSize}
         mapCoordinates={playerMap}
-        currentShipDeploying={currentShipDeploying}
+        currentShipOnDeploy={currentShipOnDeploy}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
@@ -136,16 +135,16 @@ export const GamePage = () => {
         width={mapSize}
         height={mapSize}
         mapCoordinates={enemyMap}
-        currentShipDeploying={currentShipDeploying}
+        currentShipOnDeploy={currentShipOnDeploy}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
       />
-      {currentShipDeploying && cursorLocation && (
+      {currentShipOnDeploy && cursorLocation && (
         <CursorShadowShip
           isVisible={true}
-          length={currentShipDeployingLength}
-          orientation={currentShipDeploying.orientation}
+          length={currentShipOnDeployLength}
+          orientation={currentShipOnDeploy.orientation}
           locationX={cursorLocation.x}
           locationY={cursorLocation.y}
         />

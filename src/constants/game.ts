@@ -1,4 +1,4 @@
-import { TOrientationType } from "~/pages/GamePage/GamePage.types";
+import { TOrientationType } from "~/types/game";
 
 export const MAXIMUM_MAP_SIZE = 10;
 

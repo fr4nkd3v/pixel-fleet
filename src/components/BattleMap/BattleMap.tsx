@@ -4,14 +4,14 @@ import styles from './BattleMap.module.css';
 import { getNextCoordinates, getTilesByCoordinates, hasCoordinateCovered, parseCoordinateX } from '~/utils/utils';
 import { SHIP_TYPES } from '~/constants/game';
 import { useRef } from 'react';
-import { TOrientationType } from '~/pages/GamePage/GamePage.types';
+import { TOrientationType } from '~/types/game';
 
 export const BattleMap = (
   {
     width,
     height,
     mapCoordinates,
-    currentShipDeploying,
+    currentShipOnDeploy,
     onDeployedShip,
     onChangeOrientation,
     onChangeCursorLocation
@@ -22,13 +22,13 @@ export const BattleMap = (
   const handleMouseEnterAndLeaveTile = (
     event: React.MouseEvent, action: 'enter' | 'leave', forcedOrientation?: TOrientationType
   ) => {
-    if (!currentShipDeploying) return;
+    if (!currentShipOnDeploy) return;
 
     const { locationX, locationY } = (event.target as HTMLElement).dataset;
     if (!locationX || !locationY) return;
 
-    const length: number = SHIP_TYPES[currentShipDeploying.shipId].length;
-    const coordinates = getNextCoordinates(locationX, Number(locationY), length, forcedOrientation || currentShipDeploying.orientation);
+    const length: number = SHIP_TYPES[currentShipOnDeploy.shipId].length;
+    const coordinates = getNextCoordinates(locationX, Number(locationY), length, forcedOrientation || currentShipOnDeploy.orientation);
     // Validations
     const isOutOfArea = coordinates.length < length;
     const isCovered = hasCoordinateCovered(coordinates, mapCoordinates);
@@ -48,8 +48,8 @@ export const BattleMap = (
 
   const handleContextMenuTile = (event: React.MouseEvent) => {
     event.preventDefault();
-    if (!currentShipDeploying) return;
-    const oppositeOrientation = currentShipDeploying.orientation === 'horizontal'
+    if (!currentShipOnDeploy) return;
+    const oppositeOrientation = currentShipOnDeploy.orientation === 'horizontal'
       ? 'vertical'
       : 'horizontal'
     onChangeOrientation(oppositeOrientation);
@@ -84,7 +84,7 @@ export const BattleMap = (
 
   const handleClickBattleMap = (event: React.MouseEvent) => {
     // Validate data & elements
-    if (!currentShipDeploying) return;
+    if (!currentShipOnDeploy) return;
 
     const childTile = (event.target as Element).closest(`.${styles['BattleMap-tile']}`);
     if (!childTile) return;
@@ -93,15 +93,15 @@ export const BattleMap = (
     if (!locationX || !locationY) return;
 
     // Get coordinates that form the ship deployed
-    const length: number = SHIP_TYPES[currentShipDeploying.shipId].length;
-    const coordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipDeploying.orientation);
+    const length: number = SHIP_TYPES[currentShipOnDeploy.shipId].length;
+    const coordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation);
     if (coordinates.length < length) return; // ❌ Is unavailable | out-of-area location
 
     const isCovered = hasCoordinateCovered(coordinates, mapCoordinates);
     if (isCovered) return; // ❌ Is unavailable | location covered by another ship
 
     // ✅ Is available
-    onDeployedShip(currentShipDeploying.shipId, locationX, locationY);
+    onDeployedShip(currentShipOnDeploy.shipId, locationX, locationY);
     const tiles = getTilesByCoordinates(coordinates);
     tiles.forEach(tile => tile.classList.remove(
       styles['is-available'], styles['is-unavailable']

@@ -1,12 +1,11 @@
-import { TCurrentShipDeploying, TCursorLocation, TMapCoordinates, TOrientationType } from "~/pages/GamePage/GamePage.types";
-import { TShipNameKeys } from "~/types/game";
+import type { TMapCoordinate, TShipId, TOrientationType, TCurrentShipOnDeploy, TCursorLocation } from "~/types/game";
 
 export interface IBattleMapProps {
   width: number;
   height: number;
-  mapCoordinates: TMapCoordinates;
-  currentShipDeploying: TCurrentShipDeploying;
-  onDeployedShip: (shipId: TShipNameKeys, locationX: string, locationY: string) => void;
+  mapCoordinates: TMapCoordinate[];
+  currentShipOnDeploy: TCurrentShipOnDeploy | null;
+  onDeployedShip: (shipId: TShipId, locationX: string, locationY: string) => void;
   onChangeOrientation: (orientation: TOrientationType) => void;
   onChangeCursorLocation: ({ x, y }: TCursorLocation) => void;
 }

@@ -1,11 +1,10 @@
-import { TCurrentShipDeploying } from '~/pages/GamePage/GamePage.types';
-import { type TShipNameKeys } from '~/types/game';
+import { TCurrentShipOnDeploy, type TShipId } from '~/types/game';
 
 export interface IShipItemProps {
-  shipId: TShipNameKeys;
-  shipType: TShipNameKeys;
+  shipId: TShipId;
+  shipType: TShipId;
   health: number;
   isDeployed: boolean;
-  onDeploying: (shipId: TShipNameKeys, {locationX, locationY}: {locationX: number, locationY: number}) => void;
-  currentShipDeploying: TCurrentShipDeploying;
+  onDeploying: (shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}) => void;
+  currentShipOnDeploy: TCurrentShipOnDeploy | null;
 }

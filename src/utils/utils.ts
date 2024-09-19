@@ -1,6 +1,5 @@
 import { MAXIMUM_MAP_SIZE } from "~/constants/game";
-import { TMapCoordinates, TOrientationType } from "~/pages/GamePage/GamePage.types";
-import { TCoordinate } from "~/types/game";
+import { TCoordinate, TMapCoordinate, TOrientationType } from "~/types/game";
 
 export const parseCoordinateX = (coor: number): string => {
   return String.fromCharCode(coor + 96);
@@ -42,7 +41,7 @@ export const getNextCoordinates = (
 }
 
 export const hasCoordinateCovered = (
-  coordinates: TCoordinate[], mapCoordinates: TMapCoordinates
+  coordinates: TCoordinate[], mapCoordinates: TMapCoordinate[]
 ): boolean => {
   return coordinates.some(coor => {
     const coordinateCovered = mapCoordinates.find(mapCoor => (

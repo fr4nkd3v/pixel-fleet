@@ -1,8 +1,7 @@
-import { TCurrentShipDeploying, TUserFleetState } from '~/pages/GamePage/GamePage.types';
-import { TShipNameKeys } from '~/types/game';
+import { TCurrentShipOnDeploy, TShipId, TFleet } from '~/types/game';
 
 export interface IFleetMenuProps {
-  shipList: TUserFleetState;
-  onDeployingShip: (shipId: TShipNameKeys, {locationX, locationY}:{locationX: number, locationY: number}) => void;
-  currentShipDeploying: TCurrentShipDeploying;
+  shipList: TFleet;
+  onDeployingShip: (shipId: TShipId, {locationX, locationY}:{locationX: number, locationY: number}) => void;
+  currentShipOnDeploy: TCurrentShipOnDeploy | null;
 }

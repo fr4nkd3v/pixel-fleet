@@ -2,7 +2,7 @@ import styles from './FleetMenu.module.css';
 import { type IFleetMenuProps } from './FleetMenu.types';
 import { ShipItem } from "./ShipItem"
 
-export const FleetMenu = ({ shipList, onDeployingShip, currentShipDeploying }: IFleetMenuProps) => {
+export const FleetMenu = ({ shipList, onDeployingShip, currentShipOnDeploy }: IFleetMenuProps) => {
   return (
     <div className={styles['FleetMenu']}>
       <div className={styles['FleetMenu-mainText']}>DESPLIEGA TU FLOTA</div>
@@ -16,7 +16,7 @@ export const FleetMenu = ({ shipList, onDeployingShip, currentShipDeploying }: I
             health={ship.health}
             isDeployed={ship.location.x !== null && ship.location.y !== null}
             onDeploying={onDeployingShip}
-            currentShipDeploying={currentShipDeploying}
+            currentShipOnDeploy={currentShipOnDeploy}
           />
         ))}
       </div>

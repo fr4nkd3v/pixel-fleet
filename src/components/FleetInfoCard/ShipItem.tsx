@@ -4,7 +4,7 @@ import { ShipIcon } from '~/components/Icon';
 import styles from './ShipItem.module.css';
 
 export const ShipItem = (
-  { shipId, shipType, health, isDeployed, onDeploying, currentShipDeploying }: IShipItemProps
+  { shipId, shipType, health, isDeployed, onDeploying, currentShipOnDeploy }: IShipItemProps
 ) => {
   const lifes = [];
   for (let i = 0; i < health; i++) {
@@ -21,7 +21,7 @@ export const ShipItem = (
 
   return (
     <div
-      className={`${styles['ShipItem']} ${isDeployed ? '' : styles['not-deployed']} ${currentShipDeploying?.shipId === shipId ? styles['selected'] : ''}`}
+      className={`${styles['ShipItem']} ${isDeployed ? '' : styles['not-deployed']} ${currentShipOnDeploy?.shipId === shipId ? styles['selected'] : ''}`}
       onClick={handleClickShipItem}
     >
       <div className={styles['ShipItem-icon']}>
