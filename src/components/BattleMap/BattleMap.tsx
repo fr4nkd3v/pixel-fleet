@@ -1,7 +1,7 @@
 import { type IBattleMapProps } from './BattleMap.types';
 import { Tile } from './Tile';
 import styles from './BattleMap.module.css';
-import { getNextTiles, parseCoordinateX } from '~/utils/utils';
+import { getNextCoordinates, getTilesByCoordinates, hasCoordinateCovered, parseCoordinateX } from '~/utils/utils';
 import { SHIP_TYPES } from '~/constants/game';
 import { useRef } from 'react';
 import { TOrientationType } from '~/pages/GamePage/GamePage.types';
@@ -24,18 +24,20 @@ export const BattleMap = (
   ) => {
     if (!currentShipDeploying) return;
 
-    const childTile = (event.target as Element);
-    if (!childTile) return;
-
-    const { locationX, locationY } = (childTile as HTMLElement).dataset;
+    const { locationX, locationY } = (event.target as HTMLElement).dataset;
     if (!locationX || !locationY) return;
 
     const length: number = SHIP_TYPES[currentShipDeploying.shipId].length;
-    const tiles = getNextTiles(locationX, Number(locationY), length, forcedOrientation || currentShipDeploying.orientation);
+    const coordinates = getNextCoordinates(locationX, Number(locationY), length, forcedOrientation || currentShipDeploying.orientation);
+    // Validations
+    const isOutOfArea = coordinates.length < length;
+    const isCovered = hasCoordinateCovered(coordinates, mapCoordinates);
+
+    const tiles = getTilesByCoordinates(coordinates);
 
     if (action === 'enter') {
       tiles.forEach(tile => tile.classList.add(
-        styles[tiles.length < length ? 'is-unavailable' : 'is-available']
+        styles[(isOutOfArea || isCovered) ? 'is-unavailable' : 'is-available']
       ))
     } else if (action === 'leave') {
       tiles.forEach(tile => tile.classList.remove(
@@ -81,6 +83,7 @@ export const BattleMap = (
   }
 
   const handleClickBattleMap = (event: React.MouseEvent) => {
+    // Validate data & elements
     if (!currentShipDeploying) return;
 
     const childTile = (event.target as Element).closest(`.${styles['BattleMap-tile']}`);
@@ -89,14 +92,17 @@ export const BattleMap = (
     const { locationX, locationY } = (childTile as HTMLElement).dataset;
     if (!locationX || !locationY) return;
 
+    // Get coordinates that form the ship deployed
     const length: number = SHIP_TYPES[currentShipDeploying.shipId].length;
-    const tiles = getNextTiles(locationX, Number(locationY), length, currentShipDeploying.orientation);
+    const coordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipDeploying.orientation);
+    if (coordinates.length < length) return; // ❌ Is unavailable | out-of-area location
 
-    if (tiles.length < length) return; // ❌ Is unavailable
+    const isCovered = hasCoordinateCovered(coordinates, mapCoordinates);
+    if (isCovered) return; // ❌ Is unavailable | location covered by another ship
 
     // ✅ Is available
     onDeployedShip(currentShipDeploying.shipId, locationX, locationY);
-
+    const tiles = getTilesByCoordinates(coordinates);
     tiles.forEach(tile => tile.classList.remove(
       styles['is-available'], styles['is-unavailable']
     ))

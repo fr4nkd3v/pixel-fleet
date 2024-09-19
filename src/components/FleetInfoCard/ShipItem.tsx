@@ -14,6 +14,7 @@ export const ShipItem = (
   }
 
   const handleClickShipItem = (event: React.MouseEvent<HTMLElement>) => {
+    if (isDeployed) return;
     const {clientX, clientY} = event;
     onDeploying(shipId, {locationX: clientX, locationY: clientY});
   }

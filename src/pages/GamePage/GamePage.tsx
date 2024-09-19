@@ -2,7 +2,7 @@ import { FleetMenu } from '~/components/FleetInfoCard';
 import styles from './GamePage.module.css';
 import { type TShipNameKeys } from '~/types/game';
 import { BattleMap } from '~/components/BattleMap';
-import { DEFAULT_ORIENTATION, SHIP_TYPES } from '~/constants/game';
+import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
 import { useState } from 'react';
 import type { TCurrentShipDeploying, TCursorLocation, TOptionalCursorLocation, TOrientationType, TUserFleetState, TMapCoordinates } from './GamePage.types';
 import { CursorShadowShip } from '~/components/CursorShadowShip';
@@ -17,7 +17,7 @@ export const GamePage = () => {
     'battleship',
     'submarine',
   ];
-  const mapSize = 10;
+  const mapSize = MAXIMUM_MAP_SIZE;
 
   // Generate fleet & map data for state
   const commonFleetArr = availableFleetIds.map(shipId => {

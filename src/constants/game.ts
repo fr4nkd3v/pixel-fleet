@@ -1,5 +1,7 @@
 import { TOrientationType } from "~/pages/GamePage/GamePage.types";
 
+export const MAXIMUM_MAP_SIZE = 10;
+
 export const SHIP_IDS = [
   'missile_launcher',
   'battleship',
