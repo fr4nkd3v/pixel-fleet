@@ -1,6 +1,6 @@
 // semi-random selection algorithm
 
-import { TCoordinate, TFleet, TMapCoordinate } from "~/types/game";
+import { TCoordinate, TFleet, TMapCoordinate, TShipPart } from "~/types/game";
 import { getNextCoordinates, hasCoordinateCovered, parseStringCoordinateX } from "./coordinates";
 import { getRandomInt, getRandomOrientation } from "./random";
 
@@ -20,8 +20,8 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMapCoordin
   // 2. Iterate fleet
   fleet.forEach(ship => {
     const { id, health, name } = ship;
-    const nextCoordinates = tryRandomCoordinate(availableCoordinates, 10, health, map);
-    if (!nextCoordinates) {
+    const nextMapCoordinates = tryRandomCoordinate(availableCoordinates, 10, health, map);
+    if (!nextMapCoordinates) {
       console.log(`❌ No se pudieron encontrar coordenadas para el barco ${name}`);
       return;
     }
@@ -30,19 +30,13 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMapCoordin
 
     // Update available coordinates
     availableCoordinates = availableCoordinates.filter(availableCoor => {
-      const isMatch = nextCoordinates.some(nextCoor => (
+      const isMatch = nextMapCoordinates.some(nextCoor => (
         nextCoor.x === availableCoor.x && nextCoor.y === availableCoor.y
       ))
       return !isMatch;
     })
 
     // Save coordinates in enemy map array
-    const nextMapCoordinates: TMapCoordinate[] = nextCoordinates.map(coor => ({
-      x: coor.x,
-      y: coor.y,
-      covered: true,
-      attacked: false,
-    }));
     map.push(...nextMapCoordinates);
 
     // Update state of fleet
@@ -50,7 +44,7 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMapCoordin
       if (ship.id === id) {
         return {
           ...ship,
-          location: {x: nextCoordinates[0].x, y: nextCoordinates[0].y}
+          location: {x: nextMapCoordinates[0].x, y: nextMapCoordinates[0].y}
         }
       } else {
         return ship;
@@ -75,26 +69,44 @@ function tryRandomCoordinate (
   triesMax: number,
   shipLength: number,
   map: TMapCoordinate[],
-) {
+): TMapCoordinate[] | null {
   let counterTries = 0;
   let isAvailable = false;
-  let nextCoordinates: TCoordinate[] | undefined;
+  let nextMapCoordinates: TMapCoordinate[] = [];
 
   while (!isAvailable && counterTries < triesMax) {
     const randomCoordinate = availableCoordinates[getRandomInt(0, availableCoordinates.length - 1)];
+    const randomOrientation = getRandomOrientation();
 
-    nextCoordinates = getNextCoordinates(randomCoordinate.x, randomCoordinate.y, shipLength, getRandomOrientation());
+    const nextCoordinates = getNextCoordinates(randomCoordinate.x, randomCoordinate.y, shipLength, randomOrientation);
     isAvailable = (
       nextCoordinates.length === shipLength &&
       !hasCoordinateCovered(nextCoordinates, map)
     );
 
+    nextMapCoordinates = nextCoordinates.map((coor, index) => {
+      let shipPart: TShipPart | undefined;
+      if (index === 0) shipPart = 'start'
+      else if (index === nextCoordinates.length - 1) shipPart = 'end';
+      else shipPart = 'middle';
+
+      return {
+        x: coor.x,
+        y: coor.y,
+        covered: {
+          orientation: randomOrientation,
+          shipPart,
+        },
+        attacked: false,
+      }
+    });
+
     counterTries++;
     console.log(`tryRandomCoordinate - Intento ${counterTries}, Coordenadas propuestas: ${nextCoordinates.map(c => `${c.x}${c.y}`).join('|')}, Está disponible: ${isAvailable}`);
   }
 
-  if (isAvailable && nextCoordinates) {
-    return nextCoordinates;
+  if (isAvailable) {
+    return nextMapCoordinates;
   } else {
     return null;
   }

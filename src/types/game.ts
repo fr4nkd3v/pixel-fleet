@@ -14,10 +14,17 @@ export type TCoordinate = {
   y: number;
 }
 
+export type TCoveredShip = {
+  shipPart: TShipPart;
+  orientation: TOrientationType;
+}
+
+export type TShipPart = 'start' | 'middle' | 'end';
+
 export type TMapCoordinate = {
   x: string;
   y: number;
-  covered: boolean;
+  covered: false | TCoveredShip;
   attacked: boolean;
 }
 

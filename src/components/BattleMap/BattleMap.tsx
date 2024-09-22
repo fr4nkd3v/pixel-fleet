@@ -67,13 +67,13 @@ export const BattleMap = (
   const tiles = [];
   for (let h = 0; h <= height; h++) {
     for (let w = 0; w <= width; w++) {
-      const isCovered = mapCoordinates.some(({ x, y, covered }) => x === parseStringCoordinateX(w) && y === h && covered)
+      const mapCoorFound = mapCoordinates.find(({ x, y, covered }) => x === parseStringCoordinateX(w) && y === h && Boolean(covered))
       tiles.push(
         <Tile
           key={`${h}${w}`}
           locationX={w}
           locationY={h}
-          isCovered={isCovered}
+          isCovered={mapCoorFound ? mapCoorFound.covered : false}
           onMouseEnter={(event) => handleMouseEnterAndLeaveTile(event, 'enter')}
           onMouseLeave={(event) => handleMouseEnterAndLeaveTile(event, 'leave')}
           onContextMenu={handleContextMenuTile}
@@ -101,7 +101,7 @@ export const BattleMap = (
     if (isCovered) return; // ❌ Is unavailable | location covered by another ship
 
     // ✅ Is available
-    onDeployedShip(currentShipOnDeploy.shipId, locationX, Number(locationY));
+    onDeployedShip(currentShipOnDeploy.shipId, locationX, Number(locationY), currentShipOnDeploy.orientation);
     const tiles = getTilesByCoordinates(nextCoordinates);
     tiles.forEach(tile => tile.classList.remove(
       styles['is-available'], styles['is-unavailable']
@@ -121,7 +121,6 @@ export const BattleMap = (
         'gridTemplateRows': `repeat(${height + 1}, var(--tile-size))`,
       }}
       onClick={handleClickBattleMap}
-      // onContextMenu={handleContextMenuBattleMap}
       onMouseMove={handleMouseMoveBattleMap}
       ref={battleMapRef}
     >

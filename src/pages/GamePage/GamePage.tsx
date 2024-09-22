@@ -1,6 +1,6 @@
 import { FleetMenu } from '~/components/FleetInfoCard';
 import styles from './GamePage.module.css';
-import { TCurrentShipOnDeploy, TCursorLocation, TMapCoordinate, TOrientationType, TFleet, TShipId } from '~/types/game';
+import { TCurrentShipOnDeploy, TCursorLocation, TMapCoordinate, TOrientationType, TFleet, TShipId, TShipPart } from '~/types/game';
 import { BattleMap } from '~/components/BattleMap';
 import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
 import { useEffect, useState } from 'react';
@@ -71,7 +71,7 @@ export const GamePage = () => {
   }
 
   const handleDeployedShip = (
-    shipId: TShipId, locationX: string, locationY: number
+    shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType
   ) => {
     if (!currentShipOnDeploy) return;
 
@@ -88,12 +88,22 @@ export const GamePage = () => {
 
     const length: number = SHIP_TYPES[shipId].length;
     const coveredCoordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation)
-    const coordinatesInMap = coveredCoordinates.map(coor => ({
-      x: coor.x,
-      y: Number(coor.y),
-      covered: true,
-      attacked: false,
-    }));
+    const coordinatesInMap: TMapCoordinate[] = coveredCoordinates.map((coor, index) => {
+      let shipPart: TShipPart | undefined;
+      if (index === 0) shipPart = 'start'
+      else if (index === coveredCoordinates.length - 1) shipPart = 'end';
+      else shipPart = 'middle';
+
+      return {
+        x: coor.x,
+        y: Number(coor.y),
+        covered: {
+          orientation,
+          shipPart
+        },
+        attacked: false,
+      }
+    });
     setPlayerMap([
       ...playerMap,
       ...coordinatesInMap,

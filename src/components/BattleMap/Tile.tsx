@@ -3,10 +3,18 @@ import styles from './BattleMap.module.css';
 import { isValidCoordinate, parseStringCoordinateX } from '~/utils/coordinates';
 
 export const Tile = (
-  { locationX, locationY, isCovered, onMouseEnter, onMouseLeave, onContextMenu }: ITileProps
+  {
+    locationX,
+    locationY,
+    isCovered,
+    onMouseEnter,
+    onMouseLeave,
+    onContextMenu,
+  }: ITileProps
 ) => {
   const coordinateX = parseStringCoordinateX(locationX);
-  const id = isValidCoordinate(coordinateX, locationY) ? `${locationY}${coordinateX}` : undefined
+  const isValidCoor = isValidCoordinate(coordinateX, locationY);
+  const id = isValidCoor ? `${locationY}${coordinateX}` : undefined
 
   let text = null;
   if (locationX === 0 && (locationY > 0 && locationY < 11)) {
@@ -15,14 +23,19 @@ export const Tile = (
     text = coordinateX
   }
 
+  const { shipPart = '', orientation = '' } = isCovered || {};
+  const coveredCSSClasses = isCovered
+    ? [styles['is-covered'], styles[shipPart], styles[orientation]].join(' ')
+    : '';
+
   return (
     <div
       id={id}
-      className={`${styles['BattleMap-tile']} ${isCovered && styles['is-covered']}`}
-      data-location-x={isValidCoordinate(coordinateX, locationY) ? coordinateX : undefined}
-      data-location-y={isValidCoordinate(coordinateX, locationY) ? locationY : undefined}
-      onMouseEnter={isValidCoordinate(coordinateX, locationY) ? onMouseEnter : undefined}
-      onMouseLeave={isValidCoordinate(coordinateX, locationY) ? onMouseLeave : undefined}
+      className={`${styles['BattleMap-tile']} ${coveredCSSClasses}`}
+      data-location-x={isValidCoor ? coordinateX : undefined}
+      data-location-y={isValidCoor ? locationY : undefined}
+      onMouseEnter={isValidCoor ? onMouseEnter : undefined}
+      onMouseLeave={isValidCoor ? onMouseLeave : undefined}
       onContextMenu={onContextMenu}
     >
       {text}

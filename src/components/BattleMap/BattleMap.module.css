@@ -33,6 +33,33 @@
   background: var(--ship-pattern);
 }
 
+.BattleMap-tile.start::after, .BattleMap-tile.middle::after, .BattleMap-tile.end:after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: solid 5px var(--white);
+}
+.BattleMap-tile.start.horizontal::after {
+  border-right: none;
+}
+.BattleMap-tile.start.vertical::after {
+  border-bottom: none;
+}
+.BattleMap-tile.middle.horizontal::after {
+  border-left: none;
+  border-right: none;
+}
+.BattleMap-tile.middle.vertical::after {
+  border-top: none;
+  border-bottom: none;
+}
+.BattleMap-tile.end.horizontal::after {
+  border-left: none;
+}
+.BattleMap-tile.end.vertical::after {
+  border-top: none;
+}
+
 .BattleMap-background {
   position: absolute;
   bottom: 0; right: 0;
