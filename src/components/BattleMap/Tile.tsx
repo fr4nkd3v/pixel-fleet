@@ -1,11 +1,11 @@
 import { type ITileProps } from './BattleMap.types';
 import styles from './BattleMap.module.css';
-import { isValidCoordinate, parseCoordinateX } from '~/utils/utils';
+import { isValidCoordinate, parseStringCoordinateX } from '~/utils/coordinates';
 
 export const Tile = (
   { locationX, locationY, isCovered, onMouseEnter, onMouseLeave, onContextMenu }: ITileProps
 ) => {
-  const coordinateX = parseCoordinateX(locationX);
+  const coordinateX = parseStringCoordinateX(locationX);
   const id = isValidCoordinate(coordinateX, locationY) ? `${locationY}${coordinateX}` : undefined
 
   let text = null;

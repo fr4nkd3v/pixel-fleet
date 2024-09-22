@@ -6,10 +6,7 @@ export type TFleet = {
   id: TShipId;
   name: string;
   health: number;
-  location: {
-      x: null | string;
-      y: null | string;
-  };
+  location: TCoordinate | null;
 }[]
 
 export type TCoordinate = {

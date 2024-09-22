@@ -3,13 +3,13 @@ import styles from './GamePage.module.css';
 import { TCurrentShipOnDeploy, TCursorLocation, TMapCoordinate, TOrientationType, TFleet, TShipId } from '~/types/game';
 import { BattleMap } from '~/components/BattleMap';
 import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CursorShadowShip } from '~/components/CursorShadowShip';
-import { getNextCoordinates } from '~/utils/utils';
+import { autoFleetDeploy, getNextCoordinates } from '~/utils';
 // import { useState } from 'react';
 
 export const GamePage = () => {
-  // Fleet & map size for each player
+  // Set fleet & map size for each player
   const availableFleetIds: TShipId[] = [
     'missile_launcher',
     'destroyer',
@@ -19,16 +19,14 @@ export const GamePage = () => {
   const mapSize = MAXIMUM_MAP_SIZE;
 
   // Generate fleet & map data for state
-  const commonFleetArr = availableFleetIds.map(shipId => {
+  const commonFleetArr: TFleet = availableFleetIds.map(shipId => {
     return {
       id: shipId,
       name: SHIP_TYPES[shipId].name,
       health: SHIP_TYPES[shipId].length,
-      location: { x: null, y: null },
+      location: null,
     }
   })
-  const playerFleetArr: TFleet = [...commonFleetArr]
-  const enemyFleetArr: TFleet = [...commonFleetArr]
 
   // ? MapArr structure
   // Is an array of coordinate objects that have been covered or attacked
@@ -45,6 +43,23 @@ export const GamePage = () => {
   ]
   */
 
+  const [ playerFleet, setPlayerFleet ] = useState([...commonFleetArr]);
+  const [ opponentFleet, setOpponentFleet ] = useState([...commonFleetArr]);
+  const [ playerMap, setPlayerMap ] = useState<TMapCoordinate[]>([]);
+  const [ opponentMap, setOpponentMap ] = useState<TMapCoordinate[]>([]);
+  const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
+  const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
+  // TODO: add state for current player turn
+  // TODO: add state for winner of game
+
+  useEffect(() => {
+    const { fleet, map } = autoFleetDeploy(mapSize, [...commonFleetArr], []);
+    setOpponentMap(map);
+    setOpponentFleet(fleet);
+  }, [])
+
+  const currentShipOnDeployLength = currentShipOnDeploy ? SHIP_TYPES[currentShipOnDeploy.shipId].length : null;
+
   const handleDeployingShip = (
     shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}
   ) => {
@@ -56,7 +71,7 @@ export const GamePage = () => {
   }
 
   const handleDeployedShip = (
-    shipId: TShipId, locationX: string, locationY: string
+    shipId: TShipId, locationX: string, locationY: number
   ) => {
     if (!currentShipOnDeploy) return;
 
@@ -99,17 +114,6 @@ export const GamePage = () => {
     setCursorLocation({ x, y });
   }
 
-  const [ playerFleet, setPlayerFleet ] = useState(playerFleetArr);
-  const [ enemyFleet, setEnemyFleet ] = useState(enemyFleetArr);
-  const [ playerMap, setPlayerMap ] = useState<TMapCoordinate[]>([]);
-  const [ enemyMap, setEnemyMap ] = useState<TMapCoordinate[]>([]);
-  const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
-  const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
-  // TODO: add state for current player turn
-  // TODO: add state for winner of game
-
-  const currentShipOnDeployLength = currentShipOnDeploy ? SHIP_TYPES[currentShipOnDeploy.shipId].length : null;
-
   return (
     <section className={styles['GamePage']}>
       <FleetMenu
@@ -118,7 +122,7 @@ export const GamePage = () => {
         currentShipOnDeploy={currentShipOnDeploy}
       />
       <FleetMenu
-        shipList={enemyFleet}
+        shipList={opponentFleet}
         onDeployingShip={handleDeployingShip}
         currentShipOnDeploy={currentShipOnDeploy}
       />
@@ -134,7 +138,7 @@ export const GamePage = () => {
       <BattleMap
         width={mapSize}
         height={mapSize}
-        mapCoordinates={enemyMap}
+        mapCoordinates={opponentMap}
         currentShipOnDeploy={currentShipOnDeploy}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}

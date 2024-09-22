@@ -1,7 +1,7 @@
 import { type IBattleMapProps } from './BattleMap.types';
 import { Tile } from './Tile';
 import styles from './BattleMap.module.css';
-import { getNextCoordinates, getTilesByCoordinates, hasCoordinateCovered, parseCoordinateX } from '~/utils/utils';
+import { getNextCoordinates, getTilesByCoordinates, hasCoordinateCovered, parseStringCoordinateX } from '~/utils/coordinates';
 import { SHIP_TYPES } from '~/constants/game';
 import { useRef } from 'react';
 import { TOrientationType } from '~/types/game';
@@ -28,12 +28,12 @@ export const BattleMap = (
     if (!locationX || !locationY) return;
 
     const length: number = SHIP_TYPES[currentShipOnDeploy.shipId].length;
-    const coordinates = getNextCoordinates(locationX, Number(locationY), length, forcedOrientation || currentShipOnDeploy.orientation);
+    const nextCoordinates = getNextCoordinates(locationX, Number(locationY), length, forcedOrientation || currentShipOnDeploy.orientation);
     // Validations
-    const isOutOfArea = coordinates.length < length;
-    const isCovered = hasCoordinateCovered(coordinates, mapCoordinates);
+    const isOutOfArea = nextCoordinates.length < length;
+    const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
 
-    const tiles = getTilesByCoordinates(coordinates);
+    const tiles = getTilesByCoordinates(nextCoordinates);
 
     if (action === 'enter') {
       tiles.forEach(tile => tile.classList.add(
@@ -67,7 +67,7 @@ export const BattleMap = (
   const tiles = [];
   for (let h = 0; h <= height; h++) {
     for (let w = 0; w <= width; w++) {
-      const isCovered = mapCoordinates.some(({ x, y, covered }) => x === parseCoordinateX(w) && y === h && covered)
+      const isCovered = mapCoordinates.some(({ x, y, covered }) => x === parseStringCoordinateX(w) && y === h && covered)
       tiles.push(
         <Tile
           key={`${h}${w}`}
@@ -94,15 +94,15 @@ export const BattleMap = (
 
     // Get coordinates that form the ship deployed
     const length: number = SHIP_TYPES[currentShipOnDeploy.shipId].length;
-    const coordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation);
-    if (coordinates.length < length) return; // ❌ Is unavailable | out-of-area location
+    const nextCoordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation);
+    if (nextCoordinates.length < length) return; // ❌ Is unavailable | out-of-area location
 
-    const isCovered = hasCoordinateCovered(coordinates, mapCoordinates);
+    const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
     if (isCovered) return; // ❌ Is unavailable | location covered by another ship
 
     // ✅ Is available
-    onDeployedShip(currentShipOnDeploy.shipId, locationX, locationY);
-    const tiles = getTilesByCoordinates(coordinates);
+    onDeployedShip(currentShipOnDeploy.shipId, locationX, Number(locationY));
+    const tiles = getTilesByCoordinates(nextCoordinates);
     tiles.forEach(tile => tile.classList.remove(
       styles['is-available'], styles['is-unavailable']
     ))
