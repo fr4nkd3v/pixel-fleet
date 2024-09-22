@@ -2,24 +2,28 @@ import { SHIP_IDS } from '~/constants/game';
 
 export type TShipId = typeof SHIP_IDS[number];
 
-export type TFleet = {
+export type TShip = {
   id: TShipId;
   name: string;
   health: number;
   location: TCoordinate | null;
-}[]
-
-export type TCoordinate = {
-  x: string;
-  y: number;
 }
+
+export type TFleet = TShip[]
+
+export type TShipPart = 'start' | 'middle' | 'end';
+
+export type TOrientationType = 'horizontal' | 'vertical';
 
 export type TCoveredShip = {
   shipPart: TShipPart;
   orientation: TOrientationType;
 }
 
-export type TShipPart = 'start' | 'middle' | 'end';
+export type TCoordinate = {
+  x: string;
+  y: number;
+}
 
 export type TMapCoordinate = {
   x: string;
@@ -28,7 +32,7 @@ export type TMapCoordinate = {
   attacked: boolean;
 }
 
-export type TOrientationType = 'horizontal' | 'vertical';
+export type TMap = TMapCoordinate[];
 
 export type TCurrentShipOnDeploy = {
   shipId: TShipId;

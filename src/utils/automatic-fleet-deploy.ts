@@ -1,10 +1,10 @@
 // semi-random selection algorithm
 
-import { TCoordinate, TFleet, TMapCoordinate, TShipPart } from "~/types/game";
+import { TCoordinate, TFleet, TMap, TShipPart } from "~/types/game";
 import { getNextCoordinates, hasCoordinateCovered, parseStringCoordinateX } from "./coordinates";
 import { getRandomInt, getRandomOrientation } from "./random";
 
-export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMapCoordinate[]) => {
+export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
   // 1. Generate available coordinates array
   let availableCoordinates: TCoordinate[] = [];
   for (let h = 1; h <= mapSize; h++) {
@@ -68,11 +68,11 @@ function tryRandomCoordinate (
   availableCoordinates: TCoordinate[],
   triesMax: number,
   shipLength: number,
-  map: TMapCoordinate[],
-): TMapCoordinate[] | null {
+  map: TMap,
+): TMap | null {
   let counterTries = 0;
   let isAvailable = false;
-  let nextMapCoordinates: TMapCoordinate[] = [];
+  let nextMapCoordinates: TMap = [];
 
   while (!isAvailable && counterTries < triesMax) {
     const randomCoordinate = availableCoordinates[getRandomInt(0, availableCoordinates.length - 1)];

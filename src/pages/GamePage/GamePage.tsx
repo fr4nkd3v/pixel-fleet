@@ -1,6 +1,6 @@
 import { FleetMenu } from '~/components/FleetInfoCard';
 import styles from './GamePage.module.css';
-import { TCurrentShipOnDeploy, TCursorLocation, TMapCoordinate, TOrientationType, TFleet, TShipId, TShipPart } from '~/types/game';
+import { TCurrentShipOnDeploy, TCursorLocation, TOrientationType, TFleet, TShipId, TShipPart, TMap } from '~/types/game';
 import { BattleMap } from '~/components/BattleMap';
 import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
 import { useEffect, useState } from 'react';
@@ -45,8 +45,8 @@ export const GamePage = () => {
 
   const [ playerFleet, setPlayerFleet ] = useState([...commonFleetArr]);
   const [ opponentFleet, setOpponentFleet ] = useState([...commonFleetArr]);
-  const [ playerMap, setPlayerMap ] = useState<TMapCoordinate[]>([]);
-  const [ opponentMap, setOpponentMap ] = useState<TMapCoordinate[]>([]);
+  const [ playerMap, setPlayerMap ] = useState<TMap>([]);
+  const [ opponentMap, setOpponentMap ] = useState<TMap>([]);
   const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
   const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
   // TODO: add state for current player turn
@@ -88,7 +88,7 @@ export const GamePage = () => {
 
     const length: number = SHIP_TYPES[shipId].length;
     const coveredCoordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation)
-    const coordinatesInMap: TMapCoordinate[] = coveredCoordinates.map((coor, index) => {
+    const coordinatesInMap: TMap = coveredCoordinates.map((coor, index) => {
       let shipPart: TShipPart | undefined;
       if (index === 0) shipPart = 'start'
       else if (index === coveredCoordinates.length - 1) shipPart = 'end';

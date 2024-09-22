@@ -1,9 +1,9 @@
-import type { TMapCoordinate, TShipId, TOrientationType, TCurrentShipOnDeploy, TCursorLocation, TCoveredShip } from "~/types/game";
+import type { TShipId, TOrientationType, TCurrentShipOnDeploy, TCursorLocation, TCoveredShip, TMap } from "~/types/game";
 
 export interface IBattleMapProps {
   width: number;
   height: number;
-  mapCoordinates: TMapCoordinate[];
+  mapCoordinates: TMap;
   currentShipOnDeploy: TCurrentShipOnDeploy | null;
   onDeployedShip: (shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType) => void;
   onChangeOrientation: (orientation: TOrientationType) => void;
