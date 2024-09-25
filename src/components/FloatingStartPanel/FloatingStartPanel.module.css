@@ -1,0 +1,13 @@
+.FloatingStartPanel {
+  position: absolute;
+  left: 75%; top: 50%;
+  transform: translateX(-50%);
+  z-index: var(--layer-30);
+}
+
+.FloatingStartPanel-content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}

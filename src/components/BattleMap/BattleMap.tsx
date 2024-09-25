@@ -12,9 +12,10 @@ export const BattleMap = (
     height,
     mapCoordinates,
     currentShipOnDeploy,
+    disabled = false,
     onDeployedShip,
     onChangeOrientation,
-    onChangeCursorLocation
+    onChangeCursorLocation,
   }: IBattleMapProps
 ) => {
   const battleMapRef = useRef<null | HTMLElement>(null);
@@ -115,7 +116,7 @@ export const BattleMap = (
 
   return (
     <section
-      className={styles['BattleMap']}
+      className={`${styles['BattleMap']} ${disabled ? styles['is-disabled'] : ''}`}
       style={{
         'gridTemplateColumns': `repeat(${width + 1}, var(--tile-size))`,
         'gridTemplateRows': `repeat(${height + 1}, var(--tile-size))`,

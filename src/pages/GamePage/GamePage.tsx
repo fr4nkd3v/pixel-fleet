@@ -6,6 +6,7 @@ import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/g
 import { useEffect, useState } from 'react';
 import { CursorShadowShip } from '~/components/CursorShadowShip';
 import { autoFleetDeploy, getNextCoordinates } from '~/utils';
+import { FloatingStartPanel } from '~/components/FloatingStartPanel/FloatingStartPanel';
 // import { useState } from 'react';
 
 export const GamePage = () => {
@@ -49,6 +50,7 @@ export const GamePage = () => {
   const [ opponentMap, setOpponentMap ] = useState<TMap>([]);
   const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
   const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
+  const [ isReady, setIsReady ] = useState(false);
   // TODO: add state for current player turn
   // TODO: add state for winner of game
 
@@ -59,6 +61,8 @@ export const GamePage = () => {
   }, [])
 
   const currentShipOnDeployLength = currentShipOnDeploy ? SHIP_TYPES[currentShipOnDeploy.shipId].length : null;
+
+  const isPlayerFleetDeployed = playerFleet.every(ship => ship.location !== null);
 
   const handleDeployingShip = (
     shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}
@@ -153,6 +157,7 @@ export const GamePage = () => {
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
+        disabled={!isReady}
       />
       {currentShipOnDeploy && cursorLocation && (
         <CursorShadowShip
@@ -161,6 +166,12 @@ export const GamePage = () => {
           orientation={currentShipOnDeploy.orientation}
           locationX={cursorLocation.x}
           locationY={cursorLocation.y}
+        />
+      )}
+      {!isReady && (
+        <FloatingStartPanel
+          isStartButtonDisabled={!isPlayerFleetDeployed}
+          onClick={() => isPlayerFleetDeployed && setIsReady(true)}
         />
       )}
     </section>

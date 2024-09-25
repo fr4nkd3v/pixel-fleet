@@ -5,6 +5,7 @@ export interface IBattleMapProps {
   height: number;
   mapCoordinates: TMap;
   currentShipOnDeploy: TCurrentShipOnDeploy | null;
+  disabled?: boolean;
   onDeployedShip: (shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType) => void;
   onChangeOrientation: (orientation: TOrientationType) => void;
   onChangeCursorLocation: ({ x, y }: TCursorLocation) => void;
