@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { CursorShadowShip } from '~/components/CursorShadowShip';
 import { autoFleetDeploy, getNextCoordinates } from '~/utils';
 import { FloatingStartPanel } from '~/components/FloatingStartPanel/FloatingStartPanel';
+import { AttackControl } from '~/components/AttackControl';
 // import { useState } from 'react';
 
 export const GamePage = () => {
@@ -51,7 +52,7 @@ export const GamePage = () => {
   const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
   const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
   const [ isReady, setIsReady ] = useState(false);
-  // TODO: add state for current player turn
+  const [ isPlayerTurn, setIsPlayerTurn] = useState(true);
   // TODO: add state for winner of game
 
   useEffect(() => {
@@ -128,6 +129,15 @@ export const GamePage = () => {
     setCursorLocation({ x, y });
   }
 
+  const handleStartGame = () => {
+    if (isPlayerFleetDeployed) setIsReady(true);
+
+  }
+
+  const initTurn = () => {
+
+  }
+
   return (
     <section className={styles['GamePage']}>
       <FleetMenu
@@ -171,8 +181,13 @@ export const GamePage = () => {
       {!isReady && (
         <FloatingStartPanel
           isStartButtonDisabled={!isPlayerFleetDeployed}
-          onClick={() => isPlayerFleetDeployed && setIsReady(true)}
+          onClick={handleStartGame}
         />
+      )}
+      {isPlayerTurn && isReady && (
+        <div className='floating-attack-control'>
+          <AttackControl />
+        </div>
       )}
     </section>
   )
