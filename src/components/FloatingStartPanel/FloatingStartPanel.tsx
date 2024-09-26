@@ -9,6 +9,7 @@ export const FloatingStartPanel = ({ onClick, isStartButtonDisabled }: IFloating
       <Panel
         width='250px'
         height='120px'
+        shadowSize="shadow-l"
       >
         <div className={styles['FloatingStartPanel-content']}>
           <Button

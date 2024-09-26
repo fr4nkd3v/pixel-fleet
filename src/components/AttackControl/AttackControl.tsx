@@ -4,7 +4,7 @@ import styles from './AttackControl.module.css';
 
 export function AttackControl() {
   return (
-    <Panel>
+    <Panel shadowSize="shadow-m">
       <div className={styles['AttackControl-container']}>
         <div className={styles["AttackControl"]}>
           <span className={styles['AttackControl-label']}>
