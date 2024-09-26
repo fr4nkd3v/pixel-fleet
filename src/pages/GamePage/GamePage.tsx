@@ -1,6 +1,6 @@
 import { FleetMenu } from '~/components/FleetInfoCard';
 import styles from './GamePage.module.css';
-import { TCurrentShipOnDeploy, TCursorLocation, TOrientationType, TFleet, TShipId, TShipPart, TMap } from '~/types/game';
+import { TCurrentShipOnDeploy, TCursorLocation, TOrientationType, TFleet, TShipId, TShipPart, TMap, TCoordinate } from '~/types/game';
 import { BattleMap } from '~/components/BattleMap';
 import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
 import { useEffect, useState } from 'react';
@@ -53,6 +53,7 @@ export const GamePage = () => {
   const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
   const [ isReady, setIsReady ] = useState(false);
   const [ isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [ targetCoordinates, setTargetCoordinates] = useState<TCoordinate>({x: 'a', y: 1})
   // TODO: add state for winner of game
 
   useEffect(() => {
@@ -134,8 +135,17 @@ export const GamePage = () => {
 
   }
 
-  const initTurn = () => {
+  const handleChangeTargetCoordinates = (coordinateAxis: 'x' | 'y', value: string) => {
+    // TODO: add validates for correct coordinates
+    const newPropCoordinate = coordinateAxis === 'x'
+      ? {x: value}
+      : {y: Number(value)};
+    setTargetCoordinates({
+      ...targetCoordinates,
+      ...newPropCoordinate,
+    });
 
+    //TODO: add view tarjet in tile aimed
   }
 
   return (
@@ -186,7 +196,10 @@ export const GamePage = () => {
       )}
       {isPlayerTurn && isReady && (
         <div className='floating-attack-control'>
-          <AttackControl />
+          <AttackControl
+            targetCoordinates={targetCoordinates}
+            onChangeTargetCoordinates={handleChangeTargetCoordinates}
+          />
         </div>
       )}
     </section>

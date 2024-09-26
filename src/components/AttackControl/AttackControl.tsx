@@ -1,8 +1,9 @@
 import { Button } from "../Button";
 import { Panel } from "../Panel";
 import styles from './AttackControl.module.css';
+import { IAttackControlProps } from "./AttackControl.types";
 
-export function AttackControl() {
+export function AttackControl({ targetCoordinates ,onChangeTargetCoordinates }: IAttackControlProps) {
   return (
     <Panel shadowSize="shadow-m">
       <div className={styles['AttackControl-container']}>
@@ -15,6 +16,12 @@ export function AttackControl() {
               type="number"
               id="coordinate-y"
               className={`nes-input ${styles['AttackControl-input']}`}
+              onInput={
+                (event: React.ChangeEvent<HTMLInputElement>) => {
+                  onChangeTargetCoordinates('y', event.target.value)
+                }
+              }
+              value={targetCoordinates.y.toString()}
             />
           </div>
           <div className="nes-field is-inline">
@@ -22,6 +29,12 @@ export function AttackControl() {
               type="text"
               id="coordinate-x"
               className={`nes-input ${styles['AttackControl-input']}`}
+              onInput={
+                (event: React.ChangeEvent<HTMLInputElement>) => {
+                  onChangeTargetCoordinates('x', event.target.value)
+                }
+              }
+              value={targetCoordinates.x}
             />
           </div>
           <span className={styles['AttackControl-label']}>

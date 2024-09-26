@@ -17,4 +17,5 @@
   width: 5rem;
   /* background-color: var(--white); */
   padding: .5rem;
+  text-transform: uppercase;
 }
