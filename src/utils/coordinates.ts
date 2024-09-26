@@ -5,6 +5,10 @@ export const parseStringCoordinateX = (coor: number): string => {
   return String.fromCharCode(coor + 96);
 }
 
+export const parseNumberCoordinateX = (coor: string): number => {
+  return coor.charCodeAt(0) - 96;
+}
+
 export const isValidCoordinate = (x: string, y: number) => {
   return ('abcdefghij'.includes(x) && y > 0 && y < 11);
 }

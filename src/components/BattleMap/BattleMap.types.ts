@@ -1,4 +1,12 @@
-import type { TShipId, TOrientationType, TCurrentShipOnDeploy, TCursorLocation, TCoveredShip, TMap } from "~/types/game";
+import type {
+  TShipId,
+  TOrientationType,
+  TCurrentShipOnDeploy,
+  TCursorLocation,
+  TCoveredShip,
+  TMap,
+  TCoordinate
+} from "~/types/game";
 
 export interface IBattleMapProps {
   width: number;
@@ -6,6 +14,7 @@ export interface IBattleMapProps {
   mapCoordinates: TMap;
   currentShipOnDeploy: TCurrentShipOnDeploy | null;
   disabled?: boolean;
+  targetCoordinates: TCoordinate;
   onDeployedShip: (shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType) => void;
   onChangeOrientation: (orientation: TOrientationType) => void;
   onChangeCursorLocation: ({ x, y }: TCursorLocation) => void;
@@ -18,4 +27,8 @@ export interface ITileProps {
   onMouseEnter?: (event: React.MouseEvent) => void;
   onMouseLeave?: (event: React.MouseEvent) => void;
   onContextMenu?: (event: React.MouseEvent) => void;
+}
+
+export interface ISightProps {
+  targetCoordinates: TCoordinate;
 }

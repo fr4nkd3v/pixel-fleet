@@ -43,7 +43,7 @@ export function AttackControl({ targetCoordinates ,onChangeTargetCoordinates }: 
         </div>
         <Button
           text="attack"
-          onClick={() => console.log('click en atacar')}
+          onClick={() => console.log(`atacar en la coordenada ${targetCoordinates.y}${targetCoordinates.x}`)}
         />
       </div>
     </Panel>

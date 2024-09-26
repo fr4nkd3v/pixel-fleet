@@ -5,6 +5,7 @@ import { getNextCoordinates, getTilesByCoordinates, hasCoordinateCovered, parseS
 import { SHIP_TYPES } from '~/constants/game';
 import { useRef } from 'react';
 import { TOrientationType } from '~/types/game';
+import { Sight } from './Sight';
 
 export const BattleMap = (
   {
@@ -13,6 +14,7 @@ export const BattleMap = (
     mapCoordinates,
     currentShipOnDeploy,
     disabled = false,
+    targetCoordinates,
     onDeployedShip,
     onChangeOrientation,
     onChangeCursorLocation,
@@ -133,6 +135,7 @@ export const BattleMap = (
           height: `calc(var(--tile-size) * ${height})`,
         }}
       ></div>
+      <Sight targetCoordinates={targetCoordinates}/>
     </section>
   )
 }

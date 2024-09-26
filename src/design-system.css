@@ -47,6 +47,14 @@
   --color-success-500: #17C1A6;
   --color-success-600: #108975;
 
+  --color-warning: #F4C790;
+  --color-warning-100: #FBECDA;
+  --color-warning-200: #F8DAB5;
+  --color-warning-300: #EFAB59;
+  --color-warning-400: #E99022;
+  --color-warning-500: #BC7013;
+  --color-warning-600: #854F0D;
+
   --color-error: #E4626F;
   --color-error-100: #F8D8DB;
   --color-error-200: #F2B1B7;

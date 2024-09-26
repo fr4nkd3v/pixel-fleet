@@ -165,6 +165,7 @@ export const GamePage = () => {
         height={mapSize}
         mapCoordinates={playerMap}
         currentShipOnDeploy={currentShipOnDeploy}
+        targetCoordinates={{x: 'a', y: 1}}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
@@ -174,6 +175,7 @@ export const GamePage = () => {
         height={mapSize}
         mapCoordinates={opponentMap}
         currentShipOnDeploy={currentShipOnDeploy}
+        targetCoordinates={targetCoordinates}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
