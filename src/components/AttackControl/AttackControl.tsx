@@ -3,7 +3,9 @@ import { Panel } from "../Panel";
 import styles from './AttackControl.module.css';
 import { IAttackControlProps } from "./AttackControl.types";
 
-export function AttackControl({ targetCoordinates ,onChangeTargetCoordinates }: IAttackControlProps) {
+export function AttackControl(
+  { targetCoordinates, onChangeTargetCoordinates, onShoot }: IAttackControlProps
+) {
   return (
     <Panel shadowSize="shadow-m">
       <div className={styles['AttackControl-container']}>
@@ -43,7 +45,7 @@ export function AttackControl({ targetCoordinates ,onChangeTargetCoordinates }: 
         </div>
         <Button
           text="attack"
-          onClick={() => console.log(`atacar en la coordenada ${targetCoordinates.y}${targetCoordinates.x}`)}
+          onClick={onShoot}
         />
       </div>
     </Panel>

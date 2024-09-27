@@ -126,6 +126,7 @@
 
   /* Custom Variables */
   --tile-size: var(--size-48);
+  --background-color-sight: rgba(233, 144, 34, 0.25);
 
   --ship-pattern-diagonal-percentage: 8.5%;
   --ship-pattern: linear-gradient(

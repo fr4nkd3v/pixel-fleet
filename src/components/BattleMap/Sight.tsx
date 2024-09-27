@@ -4,11 +4,12 @@ import styles from './BattleMap.module.css';
 import { parseNumberCoordinateX } from "~/utils";
 
 export const Sight = ({ targetCoordinates }: ISightProps) => {
-  console.log(targetCoordinates);
   const { x: strX, y } = targetCoordinates;
   const x = parseNumberCoordinateX(strX);
-  const left = `calc(var(--tile-size) * ${x})`
-  const top = `calc(var(--tile-size) * ${y})`
+
+  const left = `calc(var(--tile-size) * ${x})`;
+  const top = `calc(var(--tile-size) * ${y})`;
+
   return (
     <div
       className={styles["Sight"]}

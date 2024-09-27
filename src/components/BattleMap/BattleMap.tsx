@@ -15,6 +15,7 @@ export const BattleMap = (
     currentShipOnDeploy,
     disabled = false,
     targetCoordinates,
+    isReady,
     onDeployedShip,
     onChangeOrientation,
     onChangeCursorLocation,
@@ -70,13 +71,14 @@ export const BattleMap = (
   const tiles = [];
   for (let h = 0; h <= height; h++) {
     for (let w = 0; w <= width; w++) {
-      const mapCoorFound = mapCoordinates.find(({ x, y, covered }) => x === parseStringCoordinateX(w) && y === h && Boolean(covered))
+      const mapCoorFound = mapCoordinates.find(({ x, y }) => x === parseStringCoordinateX(w) && y === h)
       tiles.push(
         <Tile
           key={`${h}${w}`}
           locationX={w}
           locationY={h}
           isCovered={mapCoorFound ? mapCoorFound.covered : false}
+          isAttacked={mapCoorFound ? mapCoorFound.attacked : false}
           onMouseEnter={(event) => handleMouseEnterAndLeaveTile(event, 'enter')}
           onMouseLeave={(event) => handleMouseEnterAndLeaveTile(event, 'leave')}
           onContextMenu={handleContextMenuTile}
@@ -135,7 +137,9 @@ export const BattleMap = (
           height: `calc(var(--tile-size) * ${height})`,
         }}
       ></div>
-      <Sight targetCoordinates={targetCoordinates}/>
+      {isReady && (
+        <Sight targetCoordinates={targetCoordinates}/>
+      )}
     </section>
   )
 }

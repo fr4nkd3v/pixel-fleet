@@ -7,6 +7,7 @@ export const Tile = (
     locationX,
     locationY,
     isCovered,
+    isAttacked,
     onMouseEnter,
     onMouseLeave,
     onContextMenu,
@@ -28,10 +29,12 @@ export const Tile = (
     ? [styles['is-covered'], styles[shipPart], styles[orientation]].join(' ')
     : '';
 
+  const attackedCSSClass = isAttacked ? styles['is-attacked'] : '';
+
   return (
     <div
       id={id}
-      className={`${styles['BattleMap-tile']} ${coveredCSSClasses}`}
+      className={`${styles['BattleMap-tile']} ${coveredCSSClasses} ${attackedCSSClass}`}
       data-location-x={isValidCoor ? coordinateX : undefined}
       data-location-y={isValidCoor ? locationY : undefined}
       onMouseEnter={isValidCoor ? onMouseEnter : undefined}

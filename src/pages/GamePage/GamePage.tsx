@@ -56,6 +56,7 @@ export const GamePage = () => {
   const [ targetCoordinates, setTargetCoordinates] = useState<TCoordinate>({x: 'a', y: 1})
   // TODO: add state for winner of game
 
+  // console.log(opponentMap.map(coor => coor.x + coor.y + " - attacked: " + coor.attacked).join('\n'));
   useEffect(() => {
     const { fleet, map } = autoFleetDeploy(mapSize, [...commonFleetArr], []);
     setOpponentMap(map);
@@ -132,7 +133,6 @@ export const GamePage = () => {
 
   const handleStartGame = () => {
     if (isPlayerFleetDeployed) setIsReady(true);
-
   }
 
   const handleChangeTargetCoordinates = (coordinateAxis: 'x' | 'y', value: string) => {
@@ -146,6 +146,30 @@ export const GamePage = () => {
     });
 
     //TODO: add view tarjet in tile aimed
+  }
+
+  const handleShoot = () => {
+    //TODO: start animation
+    const { x, y } = targetCoordinates;
+    const newOpponentMap: TMap = [];
+    let foundCoordinateShooted = false;
+    for (const coor of opponentMap) {
+      if (coor.x !== x || coor.y !== y) {
+        newOpponentMap.push({...coor});
+      } else {
+        foundCoordinateShooted = true;
+        newOpponentMap.push({
+          ...coor,
+          attacked: true,
+        });
+      }
+    }
+    if (!foundCoordinateShooted) {
+      newOpponentMap.push({
+        x, y, attacked: true, covered: false
+      })
+    }
+    setOpponentMap(newOpponentMap)
   }
 
   return (
@@ -166,6 +190,7 @@ export const GamePage = () => {
         mapCoordinates={playerMap}
         currentShipOnDeploy={currentShipOnDeploy}
         targetCoordinates={{x: 'a', y: 1}}
+        isReady={isReady}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
@@ -176,6 +201,7 @@ export const GamePage = () => {
         mapCoordinates={opponentMap}
         currentShipOnDeploy={currentShipOnDeploy}
         targetCoordinates={targetCoordinates}
+        isReady={isReady}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
@@ -201,6 +227,7 @@ export const GamePage = () => {
           <AttackControl
             targetCoordinates={targetCoordinates}
             onChangeTargetCoordinates={handleChangeTargetCoordinates}
+            onShoot={handleShoot}
           />
         </div>
       )}
