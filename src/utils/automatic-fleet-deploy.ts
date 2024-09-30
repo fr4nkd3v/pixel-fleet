@@ -1,6 +1,6 @@
 // semi-random selection algorithm
 
-import { TCoordinate, TFleet, TMap, TShipPart } from "~/types/game";
+import { TCoordinate, TFleet, TMap, TShipId, TShipPart } from "~/types/game";
 import { getNextCoordinates, hasCoordinateCovered, parseStringCoordinateX } from "./coordinates";
 import { getRandomInt, getRandomOrientation } from "./random";
 
@@ -15,12 +15,13 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
       })
     }
   }
-  console.log('coordenadas disponibles:', availableCoordinates.length);
+  // console.log('coordenadas disponibles:', availableCoordinates.length);
 
   // 2. Iterate fleet
   fleet.forEach(ship => {
     const { id, health, name } = ship;
-    const nextMapCoordinates = tryRandomCoordinate(availableCoordinates, 10, health, map);
+    const maximumNumberOfTries = 10;
+    const nextMapCoordinates = tryRandomCoordinate(availableCoordinates, maximumNumberOfTries, id, health, map);
     if (!nextMapCoordinates) {
       console.log(`❌ No se pudieron encontrar coordenadas para el barco ${name}`);
       return;
@@ -36,7 +37,7 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
       return !isMatch;
     })
 
-    // Save coordinates in enemy map array
+    // Save coordinates in map array
     map.push(...nextMapCoordinates);
 
     // Update state of fleet
@@ -44,19 +45,19 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
       if (ship.id === id) {
         return {
           ...ship,
-          location: {x: nextMapCoordinates[0].x, y: nextMapCoordinates[0].y}
+          isDeployed: true,
         }
       } else {
         return ship;
       }
     })
-    console.log(`✅ Si se pudieron encontrar coordenadas para el barco ${name}`);
+    // console.log(`✅ Si se pudieron encontrar coordenadas para el barco ${name}`);
   })
-  console.log('Coordenadas disponibles:', availableCoordinates.length);
-  console.log('Estado de flota:', fleet);
-  console.log('Estado del mapa:', map);
+  // console.log('Coordenadas disponibles:', availableCoordinates.length);
+  // console.log('Estado de flota:', fleet);
+  // console.log('Estado del mapa:', map);
 
-  const isFleetDeployedSuccessfully = fleet.every(ship => ship.location !== null);
+  const isFleetDeployedSuccessfully = fleet.every(ship => ship.isDeployed);
   if (isFleetDeployedSuccessfully) {
     return { ok: true, fleet, map }
   } else {
@@ -67,6 +68,7 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
 function tryRandomCoordinate (
   availableCoordinates: TCoordinate[],
   triesMax: number,
+  shipId: TShipId,
   shipLength: number,
   map: TMap,
 ): TMap | null {
@@ -94,6 +96,7 @@ function tryRandomCoordinate (
         x: coor.x,
         y: coor.y,
         covered: {
+          shipId,
           orientation: randomOrientation,
           shipPart,
         },
@@ -102,7 +105,7 @@ function tryRandomCoordinate (
     });
 
     counterTries++;
-    console.log(`tryRandomCoordinate - Intento ${counterTries}, Coordenadas propuestas: ${nextCoordinates.map(c => `${c.x}${c.y}`).join('|')}, Está disponible: ${isAvailable}`);
+    // console.log(`tryRandomCoordinate - Intento ${counterTries}, Coordenadas propuestas: ${nextCoordinates.map(c => `${c.x}${c.y}`).join('|')}, Está disponible: ${isAvailable}`);
   }
 
   if (isAvailable) {

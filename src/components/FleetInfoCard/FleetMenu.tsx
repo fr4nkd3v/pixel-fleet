@@ -14,7 +14,7 @@ export const FleetMenu = ({ shipList, onDeployingShip, currentShipOnDeploy }: IF
             shipType={ship.id}
             key={ship.id}
             health={ship.health}
-            isDeployed={ship.location !== null}
+            isDeployed={ship.isDeployed}
             onDeploying={onDeployingShip}
             currentShipOnDeploy={currentShipOnDeploy}
           />

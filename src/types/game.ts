@@ -6,7 +6,7 @@ export type TShip = {
   id: TShipId;
   name: string;
   health: number;
-  location: TCoordinate | null;
+  isDeployed: boolean;
 }
 
 export type TFleet = TShip[]
@@ -16,6 +16,7 @@ export type TShipPart = 'start' | 'middle' | 'end';
 export type TOrientationType = 'horizontal' | 'vertical';
 
 export type TCoveredShip = {
+  shipId: TShipId;
   shipPart: TShipPart;
   orientation: TOrientationType;
 }

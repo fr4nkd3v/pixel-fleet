@@ -5,7 +5,7 @@ import { BattleMap } from '~/components/BattleMap';
 import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
 import { useEffect, useState } from 'react';
 import { CursorShadowShip } from '~/components/CursorShadowShip';
-import { autoFleetDeploy, getNextCoordinates } from '~/utils';
+import { attackMap, autoFleetDeploy, getNextCoordinates, getRandomCoordinate, playerIsWinner } from '~/utils';
 import { FloatingStartPanel } from '~/components/FloatingStartPanel/FloatingStartPanel';
 import { AttackControl } from '~/components/AttackControl';
 // import { useState } from 'react';
@@ -14,8 +14,8 @@ export const GamePage = () => {
   // Set fleet & map size for each player
   const availableFleetIds: TShipId[] = [
     'missile_launcher',
-    'destroyer',
     'battleship',
+    'destroyer',
     'submarine',
   ];
   const mapSize = MAXIMUM_MAP_SIZE;
@@ -26,7 +26,7 @@ export const GamePage = () => {
       id: shipId,
       name: SHIP_TYPES[shipId].name,
       health: SHIP_TYPES[shipId].length,
-      location: null,
+      isDeployed: false,
     }
   })
 
@@ -65,7 +65,7 @@ export const GamePage = () => {
 
   const currentShipOnDeployLength = currentShipOnDeploy ? SHIP_TYPES[currentShipOnDeploy.shipId].length : null;
 
-  const isPlayerFleetDeployed = playerFleet.every(ship => ship.location !== null);
+  const isPlayerFleetDeployed = playerFleet.every(ship => ship.isDeployed);
 
   const handleDeployingShip = (
     shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}
@@ -86,7 +86,7 @@ export const GamePage = () => {
       if (ship.id === shipId) {
         return {
           ...ship,
-          location: {x: locationX, y: locationY}
+          isDeployed: true
         }
       } else {
         return ship;
@@ -105,6 +105,7 @@ export const GamePage = () => {
         x: coor.x,
         y: Number(coor.y),
         covered: {
+          shipId,
           orientation,
           shipPart
         },
@@ -148,29 +149,52 @@ export const GamePage = () => {
     //TODO: add view tarjet in tile aimed
   }
 
-  const handleShoot = () => {
+  const handlePlayerShoot = () => {
     //TODO: start animation
-    const { x, y } = targetCoordinates;
-    const newOpponentMap: TMap = [];
-    let foundCoordinateShooted = false;
-    for (const coor of opponentMap) {
-      if (coor.x !== x || coor.y !== y) {
-        newOpponentMap.push({...coor});
-      } else {
-        foundCoordinateShooted = true;
-        newOpponentMap.push({
-          ...coor,
-          attacked: true,
-        });
-      }
+    const {
+      fleet: newOpponentFleet,
+      map: newOpponentMap
+    } = attackMap(opponentMap, targetCoordinates, opponentFleet);
+    setOpponentMap(newOpponentMap);
+    setOpponentFleet(newOpponentFleet);
+
+    const isWinner = playerIsWinner(playerFleet, opponentFleet);
+    if (isWinner) {
+      console.log(`Player is winner?: ${isWinner}`);
+      return;
     }
-    if (!foundCoordinateShooted) {
-      newOpponentMap.push({
-        x, y, attacked: true, covered: false
-      })
-    }
-    setOpponentMap(newOpponentMap)
+
+    setIsPlayerTurn(false)
   }
+
+  const handleOpponentShoot = () => {
+    //TODO: start animation
+    const randomCoordinates = getRandomCoordinate();
+    const {
+      fleet: newPlayerFleet,
+      map: newPlayerMap,
+    } = attackMap(playerMap, randomCoordinates, playerFleet);
+    setPlayerMap(newPlayerMap);
+    setPlayerFleet(newPlayerFleet);
+
+    const isWinner = playerIsWinner(playerFleet, opponentFleet);
+    if (isWinner) {
+      console.log(`Player is winner?: ${isWinner}`);
+      return;
+    }
+
+    setIsPlayerTurn(true);
+  }
+
+  useEffect(() => {
+    if (!isPlayerTurn) {
+      console.log('🖥 turno de la PC');
+      setTimeout(() => {
+        handleOpponentShoot();
+        console.log('👦 turno del jugador');
+      }, 2000)
+    }
+  }, [isPlayerTurn])
 
   return (
     <section className={styles['GamePage']}>
@@ -227,7 +251,7 @@ export const GamePage = () => {
           <AttackControl
             targetCoordinates={targetCoordinates}
             onChangeTargetCoordinates={handleChangeTargetCoordinates}
-            onShoot={handleShoot}
+            onShoot={handlePlayerShoot}
           />
         </div>
       )}
