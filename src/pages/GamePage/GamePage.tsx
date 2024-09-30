@@ -13,8 +13,8 @@ import { AttackControl } from '~/components/AttackControl';
 export const GamePage = () => {
   // Set fleet & map size for each player
   const availableFleetIds: TShipId[] = [
-    'missile_launcher',
-    'battleship',
+    // 'missile_launcher',
+    // 'battleship',
     'destroyer',
     'submarine',
   ];

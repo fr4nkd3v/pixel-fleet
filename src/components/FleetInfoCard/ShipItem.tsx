@@ -4,12 +4,21 @@ import { ShipIcon } from '~/components/Icon';
 import styles from './ShipItem.module.css';
 
 export const ShipItem = (
-  { shipId, shipType, health, isDeployed, onDeploying, currentShipOnDeploy }: IShipItemProps
+  {
+    shipId,
+    shipType,
+    fullHealth,
+    currentHealth,
+    isDeployed,
+    onDeploying,
+    currentShipOnDeploy
+  }: IShipItemProps
 ) => {
   const lifes = [];
-  for (let i = 0; i < health; i++) {
+  for (let i = 1; i <= fullHealth; i++) {
+    const extraCssClass = i <= currentHealth ? '' : styles['is-dead'];
     lifes.push(
-      <div className={styles['ShipItem-life']} key={i}></div>
+      <div className={`${styles['ShipItem-live']} ${extraCssClass}`} key={i}></div>
     )
   }
 

@@ -39,14 +39,17 @@
   display: flex;
   gap: var(--size-2);
 }
-.ShipItem-life {
+.ShipItem-live {
   width: var(--size-10);
   aspect-ratio: 1 / 1;
   background-color: var(--color-primary-600);
 }
-.ShipItem.not-deployed .ShipItem-life {
+.ShipItem-live.is-dead {
+  background-color: var(--color-error-400);
+}
+.ShipItem.not-deployed .ShipItem-live {
   background-color: var(--gray-12);
 }
-.ShipItem.selected .ShipItem-life {
+.ShipItem.selected .ShipItem-live {
   background-color: var(--color-primary-600);
 }

@@ -1,3 +1,4 @@
+import { SHIP_TYPES } from '~/constants/game';
 import styles from './FleetMenu.module.css';
 import { type IFleetMenuProps } from './FleetMenu.types';
 import { ShipItem } from "./ShipItem"
@@ -13,7 +14,8 @@ export const FleetMenu = ({ shipList, onDeployingShip, currentShipOnDeploy }: IF
             shipId={ship.id}
             shipType={ship.id}
             key={ship.id}
-            health={ship.health}
+            fullHealth={SHIP_TYPES[ship.id].length}
+            currentHealth={ship.health}
             isDeployed={ship.isDeployed}
             onDeploying={onDeployingShip}
             currentShipOnDeploy={currentShipOnDeploy}
