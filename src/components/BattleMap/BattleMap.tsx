@@ -16,9 +16,13 @@ export const BattleMap = (
     disabled = false,
     targetCoordinates,
     isReady,
+    showSight,
+    isShot,
+    isInTurn,
     onDeployedShip,
     onChangeOrientation,
     onChangeCursorLocation,
+    onFinishesShot,
   }: IBattleMapProps
 ) => {
   const battleMapRef = useRef<null | HTMLElement>(null);
@@ -137,8 +141,13 @@ export const BattleMap = (
           height: `calc(var(--tile-size) * ${height})`,
         }}
       ></div>
-      {isReady && (
-        <Sight targetCoordinates={targetCoordinates}/>
+      {isReady && showSight && targetCoordinates && (
+        <Sight
+          targetCoordinates={targetCoordinates}
+          isShot={isShot}
+          isInTurn={isInTurn}
+          onFinishesShot={onFinishesShot}
+        />
       )}
     </section>
   )

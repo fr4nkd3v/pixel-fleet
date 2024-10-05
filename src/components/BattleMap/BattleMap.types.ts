@@ -14,11 +14,15 @@ export interface IBattleMapProps {
   mapCoordinates: TMap;
   currentShipOnDeploy: TCurrentShipOnDeploy | null;
   disabled?: boolean;
-  targetCoordinates: TCoordinate;
+  targetCoordinates: TCoordinate | null;
   isReady: boolean;
+  showSight: boolean;
+  isShot: boolean;
+  isInTurn: boolean;
   onDeployedShip: (shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType) => void;
   onChangeOrientation: (orientation: TOrientationType) => void;
   onChangeCursorLocation: ({ x, y }: TCursorLocation) => void;
+  onFinishesShot: () => void;
 }
 
 export interface ITileProps {
@@ -33,4 +37,7 @@ export interface ITileProps {
 
 export interface ISightProps {
   targetCoordinates: TCoordinate;
+  isShot: boolean;
+  isInTurn: boolean;
+  onFinishesShot: () => void;
 }
