@@ -1,5 +1,12 @@
-import { FleetMenu } from "~/components/FleetInfoCard";
+import { useCallback, useEffect } from "react";
 import styles from "./GamePage.module.css";
+import {
+  FleetMenu,
+  BattleMap,
+  CursorShadowShip,
+  FloatingStartPanel,
+  AttackControl,
+} from "~/components";
 import {
   TCursorLocation,
   TOrientationType,
@@ -8,10 +15,7 @@ import {
   TMap,
   TCoordinate,
 } from "~/types/game";
-import { BattleMap } from "~/components/BattleMap";
 import { MAXIMUM_MAP_SIZE, SHIP_TYPES } from "~/constants/game";
-import { useCallback, useEffect } from "react";
-import { CursorShadowShip } from "~/components/CursorShadowShip";
 import {
   attackMap,
   autoFleetDeploy,
@@ -21,8 +25,6 @@ import {
   playerIsWinner,
   prepareFleet,
 } from "~/utils";
-import { FloatingStartPanel } from "~/components/FloatingStartPanel/FloatingStartPanel";
-import { AttackControl } from "~/components/AttackControl";
 import {
   useGameStore,
   useOpponentStore,
@@ -102,22 +104,6 @@ export const GamePage = () => {
     clearShipOnDeploy,
   } = useShipDeployStore();
 
-  // const [playerFleet, setPlayerFleet] = useState([...commonFleetArr]);
-  // const [opponentFleet, setOpponentFleet] = useState([...commonFleetArr]);
-  // const [playerMap, setPlayerMap] = useState<TMap>([]);
-  // const [opponentMap, setOpponentMap] = useState<TMap>([]);
-  // const [currentShipOnDeploy, setCurrentShipOnDeploy] =
-  //   useState<TShipOnDeploy | null>(null);
-  // const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
-  //   null
-  // );
-  // const [playerTargetCoordinates, setPlayerTargetCoordinates] =
-  //   useState<TCoordinate | null>(null);
-  // const [opponentTargetCoordinates, setOpponentTargetCoordinates] =
-  //   useState<TCoordinate>({ x: "a", y: 1 });
-  // TODO: add state for winner of game
-
-  // console.log(opponentMap.map(coor => coor.x + coor.y + " - attacked: " + coor.attacked).join('\n'));
   useEffect(() => {
     const { fleet, map } = autoFleetDeploy(mapSize, [...commonFleetArr], []);
     setOpponentMap(map);
@@ -197,8 +183,6 @@ export const GamePage = () => {
     // TODO: add validates for correct coordinates
     if (coordinateAxis === "x") updatePlayerTargetCoordinateX(value);
     else updatePlayerTargetCoordinateY(Number(value));
-
-    //TODO: add view tarjet in tile aimed
   };
 
   const handlePlayerShoot = () => {
@@ -227,12 +211,6 @@ export const GamePage = () => {
 
   const handleOpponentShoot = useCallback(() => {
     let targetCoordinates: null | TCoordinate = null;
-    // setTimeout(() => {
-    //   targetCoordinates = getRandomCoordinate();
-    //   setOpponentTargetCoordinates(targetCoordinates);
-    //   setIsShot(true);
-    // }, 3000);
-
     let secs = 1;
     const timer = setInterval(() => {
       if (secs === 2) {
