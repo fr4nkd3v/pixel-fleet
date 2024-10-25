@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import styles from "./GamePage.module.css";
 import {
   FleetMenu,
@@ -10,10 +10,10 @@ import {
 import {
   TCursorLocation,
   TOrientationType,
-  TFleet,
   TShipId,
   TMap,
   TCoordinate,
+  TFleet,
 } from "~/types/game";
 import { MAXIMUM_MAP_SIZE, SHIP_TYPES } from "~/constants/game";
 import {
@@ -40,10 +40,10 @@ export const GamePage = () => {
     "destroyer",
     "submarine",
   ];
-  const mapSize = MAXIMUM_MAP_SIZE;
 
   // Generate fleet & map data for state
-  const commonFleetArr: TFleet = prepareFleet(availableFleetIds);
+
+  const commonFleetArr = useRef<TFleet>(prepareFleet(availableFleetIds));
 
   // ? MapArr structure
   // Is an array of coordinate objects that have been covered or attacked
@@ -104,13 +104,17 @@ export const GamePage = () => {
     clearShipOnDeploy,
   } = useShipDeployStore();
 
+  // useEffect for first render
   useEffect(() => {
-    const { fleet, map } = autoFleetDeploy(mapSize, [...commonFleetArr], []);
+    const { fleet, map } = autoFleetDeploy(
+      MAXIMUM_MAP_SIZE,
+      [...commonFleetArr.current],
+      []
+    );
     setOpponentMap(map);
     setOpponentFleet(fleet);
-    setPlayerFleet([...commonFleetArr]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setPlayerFleet([...commonFleetArr.current]);
+  }, [commonFleetArr, setOpponentFleet, setOpponentMap, setPlayerFleet]);
 
   const currentShipOnDeployLength = shipOnDeployId
     ? SHIP_TYPES[shipOnDeployId].length
@@ -274,8 +278,6 @@ export const GamePage = () => {
         shipOnDeployId={shipOnDeployId}
       />
       <BattleMap
-        width={mapSize}
-        height={mapSize}
         mapCoordinates={playerMap}
         currentShipOnDeploy={{
           shipId: shipOnDeployId,
@@ -292,8 +294,6 @@ export const GamePage = () => {
         onFinishesShot={handleOpponentFinishesShooting}
       />
       <BattleMap
-        width={mapSize}
-        height={mapSize}
         mapCoordinates={opponentMap}
         currentShipOnDeploy={{
           shipId: shipOnDeployId,

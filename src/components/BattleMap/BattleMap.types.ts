@@ -9,8 +9,6 @@ import type {
 } from "~/types/game";
 
 export interface IBattleMapProps {
-  width: number;
-  height: number;
   mapCoordinates: TMap;
   currentShipOnDeploy: TShipOnDeploy;
   disabled?: boolean;

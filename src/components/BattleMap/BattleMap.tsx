@@ -1,20 +1,19 @@
+import { useRef } from "react";
 import { type IBattleMapProps } from "./BattleMap.types";
 import { Tile } from "./Tile";
+import { Sight } from "./Sight";
 import styles from "./BattleMap.module.css";
 import {
   getNextCoordinates,
   getTilesByCoordinates,
   hasCoordinateCovered,
   parseStringCoordinateX,
-} from "~/utils/coordinates";
-import { SHIP_TYPES } from "~/constants/game";
-import { useRef } from "react";
-import { TOrientationType } from "~/types/game";
-import { Sight } from "./Sight";
+  toggleOrientation,
+} from "~/utils";
+import { MAXIMUM_MAP_SIZE, SHIP_TYPES } from "~/constants";
+import { TOrientationType } from "~/types";
 
 export const BattleMap = ({
-  width,
-  height,
   mapCoordinates,
   currentShipOnDeploy,
   disabled = false,
@@ -28,8 +27,14 @@ export const BattleMap = ({
   onChangeCursorLocation,
   onFinishesShot,
 }: IBattleMapProps) => {
+  const sideLength = MAXIMUM_MAP_SIZE;
   const battleMapRef = useRef<null | HTMLElement>(null);
 
+  const clearAvailableStyles = (tiles: HTMLElement[] | NodeListOf<Element>) => {
+    tiles.forEach((tile) =>
+      tile.classList.remove(styles["is-available"], styles["is-unavailable"])
+    );
+  };
   const handleMouseEnterAndLeaveTile = (
     event: React.MouseEvent,
     action: "enter" | "leave",
@@ -48,10 +53,9 @@ export const BattleMap = ({
       length,
       forcedOrientation || currentShipOnDeploy.orientation
     );
-    // Validations
+
     const isOutOfArea = nextCoordinates.length < length;
     const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
-
     const tiles = getTilesByCoordinates(nextCoordinates);
 
     if (action === "enter") {
@@ -61,51 +65,25 @@ export const BattleMap = ({
         )
       );
     } else if (action === "leave") {
-      tiles.forEach((tile) =>
-        tile.classList.remove(styles["is-available"], styles["is-unavailable"])
-      );
+      clearAvailableStyles(tiles);
     }
   };
 
   const handleContextMenuTile = (event: React.MouseEvent) => {
     event.preventDefault();
-    if (!currentShipOnDeploy) return;
-    const oppositeOrientation =
-      currentShipOnDeploy.orientation === "horizontal"
-        ? "vertical"
-        : "horizontal";
+    if (!currentShipOnDeploy.orientation) return;
+    const oppositeOrientation = toggleOrientation(
+      currentShipOnDeploy.orientation
+    );
     onChangeOrientation(oppositeOrientation);
 
     if (!battleMapRef.current) return;
     const tiles = battleMapRef.current.querySelectorAll(
       `.${styles["BattleMap-tile"]}.${styles["is-available"]}, .${styles["BattleMap-tile"]}.${styles["is-unavailable"]}`
     );
-    tiles.forEach((tile) =>
-      tile.classList.remove(styles["is-available"], styles["is-unavailable"])
-    );
+    clearAvailableStyles(tiles);
     handleMouseEnterAndLeaveTile(event, "enter", oppositeOrientation);
   };
-
-  const tiles = [];
-  for (let h = 0; h <= height; h++) {
-    for (let w = 0; w <= width; w++) {
-      const mapCoorFound = mapCoordinates.find(
-        ({ x, y }) => x === parseStringCoordinateX(w) && y === h
-      );
-      tiles.push(
-        <Tile
-          key={`${h}${w}`}
-          locationX={w}
-          locationY={h}
-          isCovered={mapCoorFound ? mapCoorFound.covered : false}
-          isAttacked={mapCoorFound ? mapCoorFound.attacked : false}
-          onMouseEnter={(event) => handleMouseEnterAndLeaveTile(event, "enter")}
-          onMouseLeave={(event) => handleMouseEnterAndLeaveTile(event, "leave")}
-          onContextMenu={handleContextMenuTile}
-        />
-      );
-    }
-  }
 
   const handleClickBattleMap = (event: React.MouseEvent) => {
     // Validate data & elements
@@ -141,9 +119,7 @@ export const BattleMap = ({
       currentShipOnDeploy.orientation
     );
     const tiles = getTilesByCoordinates(nextCoordinates);
-    tiles.forEach((tile) =>
-      tile.classList.remove(styles["is-available"], styles["is-unavailable"])
-    );
+    clearAvailableStyles(tiles);
   };
 
   const handleMouseMoveBattleMap = (event: React.MouseEvent) => {
@@ -151,14 +127,35 @@ export const BattleMap = ({
     onChangeCursorLocation({ left: clientX, top: clientY });
   };
 
+  const tiles = [];
+  for (let h = 0; h <= sideLength; h++) {
+    for (let w = 0; w <= sideLength; w++) {
+      const mapCoorFound = mapCoordinates.find(
+        ({ x, y }) => x === parseStringCoordinateX(w) && y === h
+      );
+      tiles.push(
+        <Tile
+          key={`${h}${w}`}
+          locationX={w}
+          locationY={h}
+          isCovered={mapCoorFound ? mapCoorFound.covered : false}
+          isAttacked={mapCoorFound ? mapCoorFound.attacked : false}
+          onMouseEnter={(event) => handleMouseEnterAndLeaveTile(event, "enter")}
+          onMouseLeave={(event) => handleMouseEnterAndLeaveTile(event, "leave")}
+          onContextMenu={handleContextMenuTile}
+        />
+      );
+    }
+  }
+
   return (
     <section
       className={`${styles["BattleMap"]} ${
         disabled ? styles["is-disabled"] : ""
       }`}
       style={{
-        gridTemplateColumns: `repeat(${width + 1}, var(--tile-size))`,
-        gridTemplateRows: `repeat(${height + 1}, var(--tile-size))`,
+        gridTemplateColumns: `repeat(${sideLength + 1}, var(--tile-size))`,
+        gridTemplateRows: `repeat(${sideLength + 1}, var(--tile-size))`,
       }}
       onClick={handleClickBattleMap}
       onMouseMove={handleMouseMoveBattleMap}
@@ -168,8 +165,8 @@ export const BattleMap = ({
       <div
         className={styles["BattleMap-background"]}
         style={{
-          width: `calc(var(--tile-size) * ${width})`,
-          height: `calc(var(--tile-size) * ${height})`,
+          width: `calc(var(--tile-size) * ${sideLength})`,
+          height: `calc(var(--tile-size) * ${sideLength})`,
         }}
       ></div>
       {isReady && showSight && targetCoordinates && (
