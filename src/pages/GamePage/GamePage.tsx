@@ -9,11 +9,7 @@ import {
   TCoordinate,
 } from "~/types/game";
 import { BattleMap } from "~/components/BattleMap";
-import {
-  DEFAULT_ORIENTATION,
-  MAXIMUM_MAP_SIZE,
-  SHIP_TYPES,
-} from "~/constants/game";
+import { MAXIMUM_MAP_SIZE, SHIP_TYPES } from "~/constants/game";
 import { useCallback, useEffect } from "react";
 import { CursorShadowShip } from "~/components/CursorShadowShip";
 import {
@@ -99,6 +95,7 @@ export const GamePage = () => {
     shipId: shipOnDeployId,
     orientation: shipOnDeployOrientation,
     cursorLocation,
+    hasShipOnDeploy,
     setShipOnDeploy,
     setOrientation,
     setCursorLocation,
@@ -139,7 +136,7 @@ export const GamePage = () => {
     shipId: TShipId,
     { locationX, locationY }: { locationX: number; locationY: number }
   ) => {
-    setShipOnDeploy(shipId, DEFAULT_ORIENTATION, {
+    setShipOnDeploy(shipId, {
       left: locationX,
       top: locationY,
     });
@@ -151,8 +148,7 @@ export const GamePage = () => {
     locationY: number,
     orientation: TOrientationType
   ) => {
-    console.log("handleDeployedShip exec");
-    if (!shipOnDeployOrientation) return;
+    if (!hasShipOnDeploy) return;
 
     const nextCoordinates = getNextCoordinates(
       locationX,

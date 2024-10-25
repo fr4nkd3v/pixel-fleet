@@ -1,23 +1,22 @@
 import { create } from "zustand";
 import { TShipId, TOrientationType, TCursorLocation } from "~/types/game";
 import { IShipDeployStore } from "./use-ship-deploy-store.types";
+import { DEFAULT_ORIENTATION } from "~/constants/game";
 
 export const useShipDeployStore = create<IShipDeployStore>((set) => ({
   shipId: null,
-  orientation: null,
+  orientation: DEFAULT_ORIENTATION,
   cursorLocation: null,
-  setShipOnDeploy: (
-    shipId: TShipId,
-    orientation: TOrientationType,
-    cursorLocation: TCursorLocation
-  ) =>
+  hasShipOnDeploy: false,
+  setShipOnDeploy: (shipId: TShipId, cursorLocation: TCursorLocation) =>
     set({
       shipId,
-      orientation,
       cursorLocation,
+      orientation: DEFAULT_ORIENTATION,
+      hasShipOnDeploy: true,
     }),
   setOrientation: (orientation: TOrientationType) => set({ orientation }),
   setCursorLocation: (cursorLocation: TCursorLocation) =>
     set({ cursorLocation }),
-  clearShipOnDeploy: () => set({ shipId: null, orientation: null }),
+  clearShipOnDeploy: () => set({ shipId: null, hasShipOnDeploy: false }),
 }));
