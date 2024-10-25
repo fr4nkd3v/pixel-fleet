@@ -1,27 +1,32 @@
 import type {
   TShipId,
   TOrientationType,
-  TCurrentShipOnDeploy,
+  TShipOnDeploy,
   TCursorLocation,
   TCoveredShip,
   TMap,
-  TCoordinate
+  TCoordinate,
 } from "~/types/game";
 
 export interface IBattleMapProps {
   width: number;
   height: number;
   mapCoordinates: TMap;
-  currentShipOnDeploy: TCurrentShipOnDeploy | null;
+  currentShipOnDeploy: TShipOnDeploy;
   disabled?: boolean;
   targetCoordinates: TCoordinate | null;
   isReady: boolean;
   showSight: boolean;
   isShot: boolean;
   isInTurn: boolean;
-  onDeployedShip: (shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType) => void;
+  onDeployedShip: (
+    shipId: TShipId,
+    locationX: string,
+    locationY: number,
+    orientation: TOrientationType
+  ) => void;
   onChangeOrientation: (orientation: TOrientationType) => void;
-  onChangeCursorLocation: ({ x, y }: TCursorLocation) => void;
+  onChangeCursorLocation: ({ left, top }: TCursorLocation) => void;
   onFinishesShot: () => void;
 }
 

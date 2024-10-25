@@ -1,4 +1,4 @@
-import { TCurrentShipOnDeploy, type TShipId } from '~/types/game';
+import { type TShipId } from "~/types/game";
 
 export interface IShipItemProps {
   shipId: TShipId;
@@ -6,6 +6,9 @@ export interface IShipItemProps {
   fullHealth: number;
   currentHealth: number;
   isDeployed: boolean;
-  onDeploying: (shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}) => void;
-  currentShipOnDeploy: TCurrentShipOnDeploy | null;
+  onDeploying: (
+    shipId: TShipId,
+    { locationX, locationY }: { locationX: number; locationY: number }
+  ) => void;
+  shipOnDeployId: TShipId | null;
 }

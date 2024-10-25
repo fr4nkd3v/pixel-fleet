@@ -1,34 +1,51 @@
-import { FleetMenu } from '~/components/FleetInfoCard';
-import styles from './GamePage.module.css';
-import { TCurrentShipOnDeploy, TCursorLocation, TOrientationType, TFleet, TShipId, TShipPart, TMap, TCoordinate } from '~/types/game';
-import { BattleMap } from '~/components/BattleMap';
-import { DEFAULT_ORIENTATION, MAXIMUM_MAP_SIZE, SHIP_TYPES } from '~/constants/game';
-import { useEffect, useState } from 'react';
-import { CursorShadowShip } from '~/components/CursorShadowShip';
-import { attackMap, autoFleetDeploy, getNextCoordinates, getRandomCoordinate, playerIsWinner } from '~/utils';
-import { FloatingStartPanel } from '~/components/FloatingStartPanel/FloatingStartPanel';
-import { AttackControl } from '~/components/AttackControl';
-// import { useState } from 'react';
+import { FleetMenu } from "~/components/FleetInfoCard";
+import styles from "./GamePage.module.css";
+import {
+  TCursorLocation,
+  TOrientationType,
+  TFleet,
+  TShipId,
+  TMap,
+  TCoordinate,
+} from "~/types/game";
+import { BattleMap } from "~/components/BattleMap";
+import {
+  DEFAULT_ORIENTATION,
+  MAXIMUM_MAP_SIZE,
+  SHIP_TYPES,
+} from "~/constants/game";
+import { useCallback, useEffect } from "react";
+import { CursorShadowShip } from "~/components/CursorShadowShip";
+import {
+  attackMap,
+  autoFleetDeploy,
+  getNextCoordinates,
+  getRandomCoordinate,
+  getShipPartByIndex,
+  playerIsWinner,
+  prepareFleet,
+} from "~/utils";
+import { FloatingStartPanel } from "~/components/FloatingStartPanel/FloatingStartPanel";
+import { AttackControl } from "~/components/AttackControl";
+import {
+  useGameStore,
+  useOpponentStore,
+  usePlayerStore,
+  useShipDeployStore,
+} from "~/stores";
 
 export const GamePage = () => {
   // Set fleet & map size for each player
   const availableFleetIds: TShipId[] = [
     // 'missile_launcher',
     // 'battleship',
-    'destroyer',
-    'submarine',
+    "destroyer",
+    "submarine",
   ];
   const mapSize = MAXIMUM_MAP_SIZE;
 
   // Generate fleet & map data for state
-  const commonFleetArr: TFleet = availableFleetIds.map(shipId => {
-    return {
-      id: shipId,
-      name: SHIP_TYPES[shipId].name,
-      health: SHIP_TYPES[shipId].length,
-      isDeployed: false,
-    }
-  })
+  const commonFleetArr: TFleet = prepareFleet(availableFleetIds);
 
   // ? MapArr structure
   // Is an array of coordinate objects that have been covered or attacked
@@ -45,17 +62,62 @@ export const GamePage = () => {
   ]
   */
 
-  const [ playerFleet, setPlayerFleet ] = useState([...commonFleetArr]);
-  const [ opponentFleet, setOpponentFleet ] = useState([...commonFleetArr]);
-  const [ playerMap, setPlayerMap ] = useState<TMap>([]);
-  const [ opponentMap, setOpponentMap ] = useState<TMap>([]);
-  const [ currentShipOnDeploy, setCurrentShipOnDeploy] = useState<TCurrentShipOnDeploy | null>(null);
-  const [ cursorLocation, setCursorLocation ] = useState<TCursorLocation | null>(null);
-  const [ isReady, setIsReady ] = useState(false);
-  const [ isPlayerTurn, setIsPlayerTurn] = useState(true);
-  const [ playerTargetCoordinates, setPlayerTargetCoordinates] = useState<TCoordinate | null>(null);
-  const [ opponentTargetCoordinates, setOpponentTargetCoordinates] = useState<TCoordinate>({x: 'a', y: 1});
-  const [ isShot, setIsShot] = useState(false);
+  const {
+    hasStarted,
+    isPlayerTurn,
+    isShooting,
+    startGame,
+    endGame,
+    setPlayerTurn,
+    setOpponentTurn,
+    startsShooting,
+    finishShooting,
+  } = useGameStore();
+
+  const {
+    fleet: opponentFleet,
+    map: opponentMap,
+    targetCoordinates: opponentTargetCoordinates,
+    setFleet: setOpponentFleet,
+    setMap: setOpponentMap,
+    setTargetCoordinates: setOpponentTargetCoordinates,
+  } = useOpponentStore();
+
+  const {
+    fleet: playerFleet,
+    map: playerMap,
+    targetCoordinates: playerTargetCoordinates,
+    setFleet: setPlayerFleet,
+    setMap: setPlayerMap,
+    deployShipInFleet,
+    setTargetCoordinates: setPlayerTargetCoordinates,
+    updateTargetCoordinateX: updatePlayerTargetCoordinateX,
+    updateTargetCoordinateY: updatePlayerTargetCoordinateY,
+  } = usePlayerStore();
+
+  const {
+    shipId: shipOnDeployId,
+    orientation: shipOnDeployOrientation,
+    cursorLocation,
+    setShipOnDeploy,
+    setOrientation,
+    setCursorLocation,
+    clearShipOnDeploy,
+  } = useShipDeployStore();
+
+  // const [playerFleet, setPlayerFleet] = useState([...commonFleetArr]);
+  // const [opponentFleet, setOpponentFleet] = useState([...commonFleetArr]);
+  // const [playerMap, setPlayerMap] = useState<TMap>([]);
+  // const [opponentMap, setOpponentMap] = useState<TMap>([]);
+  // const [currentShipOnDeploy, setCurrentShipOnDeploy] =
+  //   useState<TShipOnDeploy | null>(null);
+  // const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
+  //   null
+  // );
+  // const [playerTargetCoordinates, setPlayerTargetCoordinates] =
+  //   useState<TCoordinate | null>(null);
+  // const [opponentTargetCoordinates, setOpponentTargetCoordinates] =
+  //   useState<TCoordinate>({ x: "a", y: 1 });
   // TODO: add state for winner of game
 
   // console.log(opponentMap.map(coor => coor.x + coor.y + " - attacked: " + coor.attacked).join('\n'));
@@ -63,123 +125,111 @@ export const GamePage = () => {
     const { fleet, map } = autoFleetDeploy(mapSize, [...commonFleetArr], []);
     setOpponentMap(map);
     setOpponentFleet(fleet);
+    setPlayerFleet([...commonFleetArr]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
-  const currentShipOnDeployLength = currentShipOnDeploy ? SHIP_TYPES[currentShipOnDeploy.shipId].length : null;
+  const currentShipOnDeployLength = shipOnDeployId
+    ? SHIP_TYPES[shipOnDeployId].length
+    : null;
 
-  const isPlayerFleetDeployed = playerFleet.every(ship => ship.isDeployed);
+  const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
 
   const handleDeployingShip = (
-    shipId: TShipId, {locationX, locationY}: {locationX: number, locationY: number}
+    shipId: TShipId,
+    { locationX, locationY }: { locationX: number; locationY: number }
   ) => {
-    setCurrentShipOnDeploy({ shipId, orientation: DEFAULT_ORIENTATION});
-    setCursorLocation({
-      x: locationX,
-      y: locationY,
+    setShipOnDeploy(shipId, DEFAULT_ORIENTATION, {
+      left: locationX,
+      top: locationY,
     });
-  }
+  };
 
   const handleDeployedShip = (
-    shipId: TShipId, locationX: string, locationY: number, orientation: TOrientationType
+    shipId: TShipId,
+    locationX: string,
+    locationY: number,
+    orientation: TOrientationType
   ) => {
-    if (!currentShipOnDeploy) return;
+    console.log("handleDeployedShip exec");
+    if (!shipOnDeployOrientation) return;
 
-    setPlayerFleet(playerFleet.map(ship => {
-      if (ship.id === shipId) {
-        return {
-          ...ship,
-          isDeployed: true
-        }
-      } else {
-        return ship;
-      }
-    }));
-
-    const length: number = SHIP_TYPES[shipId].length;
-    const coveredCoordinates = getNextCoordinates(locationX, Number(locationY), length, currentShipOnDeploy.orientation)
-    const coordinatesInMap: TMap = coveredCoordinates.map((coor, index) => {
-      let shipPart: TShipPart | undefined;
-      if (index === 0) shipPart = 'start'
-      else if (index === coveredCoordinates.length - 1) shipPart = 'end';
-      else shipPart = 'middle';
-
+    const nextCoordinates = getNextCoordinates(
+      locationX,
+      Number(locationY),
+      SHIP_TYPES[shipId].length,
+      shipOnDeployOrientation
+    );
+    const coveredCoordinates: TMap = nextCoordinates.map((coor, index) => {
+      const shipPart = getShipPartByIndex(index, nextCoordinates.length);
       return {
         x: coor.x,
         y: Number(coor.y),
         covered: {
           shipId,
           orientation,
-          shipPart
+          shipPart,
         },
         attacked: false,
-      }
+      };
     });
-    setPlayerMap([
-      ...playerMap,
-      ...coordinatesInMap,
-    ])
-    setCurrentShipOnDeploy(null);
-  }
+
+    deployShipInFleet(shipId, coveredCoordinates);
+    clearShipOnDeploy();
+  };
 
   const handleChangeOrientation = (orientation: TOrientationType) => {
-    if (!currentShipOnDeploy) return;
+    setOrientation(orientation);
+  };
 
-    setCurrentShipOnDeploy({
-      ...currentShipOnDeploy,
-      orientation
-    })
-  }
-
-  const handleChangeCursorLocation = ({ x, y }: TCursorLocation) => {
-    setCursorLocation({ x, y });
-  }
+  const handleChangeCursorLocation = ({ left, top }: TCursorLocation) => {
+    setCursorLocation({ left, top });
+  };
 
   const handleStartGame = () => {
     if (isPlayerFleetDeployed) {
-      setIsReady(true);
-      setPlayerTargetCoordinates({x: 'a', y: 1})
+      startGame();
+      setPlayerTargetCoordinates({ x: "a", y: 1 });
     }
-  }
+  };
 
-  const handleChangeTargetCoordinates = (coordinateAxis: 'x' | 'y', value: string) => {
+  const handleChangeTargetCoordinates = (
+    coordinateAxis: "x" | "y",
+    value: string
+  ) => {
     if (!playerTargetCoordinates) return;
     // TODO: add validates for correct coordinates
-    const newPropCoordinate = coordinateAxis === 'x'
-      ? {x: value}
-      : {y: Number(value)};
-    setPlayerTargetCoordinates({
-      ...playerTargetCoordinates,
-      ...newPropCoordinate,
-    });
+    if (coordinateAxis === "x") updatePlayerTargetCoordinateX(value);
+    else updatePlayerTargetCoordinateY(Number(value));
 
     //TODO: add view tarjet in tile aimed
-  }
+  };
 
   const handlePlayerShoot = () => {
-    setIsShot(true);
-  }
+    startsShooting();
+  };
 
   const handlePlayerFinishesShot = () => {
     if (!playerTargetCoordinates) return;
 
-    const {
-      fleet: newOpponentFleet,
-      map: newOpponentMap
-    } = attackMap(opponentMap, playerTargetCoordinates, opponentFleet);
+    const { fleet: newOpponentFleet, map: newOpponentMap } = attackMap(
+      opponentMap,
+      playerTargetCoordinates,
+      opponentFleet
+    );
     setOpponentMap(newOpponentMap);
     setOpponentFleet(newOpponentFleet);
-    setIsShot(false);
-    setIsPlayerTurn(false)
+    finishShooting();
+    setOpponentTurn();
 
     const isWinner = playerIsWinner(playerFleet, opponentFleet);
     if (isWinner !== null) {
-      showWinner(isWinner)
+      showWinner(isWinner);
       return;
     }
-  }
+  };
 
-  const handleOpponentShoot = () => {
+  const handleOpponentShoot = useCallback(() => {
     let targetCoordinates: null | TCoordinate = null;
     // setTimeout(() => {
     //   targetCoordinates = getRandomCoordinate();
@@ -193,68 +243,74 @@ export const GamePage = () => {
         targetCoordinates = getRandomCoordinate();
         setOpponentTargetCoordinates(targetCoordinates);
       } else if (secs === 3) {
-        setIsShot(true);
+        startsShooting();
         clearInterval(timer);
       }
       secs++;
-    }, 1000)
-  }
+    }, 1000);
+  }, [setOpponentTargetCoordinates, startsShooting]);
 
   const handleOpponentFinishesShooting = () => {
-    const {
-      fleet: newPlayerFleet,
-      map: newPlayerMap,
-    } = attackMap(playerMap, opponentTargetCoordinates, playerFleet);
+    if (!opponentTargetCoordinates) return;
+
+    const { fleet: newPlayerFleet, map: newPlayerMap } = attackMap(
+      playerMap,
+      opponentTargetCoordinates,
+      playerFleet
+    );
     setPlayerMap(newPlayerMap);
     setPlayerFleet(newPlayerFleet);
-    setIsShot(false);
-    setIsPlayerTurn(true);
+    finishShooting();
+    setPlayerTurn();
 
     const isWinner = playerIsWinner(playerFleet, opponentFleet);
     if (isWinner !== null) {
-      showWinner(isWinner)
+      showWinner(isWinner);
       return;
     }
 
-    console.log('👦 turno del jugador ===============');
-  }
+    console.log("👦 turno del jugador ===============");
+  };
 
   const showWinner = (isWinner: boolean) => {
-    const finalMessage = isWinner ? '👦 Player is the Winner! :D' : '🖥 The PC is the Winner';
-    setIsReady(false);
+    const finalMessage = isWinner
+      ? "👦 Player is the Winner! :D"
+      : "🖥 The PC is the Winner";
+    endGame();
     alert(finalMessage);
-  }
+  };
 
   useEffect(() => {
-    if (isReady && !isPlayerTurn) {
-      console.log('🖥 turno de la PC ===============');
+    if (hasStarted && !isPlayerTurn) {
+      console.log("🖥 turno de la PC ===============");
       handleOpponentShoot();
-      // setTimeout(() => {
-      // }, 3000)
     }
-  }, [isPlayerTurn, isReady])
+  }, [isPlayerTurn, hasStarted, handleOpponentShoot]);
 
   return (
-    <section className={styles['GamePage']}>
+    <section className={styles["GamePage"]}>
       <FleetMenu
         shipList={playerFleet}
         onDeployingShip={handleDeployingShip}
-        currentShipOnDeploy={currentShipOnDeploy}
+        shipOnDeployId={shipOnDeployId}
       />
       <FleetMenu
         shipList={opponentFleet}
         onDeployingShip={handleDeployingShip}
-        currentShipOnDeploy={currentShipOnDeploy}
+        shipOnDeployId={shipOnDeployId}
       />
       <BattleMap
         width={mapSize}
         height={mapSize}
         mapCoordinates={playerMap}
-        currentShipOnDeploy={currentShipOnDeploy}
+        currentShipOnDeploy={{
+          shipId: shipOnDeployId,
+          orientation: shipOnDeployOrientation,
+        }}
         targetCoordinates={opponentTargetCoordinates}
-        isReady={isReady}
+        isReady={hasStarted}
         showSight={!isPlayerTurn}
-        isShot={isShot}
+        isShot={isShooting}
         isInTurn={!isPlayerTurn}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
@@ -265,35 +321,38 @@ export const GamePage = () => {
         width={mapSize}
         height={mapSize}
         mapCoordinates={opponentMap}
-        currentShipOnDeploy={currentShipOnDeploy}
+        currentShipOnDeploy={{
+          shipId: shipOnDeployId,
+          orientation: shipOnDeployOrientation,
+        }}
         targetCoordinates={playerTargetCoordinates}
-        disabled={!isReady}
-        isReady={isReady}
+        disabled={!hasStarted}
+        isReady={hasStarted}
         showSight={isPlayerTurn}
-        isShot={isShot}
+        isShot={isShooting}
         isInTurn={isPlayerTurn}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
         onChangeCursorLocation={handleChangeCursorLocation}
         onFinishesShot={handlePlayerFinishesShot}
       />
-      {currentShipOnDeploy && cursorLocation && (
+      {shipOnDeployId && cursorLocation && (
         <CursorShadowShip
           isVisible={true}
           length={currentShipOnDeployLength}
-          orientation={currentShipOnDeploy.orientation}
-          locationX={cursorLocation.x}
-          locationY={cursorLocation.y}
+          orientation={shipOnDeployOrientation}
+          locationX={cursorLocation.left}
+          locationY={cursorLocation.top}
         />
       )}
-      {!isReady && (
+      {!hasStarted && (
         <FloatingStartPanel
           isStartButtonDisabled={!isPlayerFleetDeployed}
           onClick={handleStartGame}
         />
       )}
-      {isPlayerTurn && isReady && playerTargetCoordinates && (
-        <div className='floating-attack-control'>
+      {isPlayerTurn && hasStarted && playerTargetCoordinates && (
+        <div className="floating-attack-control">
           <AttackControl
             targetCoordinates={playerTargetCoordinates}
             onChangeTargetCoordinates={handleChangeTargetCoordinates}
@@ -302,5 +361,5 @@ export const GamePage = () => {
         </div>
       )}
     </section>
-  )
-}
+  );
+};

@@ -1,15 +1,21 @@
-import { SHIP_TYPES } from '~/constants/game';
-import styles from './FleetMenu.module.css';
-import { type IFleetMenuProps } from './FleetMenu.types';
-import { ShipItem } from "./ShipItem"
+import { SHIP_TYPES } from "~/constants/game";
+import styles from "./FleetMenu.module.css";
+import { type IFleetMenuProps } from "./FleetMenu.types";
+import { ShipItem } from "./ShipItem";
 
-export const FleetMenu = ({ shipList, onDeployingShip, currentShipOnDeploy }: IFleetMenuProps) => {
+export const FleetMenu = ({
+  shipList,
+  onDeployingShip,
+  shipOnDeployId,
+}: IFleetMenuProps) => {
   return (
-    <div className={styles['FleetMenu']}>
-      <div className={styles['FleetMenu-mainText']}>DESPLIEGA TU FLOTA</div>
-      <p className={styles['FleetMenu-complementaryText']}>Selecciona y ubica tus unidades en los cuadros de tu zona de despliegue</p>
-      <div className={styles['FleetMenu-ships']}>
-        {shipList.map(ship => (
+    <div className={styles["FleetMenu"]}>
+      <div className={styles["FleetMenu-mainText"]}>DESPLIEGA TU FLOTA</div>
+      <p className={styles["FleetMenu-complementaryText"]}>
+        Selecciona y ubica tus unidades en los cuadros de tu zona de despliegue
+      </p>
+      <div className={styles["FleetMenu-ships"]}>
+        {shipList.map((ship) => (
           <ShipItem
             shipId={ship.id}
             shipType={ship.id}
@@ -18,13 +24,10 @@ export const FleetMenu = ({ shipList, onDeployingShip, currentShipOnDeploy }: IF
             currentHealth={ship.health}
             isDeployed={ship.isDeployed}
             onDeploying={onDeployingShip}
-            currentShipOnDeploy={currentShipOnDeploy}
+            shipOnDeployId={shipOnDeployId}
           />
         ))}
       </div>
     </div>
-  )
-}
-
-
-
+  );
+};
