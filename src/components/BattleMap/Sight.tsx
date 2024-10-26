@@ -1,13 +1,15 @@
-import { SightIcon } from "../Icon"
-import { ISightProps } from "./BattleMap.types"
-import styles from './BattleMap.module.css';
+import { SightIcon } from "../Icon";
+import { ISightProps } from "./BattleMap.types";
+import styles from "./BattleMap.module.css";
 import { parseNumberCoordinateX } from "~/utils";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export const Sight = (
-  { targetCoordinates, isShot, onFinishesShot, isInTurn }: ISightProps
-) => {
-  const [isShooting, setIsShooting] = useState(false);
+export const Sight = ({
+  targetCoordinates,
+  isShooting: isShot,
+  onFinishesShot,
+  isInTurn,
+}: ISightProps) => {
   const { x: strX, y } = targetCoordinates;
   const x = parseNumberCoordinateX(strX);
 
@@ -15,24 +17,19 @@ export const Sight = (
   const top = `calc(var(--tile-size) * ${y})`;
 
   useEffect(() => {
-    if (!(isShot && isInTurn && !isShooting)) return;
-    setIsShooting(true);
-    console.log('Objetivo localizado, disparando...');
+    if (!isShot || !isInTurn) return;
 
-    setTimeout(() => {
-      console.log('Blanco atacado');
-      setIsShooting(false);
-      onFinishesShot();
-    }, 3000)
-
-  }, [isInTurn, isShooting, isShot, onFinishesShot])
+    setTimeout(() => onFinishesShot(), 3000);
+  }, [isInTurn, isShot, onFinishesShot]);
 
   return (
     <div
-      className={`${styles["Sight"]} ${isShot && isInTurn ? styles["is-shooting"] : ''}`}
-      style={{left, top}}
+      className={`${styles["Sight"]} ${
+        isShot && isInTurn ? styles["is-shooting"] : ""
+      }`}
+      style={{ left, top }}
     >
       <SightIcon size="100%" />
     </div>
-  )
-}
+  );
+};

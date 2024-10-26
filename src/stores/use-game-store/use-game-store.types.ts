@@ -1,11 +1,10 @@
 export interface IGameStore {
-  hasStarted: boolean;
+  hasGameStarted: boolean;
   isPlayerTurn: boolean;
   isShooting: boolean;
   startGame: () => void;
   endGame: () => void;
-  setPlayerTurn: () => void;
-  setOpponentTurn: () => void;
+  toggleTurn: () => void;
   startsShooting: () => void;
   finishShooting: () => void;
 }

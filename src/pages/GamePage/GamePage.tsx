@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import styles from "./GamePage.module.css";
 import {
   FleetMenu,
@@ -13,9 +13,12 @@ import {
   TShipId,
   TMap,
   TCoordinate,
-  TFleet,
 } from "~/types/game";
-import { MAXIMUM_MAP_SIZE, SHIP_TYPES } from "~/constants/game";
+import {
+  AVAILABLE_FLEET_IDS,
+  MAXIMUM_MAP_SIZE,
+  SHIP_TYPES,
+} from "~/constants/game";
 import {
   attackMap,
   autoFleetDeploy,
@@ -34,16 +37,9 @@ import {
 
 export const GamePage = () => {
   // Set fleet & map size for each player
-  const availableFleetIds: TShipId[] = [
-    // 'missile_launcher',
-    // 'battleship',
-    "destroyer",
-    "submarine",
-  ];
 
   // Generate fleet & map data for state
-
-  const commonFleetArr = useRef<TFleet>(prepareFleet(availableFleetIds));
+  const commonFleetArr = useMemo(() => prepareFleet(AVAILABLE_FLEET_IDS), []);
 
   // ? MapArr structure
   // Is an array of coordinate objects that have been covered or attacked
@@ -61,13 +57,12 @@ export const GamePage = () => {
   */
 
   const {
-    hasStarted,
+    hasGameStarted,
     isPlayerTurn,
     isShooting,
     startGame,
     endGame,
-    setPlayerTurn,
-    setOpponentTurn,
+    toggleTurn,
     startsShooting,
     finishShooting,
   } = useGameStore();
@@ -108,12 +103,12 @@ export const GamePage = () => {
   useEffect(() => {
     const { fleet, map } = autoFleetDeploy(
       MAXIMUM_MAP_SIZE,
-      [...commonFleetArr.current],
+      [...commonFleetArr],
       []
     );
     setOpponentMap(map);
     setOpponentFleet(fleet);
-    setPlayerFleet([...commonFleetArr.current]);
+    setPlayerFleet([...commonFleetArr]);
   }, [commonFleetArr, setOpponentFleet, setOpponentMap, setPlayerFleet]);
 
   const currentShipOnDeployLength = shipOnDeployId
@@ -173,10 +168,9 @@ export const GamePage = () => {
   };
 
   const handleStartGame = () => {
-    if (isPlayerFleetDeployed) {
-      startGame();
-      setPlayerTargetCoordinates({ x: "a", y: 1 });
-    }
+    if (!isPlayerFleetDeployed) return;
+    startGame();
+    setPlayerTargetCoordinates({ x: "a", y: 1 });
   };
 
   const handleChangeTargetCoordinates = (
@@ -189,29 +183,46 @@ export const GamePage = () => {
     else updatePlayerTargetCoordinateY(Number(value));
   };
 
-  const handlePlayerShoot = () => {
-    startsShooting();
-  };
+  const showWinner = useCallback(
+    (isWinner: boolean) => {
+      const finalMessage = isWinner
+        ? "👦 Player is the Winner! :D"
+        : "🖥 The PC is the Winner";
+      endGame();
+      alert(finalMessage);
+    },
+    [endGame]
+  );
 
-  const handlePlayerFinishesShot = () => {
+  const handlePlayerFinishesShot = useCallback(() => {
     if (!playerTargetCoordinates) return;
 
+    finishShooting();
     const { fleet: newOpponentFleet, map: newOpponentMap } = attackMap(
-      opponentMap,
       playerTargetCoordinates,
+      opponentMap,
       opponentFleet
     );
     setOpponentMap(newOpponentMap);
     setOpponentFleet(newOpponentFleet);
-    finishShooting();
-    setOpponentTurn();
+    toggleTurn();
 
     const isWinner = playerIsWinner(playerFleet, opponentFleet);
     if (isWinner !== null) {
       showWinner(isWinner);
       return;
     }
-  };
+  }, [
+    finishShooting,
+    opponentFleet,
+    opponentMap,
+    playerFleet,
+    playerTargetCoordinates,
+    setOpponentFleet,
+    setOpponentMap,
+    toggleTurn,
+    showWinner,
+  ]);
 
   const handleOpponentShoot = useCallback(() => {
     let targetCoordinates: null | TCoordinate = null;
@@ -228,18 +239,18 @@ export const GamePage = () => {
     }, 1000);
   }, [setOpponentTargetCoordinates, startsShooting]);
 
-  const handleOpponentFinishesShooting = () => {
+  const handleOpponentFinishesShooting = useCallback(() => {
     if (!opponentTargetCoordinates) return;
 
+    finishShooting();
     const { fleet: newPlayerFleet, map: newPlayerMap } = attackMap(
-      playerMap,
       opponentTargetCoordinates,
+      playerMap,
       playerFleet
     );
     setPlayerMap(newPlayerMap);
     setPlayerFleet(newPlayerFleet);
-    finishShooting();
-    setPlayerTurn();
+    toggleTurn();
 
     const isWinner = playerIsWinner(playerFleet, opponentFleet);
     if (isWinner !== null) {
@@ -248,22 +259,24 @@ export const GamePage = () => {
     }
 
     console.log("👦 turno del jugador ===============");
-  };
-
-  const showWinner = (isWinner: boolean) => {
-    const finalMessage = isWinner
-      ? "👦 Player is the Winner! :D"
-      : "🖥 The PC is the Winner";
-    endGame();
-    alert(finalMessage);
-  };
+  }, [
+    finishShooting,
+    opponentFleet,
+    opponentTargetCoordinates,
+    playerFleet,
+    playerMap,
+    setPlayerFleet,
+    setPlayerMap,
+    toggleTurn,
+    showWinner,
+  ]);
 
   useEffect(() => {
-    if (hasStarted && !isPlayerTurn) {
+    if (hasGameStarted && !isPlayerTurn) {
       console.log("🖥 turno de la PC ===============");
       handleOpponentShoot();
     }
-  }, [isPlayerTurn, hasStarted, handleOpponentShoot]);
+  }, [isPlayerTurn, hasGameStarted, handleOpponentShoot]);
 
   return (
     <section className={styles["GamePage"]}>
@@ -284,9 +297,8 @@ export const GamePage = () => {
           orientation: shipOnDeployOrientation,
         }}
         targetCoordinates={opponentTargetCoordinates}
-        isReady={hasStarted}
-        showSight={!isPlayerTurn}
-        isShot={isShooting}
+        isReady={hasGameStarted}
+        isShooting={isShooting}
         isInTurn={!isPlayerTurn}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
@@ -300,10 +312,9 @@ export const GamePage = () => {
           orientation: shipOnDeployOrientation,
         }}
         targetCoordinates={playerTargetCoordinates}
-        disabled={!hasStarted}
-        isReady={hasStarted}
-        showSight={isPlayerTurn}
-        isShot={isShooting}
+        disabled={!hasGameStarted}
+        isReady={hasGameStarted}
+        isShooting={isShooting}
         isInTurn={isPlayerTurn}
         onDeployedShip={handleDeployedShip}
         onChangeOrientation={handleChangeOrientation}
@@ -319,18 +330,18 @@ export const GamePage = () => {
           locationY={cursorLocation.top}
         />
       )}
-      {!hasStarted && (
+      {!hasGameStarted && (
         <FloatingStartPanel
           isStartButtonDisabled={!isPlayerFleetDeployed}
           onClick={handleStartGame}
         />
       )}
-      {isPlayerTurn && hasStarted && playerTargetCoordinates && (
+      {isPlayerTurn && hasGameStarted && playerTargetCoordinates && (
         <div className="floating-attack-control">
           <AttackControl
             targetCoordinates={playerTargetCoordinates}
             onChangeTargetCoordinates={handleChangeTargetCoordinates}
-            onShoot={handlePlayerShoot}
+            onShootButtonClick={() => startsShooting()}
           />
         </div>
       )}

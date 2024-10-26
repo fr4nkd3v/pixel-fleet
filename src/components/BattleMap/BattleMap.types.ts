@@ -14,8 +14,7 @@ export interface IBattleMapProps {
   disabled?: boolean;
   targetCoordinates: TCoordinate | null;
   isReady: boolean;
-  showSight: boolean;
-  isShot: boolean;
+  isShooting: boolean;
   isInTurn: boolean;
   onDeployedShip: (
     shipId: TShipId,
@@ -40,7 +39,7 @@ export interface ITileProps {
 
 export interface ISightProps {
   targetCoordinates: TCoordinate;
-  isShot: boolean;
+  isShooting: boolean;
   isInTurn: boolean;
   onFinishesShot: () => void;
 }
