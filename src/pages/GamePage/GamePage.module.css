@@ -6,7 +6,18 @@
   display: grid;
   gap: var(--size-32);
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
 
   /* transition: opacity .5s ease-out; */
+}
+
+.GamePage > *:nth-child(odd) {
+  justify-self: end;
+}
+.GamePage > *:nth-child(even) {
+  justify-self: start;
+}
+
+.FloatingAttackControl {
+  width: fit-content;
 }

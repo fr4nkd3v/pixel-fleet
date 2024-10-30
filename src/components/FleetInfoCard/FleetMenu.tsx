@@ -5,15 +5,15 @@ import { ShipItem } from "./ShipItem";
 
 export const FleetMenu = ({
   shipList,
+  primaryText,
+  secondaryText,
   onDeployingShip,
   shipOnDeployId,
 }: IFleetMenuProps) => {
   return (
     <div className={styles["FleetMenu"]}>
-      <div className={styles["FleetMenu-mainText"]}>DESPLIEGA TU FLOTA</div>
-      <p className={styles["FleetMenu-complementaryText"]}>
-        Selecciona y ubica tus unidades en los cuadros de tu zona de despliegue
-      </p>
+      <div className={styles["FleetMenu-primaryText"]}>{primaryText}</div>
+      <p className={styles["FleetMenu-secondaryText"]}>{secondaryText}</p>
       <div className={styles["FleetMenu-ships"]}>
         {shipList.map((ship) => (
           <ShipItem

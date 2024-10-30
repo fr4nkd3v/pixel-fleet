@@ -1,12 +1,15 @@
 .FleetMenu {
+  min-width: 36rem;
+  width: min-content;
   padding: var(--size-16);
   background-color: var(--color-primary);
   border: var(--color-dark-1) 4px solid;
 }
-.FleetMenu-mainText {
+.FleetMenu-primaryText {
   font-size: var(--size-14);
+  text-transform: uppercase;
 }
-.FleetMenu-complementaryText {
+.FleetMenu-secondaryText {
   font-size: 9px;
 }
 .FleetMenu-ships {

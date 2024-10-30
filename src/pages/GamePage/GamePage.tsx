@@ -70,6 +70,8 @@ export const GamePage = () => {
     setFleet: setOpponentFleet,
     setMap: setOpponentMap,
     setTargetCoordinates: setOpponentTargetCoordinates,
+    message: opponentMessage,
+    setMessage: setOpponentMessage,
   } = useOpponentStore();
 
   const {
@@ -82,6 +84,8 @@ export const GamePage = () => {
     setTargetCoordinates: setPlayerTargetCoordinates,
     updateTargetCoordinateX: updatePlayerTargetCoordinateX,
     updateTargetCoordinateY: updatePlayerTargetCoordinateY,
+    message: playerMessage,
+    setMessage: setPlayerMessage,
   } = usePlayerStore();
 
   const {
@@ -95,7 +99,7 @@ export const GamePage = () => {
     clearShipOnDeploy,
   } = useShipDeployStore();
 
-  // useEffect for first render
+  // In first render
   useEffect(() => {
     const { fleet, map } = autoFleetDeploy(MAP_SIZE, [...commonFleetArr], []);
     setOpponentMap(map);
@@ -263,6 +267,25 @@ export const GamePage = () => {
     showWinner,
   ]);
 
+  // Manage player & opponent messages
+  useEffect(() => {
+    setPlayerMessage(
+      !hasGameStarted
+        ? "Despliega tus unidades y comienza la batalla"
+        : isPlayerTurn
+        ? "Es turno de atacar!"
+        : "Es el turno del oponente"
+    );
+    setOpponentMessage(
+      !hasGameStarted
+        ? "En espera"
+        : isPlayerTurn
+        ? "Esperando turno"
+        : "Buscando objetivo..."
+    );
+  }, [hasGameStarted, isPlayerTurn, setOpponentMessage, setPlayerMessage]);
+
+  // Manage opponent shooting
   useEffect(() => {
     if (hasGameStarted && !isPlayerTurn) {
       console.log("🖥 turno de la PC ===============");
@@ -274,11 +297,15 @@ export const GamePage = () => {
     <section className={styles["GamePage"]}>
       <FleetMenu
         shipList={playerFleet}
+        primaryText="mi flota"
+        secondaryText={playerMessage}
         onDeployingShip={handleDeployingShip}
         shipOnDeployId={shipOnDeployId}
       />
       <FleetMenu
         shipList={opponentFleet}
+        primaryText="flota enemiga"
+        secondaryText={opponentMessage}
         onDeployingShip={handleDeployingShip}
         shipOnDeployId={shipOnDeployId}
       />
@@ -329,7 +356,7 @@ export const GamePage = () => {
         />
       )}
       {isPlayerTurn && hasGameStarted && playerTargetCoordinates && (
-        <div className="floating-attack-control">
+        <div className={styles["FloatingAttackControl"]}>
           <AttackControl
             targetCoordinates={playerTargetCoordinates}
             onChangeTargetCoordinates={handleChangeTargetCoordinates}

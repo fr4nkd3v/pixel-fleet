@@ -12,6 +12,7 @@ export const useOpponentStore = create<IOpponentStore>((set) => ({
   fleet: [],
   map: [],
   targetCoordinates: null,
+  message: "",
   setFleet: (fleet: TFleet) => set({ fleet }),
   setMap: (map: TMap) => set({ map }),
   setTargetCoordinates: (targetCoordinates: TCoordinate) =>
@@ -24,12 +25,14 @@ export const useOpponentStore = create<IOpponentStore>((set) => ({
     set((state) => ({
       targetCoordinates: { y: value, x: state.targetCoordinates?.x || "a" },
     })),
+  setMessage: (message: string) => set({ message }),
 }));
 
 export const usePlayerStore = create<IPlayerStore>((set) => ({
   fleet: [],
   map: [],
   targetCoordinates: null,
+  message: "",
   setFleet: (fleet: TFleet) => set({ fleet }),
   setMap: (map: TMap) => set({ map }),
   deployShipInFleet: (shipId: TShipId, coveredCoordinates: TMapCoordinate[]) =>
@@ -51,4 +54,5 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
     set((state) => ({
       targetCoordinates: { y: value, x: state.targetCoordinates?.x || "a" },
     })),
+  setMessage: (message: string) => set({ message }),
 }));
