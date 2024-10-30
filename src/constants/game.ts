@@ -1,6 +1,6 @@
 import { TOrientationType, TShipId } from "~/types/game";
 
-export const MAXIMUM_MAP_SIZE = 10;
+export const MAP_SIZE = 10;
 
 export const SHIP_IDS = [
   "missile_launcher",

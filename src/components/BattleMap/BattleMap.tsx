@@ -10,7 +10,7 @@ import {
   parseStringCoordinateX,
   toggleOrientation,
 } from "~/utils";
-import { MAXIMUM_MAP_SIZE, SHIP_TYPES } from "~/constants";
+import { MAP_SIZE, SHIP_TYPES } from "~/constants";
 import { TOrientationType } from "~/types";
 
 export const BattleMap = ({
@@ -26,7 +26,7 @@ export const BattleMap = ({
   onChangeCursorLocation,
   onFinishesShot,
 }: IBattleMapProps) => {
-  const sideLength = MAXIMUM_MAP_SIZE;
+  const sideLength = MAP_SIZE;
   const battleMapRef = useRef<null | HTMLElement>(null);
 
   const clearAvailableStyles = (tiles: HTMLElement[] | NodeListOf<Element>) => {

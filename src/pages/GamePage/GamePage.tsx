@@ -14,11 +14,7 @@ import {
   TMap,
   TCoordinate,
 } from "~/types/game";
-import {
-  AVAILABLE_FLEET_IDS,
-  MAXIMUM_MAP_SIZE,
-  SHIP_TYPES,
-} from "~/constants/game";
+import { AVAILABLE_FLEET_IDS, MAP_SIZE, SHIP_TYPES } from "~/constants/game";
 import {
   attackMap,
   autoFleetDeploy,
@@ -101,11 +97,7 @@ export const GamePage = () => {
 
   // useEffect for first render
   useEffect(() => {
-    const { fleet, map } = autoFleetDeploy(
-      MAXIMUM_MAP_SIZE,
-      [...commonFleetArr],
-      []
-    );
+    const { fleet, map } = autoFleetDeploy(MAP_SIZE, [...commonFleetArr], []);
     setOpponentMap(map);
     setOpponentFleet(fleet);
     setPlayerFleet([...commonFleetArr]);
