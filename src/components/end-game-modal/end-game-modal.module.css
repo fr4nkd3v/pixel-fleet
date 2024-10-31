@@ -1,0 +1,28 @@
+.EndGameModal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+.EndGameModal {
+}
+.EndGameModal--isWinner {
+}
+.EndGameModal-title {
+  font-size: var(--size-36);
+}
+.EndGameModal-subtitle {
+  font-size: var(--size-16);
+}
+.EndGameModal-icon {
+}
+.EndGameModal-actions {
+  display: flex;
+  gap: var(--size-30);
+}
+
+.EndGameModal--isWinner .EndGameModal-title {
+  color: var(--color-success-500);
+}
+.EndGameModal--isLoser .EndGameModal-title {
+  color: var(--color-error-400);
+}
