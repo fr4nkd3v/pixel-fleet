@@ -1,4 +1,4 @@
-import { Button } from "../Button";
+import { Button } from "../button";
 import { Panel } from "../Panel";
 import styles from "./AttackControl.module.css";
 import { IAttackControlProps } from "./AttackControl.types";

@@ -1,6 +1,6 @@
 export * from "./AttackControl";
 export * from "./BattleMap";
-export * from "./Button";
+export * from "./button";
 export * from "./CursorShadowShip";
 export * from "./FleetInfoCard";
 export * from "./FloatingStartPanel";
