@@ -48,6 +48,10 @@ h1 {
   line-height: 1.1;
 }
 
+p {
+  margin: 0;
+}
+
 button.nes-btn {
   cursor: pointer;
 }

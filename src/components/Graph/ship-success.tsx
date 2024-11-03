@@ -1,6 +1,6 @@
 import { IGraphProps } from "./Graph.types";
 
-export const ShipSuccess = ({ size = "155" }: IGraphProps) => {
+export const ShipSuccess = ({ size = "155px" }: IGraphProps) => {
   return (
     <svg
       viewBox="0 0 155 154"

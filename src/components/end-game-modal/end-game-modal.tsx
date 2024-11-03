@@ -4,12 +4,15 @@ import styles from "./end-game-modal.module.css";
 import { IEndGameModal } from "./end-game-modal.types";
 
 export const EndGameModal = ({
+  isVisible,
   type,
   onToHomeClick,
   onRetryClick,
 }: IEndGameModal) => {
+  if (!isVisible) return null;
+
   const isWinner = type === "win";
-  const title = isWinner ? "Victoria!" : "Perdiste";
+  const title = isWinner ? "¡Victoria!" : "Perdiste";
   const subtitle = isWinner ? "Bien jugado" : "Suerte para la próxima";
   const typeModalClass = isWinner
     ? styles["EndGameModal--isWinner"]
@@ -18,14 +21,24 @@ export const EndGameModal = ({
     <>
       <div className={styles["EndGameModal-backdrop"]}></div>
       <div className={`${styles["EndGameModal"]} ${typeModalClass}`}>
-        <p className={styles["EndGameModal-title"]}>{title}</p>
-        <p className={styles["EndGameModal-subtitle"]}>{subtitle}</p>
+        <div className={styles["EndGameModal-text"]}>
+          <p className={styles["EndGameModal-title"]}>{title}</p>
+          <p className={styles["EndGameModal-subtitle"]}>{subtitle}</p>
+        </div>
         <div className={styles["EndGameModal-icon"]}>
-          {isWinner ? <ShipSuccess /> : <ShipFail />}
+          {isWinner ? <ShipSuccess size="100%" /> : <ShipFail size="100%" />}
         </div>
         <div className={styles["EndGameModal-actions"]}>
-          <Button text="Ir a Inicio" onClick={onToHomeClick} />
-          <Button text="Revancha" onClick={onRetryClick} />
+          <Button
+            variant={isWinner ? "success" : "dark"}
+            text="Inicio"
+            onClick={onToHomeClick}
+          />
+          <Button
+            variant={isWinner ? "success" : "dark"}
+            text="Revancha"
+            onClick={onRetryClick}
+          />
         </div>
       </div>
     </>

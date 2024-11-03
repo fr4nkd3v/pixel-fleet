@@ -4,25 +4,65 @@
   background-color: rgba(0, 0, 0, 0.7);
 }
 .EndGameModal {
+  position: relative;
+  display: flex;
+  gap: var(--size-22);
+  flex-direction: column;
+  align-items: center;
+  width: 38rem;
+  padding: var(--size-80) var(--size-16);
+  text-align: center;
 }
-.EndGameModal--isWinner {
+
+.EndGameModal-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-4);
 }
 .EndGameModal-title {
-  font-size: var(--size-36);
+  font-size: var(--size-30);
 }
 .EndGameModal-subtitle {
-  font-size: var(--size-16);
+  font-size: var(--size-14);
 }
 .EndGameModal-icon {
+  width: 8rem;
 }
 .EndGameModal-actions {
   display: flex;
   gap: var(--size-30);
 }
 
+/* #region SUCCESS */
+
+.EndGameModal--isWinner {
+  background-color: var(--color-success-100);
+  border: solid var(--size-10) var(--color-success-500);
+}
 .EndGameModal--isWinner .EndGameModal-title {
   color: var(--color-success-500);
+}
+.EndGameModal--isWinner .EndGameModal-subtitle {
+  color: var(--color-success-600);
+}
+
+/* #endregion SUCCESS */
+
+/* #region FAIL */
+
+.EndGameModal--isLoser {
+  background-color: var(--color-success-100);
+  border: solid var(--size-10) var(--color-success-500);
+}
+
+.EndGameModal--isLoser {
+  background-color: var(--color-error-100);
+  border: solid var(--size-10) var(--color-error-400);
 }
 .EndGameModal--isLoser .EndGameModal-title {
   color: var(--color-error-400);
 }
+.EndGameModal--isLoser .EndGameModal-subtitle {
+  color: var(--color-error-500);
+}
+/* #endregion FAIL */
