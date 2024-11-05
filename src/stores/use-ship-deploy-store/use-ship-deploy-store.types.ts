@@ -1,12 +1,10 @@
-import { TShipId, TOrientationType, TCursorLocation } from "~/types/game";
+import { TShipId, TOrientationType } from "~/types/game";
 
 export interface IShipDeployStore {
   shipId: TShipId | null;
   orientation: TOrientationType;
-  cursorLocation: TCursorLocation | null;
   hasShipOnDeploy: boolean;
-  setShipOnDeploy: (shipId: TShipId, cursorLocation: TCursorLocation) => void;
+  setShipOnDeploy: (shipId: TShipId) => void;
   setOrientation: (orientation: TOrientationType) => void;
-  setCursorLocation: (cursorLocation: TCursorLocation) => void;
   clearShipOnDeploy: () => void;
 }

@@ -9,8 +9,8 @@ export const ShipItem = ({
   fullHealth,
   currentHealth,
   isDeployed,
-  onDeploying,
   shipOnDeployId,
+  onDeploying,
 }: IShipItemProps) => {
   const lifes = [];
   for (let i = 1; i <= fullHealth; i++) {

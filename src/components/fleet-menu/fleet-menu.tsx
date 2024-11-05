@@ -25,8 +25,8 @@ export const FleetMenu = ({
             fullHealth={SHIP_TYPES[ship.id].length}
             currentHealth={ship.health}
             isDeployed={ship.isDeployed}
-            onDeploying={onDeployingShip}
             shipOnDeployId={shipOnDeployId}
+            onDeploying={onDeployingShip}
           />
         ))}
       </div>

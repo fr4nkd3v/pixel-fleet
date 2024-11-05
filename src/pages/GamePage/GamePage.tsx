@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./GamePage.module.css";
 import {
   FleetMenu,
@@ -91,13 +91,15 @@ export const GamePage = () => {
   const {
     shipId: shipOnDeployId,
     orientation: shipOnDeployOrientation,
-    cursorLocation,
     hasShipOnDeploy,
     setShipOnDeploy,
     setOrientation,
-    setCursorLocation,
     clearShipOnDeploy,
   } = useShipDeployStore();
+
+  const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
+    null
+  );
 
   // In first render
   useEffect(() => {
@@ -117,7 +119,8 @@ export const GamePage = () => {
     shipId: TShipId,
     { locationX, locationY }: { locationX: number; locationY: number }
   ) => {
-    setShipOnDeploy(shipId, {
+    setShipOnDeploy(shipId);
+    setCursorLocation({
       left: locationX,
       top: locationY,
     });
@@ -342,7 +345,6 @@ export const GamePage = () => {
       />
       {shipOnDeployId && cursorLocation && (
         <CursorShadowShip
-          isVisible={true}
           length={currentShipOnDeployLength}
           orientation={shipOnDeployOrientation}
           locationX={cursorLocation.left}

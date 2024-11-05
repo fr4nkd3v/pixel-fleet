@@ -6,9 +6,9 @@ export interface IShipItemProps {
   fullHealth: number;
   currentHealth: number;
   isDeployed: boolean;
+  shipOnDeployId: TShipId | null;
   onDeploying: (
     shipId: TShipId,
     { locationX, locationY }: { locationX: number; locationY: number }
   ) => void;
-  shipOnDeployId: TShipId | null;
 }
