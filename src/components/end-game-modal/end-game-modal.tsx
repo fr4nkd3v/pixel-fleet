@@ -4,7 +4,7 @@ import styles from "./end-game-modal.module.css";
 import { IEndGameModal } from "./end-game-modal.types";
 
 export const EndGameModal = ({
-  isVisible,
+  isVisible = true,
   type,
   onToHomeClick,
   onRetryClick,

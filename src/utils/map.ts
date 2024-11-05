@@ -49,7 +49,10 @@ export const attackMap = (
   };
 };
 
-export const playerIsWinner = (playerFleet: TFleet, opponentFleet: TFleet) => {
+export const calculatePlayerIsWinner = (
+  playerFleet: TFleet,
+  opponentFleet: TFleet
+) => {
   if (playerFleet.every((ship) => ship.health === 0)) {
     return false;
   } else if (opponentFleet.every((ship) => ship.health === 0)) {

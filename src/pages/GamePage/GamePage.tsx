@@ -6,6 +6,7 @@ import {
   CursorShadowShip,
   FloatingStartPanel,
   AttackControl,
+  EndGameModal,
 } from "~/components";
 import {
   TCursorLocation,
@@ -21,7 +22,7 @@ import {
   getNextCoordinates,
   getRandomCoordinate,
   getShipPartByIndex,
-  playerIsWinner,
+  calculatePlayerIsWinner,
   prepareFleet,
 } from "~/utils";
 import {
@@ -56,11 +57,13 @@ export const GamePage = () => {
     hasGameStarted,
     isPlayerTurn,
     isShooting,
+    isPlayerWins,
     startGame,
     endGame,
     toggleTurn,
     startsShooting,
     finishShooting,
+    setPlayerWins,
   } = useGameStore();
 
   const {
@@ -114,6 +117,26 @@ export const GamePage = () => {
     : null;
 
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
+
+  // const showWinner = useCallback(
+  //   (isWinner: boolean) => {
+  //     const finalMessage = isWinner
+  //       ? "👦 Player is the Winner! :D"
+  //       : "🖥 The PC is the Winner";
+  //     endGame();
+  //     alert(finalMessage);
+  //   },
+  //   [endGame]
+  // );
+
+  // Calculate winner
+  useEffect(() => {
+    const isWinner = calculatePlayerIsWinner(playerFleet, opponentFleet);
+    if (isWinner !== null && hasGameStarted) {
+      endGame();
+      setPlayerWins(isWinner);
+    }
+  }, [endGame, hasGameStarted, opponentFleet, playerFleet, setPlayerWins]);
 
   const handleDeployingShip = (
     shipId: TShipId,
@@ -182,17 +205,6 @@ export const GamePage = () => {
     else updatePlayerTargetCoordinateY(Number(value));
   };
 
-  const showWinner = useCallback(
-    (isWinner: boolean) => {
-      const finalMessage = isWinner
-        ? "👦 Player is the Winner! :D"
-        : "🖥 The PC is the Winner";
-      endGame();
-      alert(finalMessage);
-    },
-    [endGame]
-  );
-
   const handlePlayerFinishesShot = useCallback(() => {
     if (!playerTargetCoordinates) return;
 
@@ -205,22 +217,14 @@ export const GamePage = () => {
     setOpponentMap(newOpponentMap);
     setOpponentFleet(newOpponentFleet);
     toggleTurn();
-
-    const isWinner = playerIsWinner(playerFleet, opponentFleet);
-    if (isWinner !== null) {
-      showWinner(isWinner);
-      return;
-    }
   }, [
     finishShooting,
     opponentFleet,
     opponentMap,
-    playerFleet,
     playerTargetCoordinates,
     setOpponentFleet,
     setOpponentMap,
     toggleTurn,
-    showWinner,
   ]);
 
   const handleOpponentShoot = useCallback(() => {
@@ -250,24 +254,14 @@ export const GamePage = () => {
     setPlayerMap(newPlayerMap);
     setPlayerFleet(newPlayerFleet);
     toggleTurn();
-
-    const isWinner = playerIsWinner(playerFleet, opponentFleet);
-    if (isWinner !== null) {
-      showWinner(isWinner);
-      return;
-    }
-
-    console.log("👦 turno del jugador ===============");
   }, [
     finishShooting,
-    opponentFleet,
     opponentTargetCoordinates,
     playerFleet,
     playerMap,
     setPlayerFleet,
     setPlayerMap,
     toggleTurn,
-    showWinner,
   ]);
 
   // Manage player & opponent messages
@@ -297,75 +291,86 @@ export const GamePage = () => {
   }, [isPlayerTurn, hasGameStarted, handleOpponentShoot]);
 
   return (
-    <section className={styles["GamePage"]}>
-      <FleetMenu
-        shipList={playerFleet}
-        primaryText="mi flota"
-        secondaryText={playerMessage}
-        onDeployingShip={handleDeployingShip}
-        shipOnDeployId={shipOnDeployId}
-      />
-      <FleetMenu
-        shipList={opponentFleet}
-        primaryText="flota enemiga"
-        secondaryText={opponentMessage}
-        onDeployingShip={handleDeployingShip}
-        shipOnDeployId={shipOnDeployId}
-      />
-      <BattleMap
-        mapCoordinates={playerMap}
-        currentShipOnDeploy={{
-          shipId: shipOnDeployId,
-          orientation: shipOnDeployOrientation,
-        }}
-        targetCoordinates={opponentTargetCoordinates}
-        isReady={hasGameStarted}
-        isShooting={isShooting}
-        isInTurn={!isPlayerTurn}
-        onDeployedShip={handleDeployedShip}
-        onChangeOrientation={handleChangeOrientation}
-        onChangeCursorLocation={handleChangeCursorLocation}
-        onFinishesShot={handleOpponentFinishesShooting}
-      />
-      <BattleMap
-        mapCoordinates={opponentMap}
-        currentShipOnDeploy={{
-          shipId: shipOnDeployId,
-          orientation: shipOnDeployOrientation,
-        }}
-        targetCoordinates={playerTargetCoordinates}
-        disabled={!hasGameStarted}
-        isReady={hasGameStarted}
-        isShooting={isShooting}
-        isInTurn={isPlayerTurn}
-        onDeployedShip={handleDeployedShip}
-        onChangeOrientation={handleChangeOrientation}
-        onChangeCursorLocation={handleChangeCursorLocation}
-        onFinishesShot={handlePlayerFinishesShot}
-      />
-      {shipOnDeployId && cursorLocation && (
-        <CursorShadowShip
-          length={currentShipOnDeployLength}
-          orientation={shipOnDeployOrientation}
-          locationX={cursorLocation.left}
-          locationY={cursorLocation.top}
+    <>
+      <section className={styles["GamePage"]}>
+        <FleetMenu
+          shipList={playerFleet}
+          primaryText="mi flota"
+          secondaryText={playerMessage}
+          onDeployingShip={handleDeployingShip}
+          shipOnDeployId={shipOnDeployId}
         />
-      )}
-      {!hasGameStarted && (
-        <FloatingStartPanel
-          isStartButtonDisabled={!isPlayerFleetDeployed}
-          onClick={handleStartGame}
+        <FleetMenu
+          shipList={opponentFleet}
+          primaryText="flota enemiga"
+          secondaryText={opponentMessage}
+          onDeployingShip={handleDeployingShip}
+          shipOnDeployId={shipOnDeployId}
         />
-      )}
-      {isPlayerTurn && hasGameStarted && playerTargetCoordinates && (
-        <div className={styles["FloatingAttackControl"]}>
-          <AttackControl
-            targetCoordinates={playerTargetCoordinates}
-            onChangeTargetCoordinates={handleChangeTargetCoordinates}
-            onShootButtonClick={() => startsShooting()}
+        <BattleMap
+          mapCoordinates={playerMap}
+          currentShipOnDeploy={{
+            shipId: shipOnDeployId,
+            orientation: shipOnDeployOrientation,
+          }}
+          targetCoordinates={opponentTargetCoordinates}
+          isReady={hasGameStarted}
+          isShooting={isShooting}
+          isInTurn={!isPlayerTurn}
+          onDeployedShip={handleDeployedShip}
+          onChangeOrientation={handleChangeOrientation}
+          onChangeCursorLocation={handleChangeCursorLocation}
+          onFinishesShot={handleOpponentFinishesShooting}
+        />
+        <BattleMap
+          mapCoordinates={opponentMap}
+          currentShipOnDeploy={{
+            shipId: shipOnDeployId,
+            orientation: shipOnDeployOrientation,
+          }}
+          targetCoordinates={playerTargetCoordinates}
+          disabled={!hasGameStarted}
+          isReady={hasGameStarted}
+          isShooting={isShooting}
+          isInTurn={isPlayerTurn}
+          onDeployedShip={handleDeployedShip}
+          onChangeOrientation={handleChangeOrientation}
+          onChangeCursorLocation={handleChangeCursorLocation}
+          onFinishesShot={handlePlayerFinishesShot}
+        />
+        {shipOnDeployId && cursorLocation && (
+          <CursorShadowShip
+            length={currentShipOnDeployLength}
+            orientation={shipOnDeployOrientation}
+            locationX={cursorLocation.left}
+            locationY={cursorLocation.top}
           />
-        </div>
+        )}
+        {!hasGameStarted && (
+          <FloatingStartPanel
+            isStartButtonDisabled={!isPlayerFleetDeployed}
+            onClick={handleStartGame}
+          />
+        )}
+        {isPlayerTurn && hasGameStarted && playerTargetCoordinates && (
+          <div className={styles["FloatingAttackControl"]}>
+            <AttackControl
+              targetCoordinates={playerTargetCoordinates}
+              onChangeTargetCoordinates={handleChangeTargetCoordinates}
+              onShootButtonClick={() => startsShooting()}
+            />
+          </div>
+        )}
+      </section>
+      {isPlayerWins !== null ? (
+        <EndGameModal
+          type={isPlayerWins ? "win" : "fail"}
+          onRetryClick={() => console.log("on retry")}
+          onToHomeClick={() => console.log("To home")}
+        />
+      ) : (
+        <></>
       )}
-    </section>
+    </>
   );
 };

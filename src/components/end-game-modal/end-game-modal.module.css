@@ -2,9 +2,13 @@
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
+  z-index: var(--layer-40);
 }
 .EndGameModal {
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   gap: var(--size-22);
   flex-direction: column;
@@ -12,6 +16,7 @@
   width: 38rem;
   padding: var(--size-80) var(--size-16);
   text-align: center;
+  z-index: var(--layer-40);
 }
 
 .EndGameModal-text {

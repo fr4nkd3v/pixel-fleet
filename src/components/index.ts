@@ -7,3 +7,4 @@ export * from "./FloatingStartPanel";
 export * from "./Graph";
 export * from "./Icon";
 export * from "./Panel";
+export * from "./end-game-modal";
