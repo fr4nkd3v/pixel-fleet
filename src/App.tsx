@@ -3,13 +3,13 @@
 import "./App.css";
 
 import "nes.css/css/nes.min.css";
-import { WelcomePage } from "./pages/WelcomePage";
-// import { GamePage } from './pages/GamePage';
+// import { WelcomePage } from "./pages/WelcomePage";
+import { GamePage } from "./pages/GamePage";
 
 function App() {
   return (
     <main className="app-container">
-      <WelcomePage />
+      <GamePage />
     </main>
   );
 }

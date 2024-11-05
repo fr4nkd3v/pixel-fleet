@@ -2,7 +2,7 @@ export * from "./AttackControl";
 export * from "./BattleMap";
 export * from "./button";
 export * from "./CursorShadowShip";
-export * from "./FleetInfoCard";
+export * from "./fleet-menu";
 export * from "./FloatingStartPanel";
 export * from "./Graph";
 export * from "./Icon";

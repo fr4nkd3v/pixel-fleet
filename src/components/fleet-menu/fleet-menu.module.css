@@ -5,6 +5,9 @@
   background-color: var(--color-primary);
   border: var(--color-dark-1) 4px solid;
 }
+.FleetMenu-texts {
+  margin-bottom: var(--size-16);
+}
 .FleetMenu-primaryText {
   font-size: var(--size-14);
   text-transform: uppercase;
