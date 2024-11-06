@@ -7,4 +7,5 @@ export interface IShipDeployStore {
   setShipOnDeploy: (shipId: TShipId) => void;
   setOrientation: (orientation: TOrientationType) => void;
   clearShipOnDeploy: () => void;
+  restartState: () => void;
 }

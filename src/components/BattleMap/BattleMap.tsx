@@ -168,6 +168,7 @@ export const BattleMap = ({
           height: `calc(var(--tile-size) * ${sideLength})`,
         }}
       ></div>
+      {/* TODO: try remove isReady for this case 👇 */}
       {isReady && isInTurn && targetCoordinates && (
         <Sight
           targetCoordinates={targetCoordinates}

@@ -26,6 +26,13 @@ export const useOpponentStore = create<IOpponentStore>((set) => ({
       targetCoordinates: { y: value, x: state.targetCoordinates?.x || "a" },
     })),
   setMessage: (message: string) => set({ message }),
+  restartState: () =>
+    set({
+      fleet: [],
+      map: [],
+      targetCoordinates: null,
+      message: "",
+    }),
 }));
 
 export const usePlayerStore = create<IPlayerStore>((set) => ({
@@ -55,4 +62,11 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
       targetCoordinates: { y: value, x: state.targetCoordinates?.x || "a" },
     })),
   setMessage: (message: string) => set({ message }),
+  restartState: () =>
+    set({
+      fleet: [],
+      map: [],
+      targetCoordinates: null,
+      message: "",
+    }),
 }));

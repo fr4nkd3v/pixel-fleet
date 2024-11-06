@@ -54,7 +54,8 @@ export const GamePage = () => {
   */
 
   const {
-    hasGameStarted,
+    gamePhase,
+    // hasGameStarted,
     isPlayerTurn,
     isShooting,
     isPlayerWins,
@@ -64,6 +65,7 @@ export const GamePage = () => {
     startsShooting,
     finishShooting,
     setPlayerWins,
+    restartState: restartGameState,
   } = useGameStore();
 
   const {
@@ -75,6 +77,7 @@ export const GamePage = () => {
     setTargetCoordinates: setOpponentTargetCoordinates,
     message: opponentMessage,
     setMessage: setOpponentMessage,
+    restartState: restartOpponentState,
   } = useOpponentStore();
 
   const {
@@ -89,6 +92,7 @@ export const GamePage = () => {
     updateTargetCoordinateY: updatePlayerTargetCoordinateY,
     message: playerMessage,
     setMessage: setPlayerMessage,
+    restartState: restartPlayerState,
   } = usePlayerStore();
 
   const {
@@ -98,19 +102,44 @@ export const GamePage = () => {
     setShipOnDeploy,
     setOrientation,
     clearShipOnDeploy,
+    restartState: restartShipDeployState,
   } = useShipDeployStore();
 
   const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
     null
   );
 
-  // In first render
+  const restartGame = useCallback(() => {
+    restartGameState();
+    restartOpponentState();
+    restartPlayerState();
+    restartShipDeployState();
+  }, [
+    restartGameState,
+    restartOpponentState,
+    restartPlayerState,
+    restartShipDeployState,
+  ]);
+
   useEffect(() => {
+    setPlayerFleet([...commonFleetArr]);
+  }, [commonFleetArr, setPlayerFleet]);
+
+  // When prestart game for player action
+  useEffect(() => {
+    if (gamePhase !== "prestart") return;
+
     const { fleet, map } = autoFleetDeploy(MAP_SIZE, [...commonFleetArr], []);
     setOpponentMap(map);
     setOpponentFleet(fleet);
     setPlayerFleet([...commonFleetArr]);
-  }, [commonFleetArr, setOpponentFleet, setOpponentMap, setPlayerFleet]);
+  }, [
+    commonFleetArr,
+    gamePhase,
+    setOpponentFleet,
+    setOpponentMap,
+    setPlayerFleet,
+  ]);
 
   const currentShipOnDeployLength = shipOnDeployId
     ? SHIP_TYPES[shipOnDeployId].length
@@ -118,25 +147,16 @@ export const GamePage = () => {
 
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
 
-  // const showWinner = useCallback(
-  //   (isWinner: boolean) => {
-  //     const finalMessage = isWinner
-  //       ? "👦 Player is the Winner! :D"
-  //       : "🖥 The PC is the Winner";
-  //     endGame();
-  //     alert(finalMessage);
-  //   },
-  //   [endGame]
-  // );
-
   // Calculate winner
   useEffect(() => {
+    if (!playerFleet.length || !opponentFleet.length) return;
+
     const isWinner = calculatePlayerIsWinner(playerFleet, opponentFleet);
-    if (isWinner !== null && hasGameStarted) {
+    if (isWinner !== null && gamePhase === "start") {
       endGame();
       setPlayerWins(isWinner);
     }
-  }, [endGame, hasGameStarted, opponentFleet, playerFleet, setPlayerWins]);
+  }, [endGame, gamePhase, opponentFleet, playerFleet, setPlayerWins]);
 
   const handleDeployingShip = (
     shipId: TShipId,
@@ -267,28 +287,27 @@ export const GamePage = () => {
   // Manage player & opponent messages
   useEffect(() => {
     setPlayerMessage(
-      !hasGameStarted
+      gamePhase === "prestart"
         ? "Despliega tus unidades y comienza la batalla"
         : isPlayerTurn
         ? "Es turno de atacar!"
         : "Es el turno del oponente"
     );
     setOpponentMessage(
-      !hasGameStarted
+      gamePhase === "prestart"
         ? "En espera"
         : isPlayerTurn
         ? "Esperando turno"
         : "Buscando objetivo..."
     );
-  }, [hasGameStarted, isPlayerTurn, setOpponentMessage, setPlayerMessage]);
+  }, [gamePhase, isPlayerTurn, setOpponentMessage, setPlayerMessage]);
 
   // Manage opponent shooting
   useEffect(() => {
-    if (hasGameStarted && !isPlayerTurn) {
-      console.log("🖥 turno de la PC ===============");
+    if (gamePhase === "start" && !isPlayerTurn) {
       handleOpponentShoot();
     }
-  }, [isPlayerTurn, hasGameStarted, handleOpponentShoot]);
+  }, [isPlayerTurn, gamePhase, handleOpponentShoot]);
 
   return (
     <>
@@ -314,7 +333,7 @@ export const GamePage = () => {
             orientation: shipOnDeployOrientation,
           }}
           targetCoordinates={opponentTargetCoordinates}
-          isReady={hasGameStarted}
+          isReady={gamePhase === "start"}
           isShooting={isShooting}
           isInTurn={!isPlayerTurn}
           onDeployedShip={handleDeployedShip}
@@ -329,8 +348,8 @@ export const GamePage = () => {
             orientation: shipOnDeployOrientation,
           }}
           targetCoordinates={playerTargetCoordinates}
-          disabled={!hasGameStarted}
-          isReady={hasGameStarted}
+          disabled={gamePhase !== "start"}
+          isReady={gamePhase === "start"}
           isShooting={isShooting}
           isInTurn={isPlayerTurn}
           onDeployedShip={handleDeployedShip}
@@ -346,13 +365,13 @@ export const GamePage = () => {
             locationY={cursorLocation.top}
           />
         )}
-        {!hasGameStarted && (
+        {gamePhase === "prestart" && (
           <FloatingStartPanel
             isStartButtonDisabled={!isPlayerFleetDeployed}
             onClick={handleStartGame}
           />
         )}
-        {isPlayerTurn && hasGameStarted && playerTargetCoordinates && (
+        {isPlayerTurn && gamePhase === "start" && playerTargetCoordinates && (
           <div className={styles["FloatingAttackControl"]}>
             <AttackControl
               targetCoordinates={playerTargetCoordinates}
@@ -365,7 +384,10 @@ export const GamePage = () => {
       {isPlayerWins !== null ? (
         <EndGameModal
           type={isPlayerWins ? "win" : "fail"}
-          onRetryClick={() => console.log("on retry")}
+          onRetryClick={() => {
+            console.log("on retry");
+            restartGame();
+          }}
           onToHomeClick={() => console.log("To home")}
         />
       ) : (

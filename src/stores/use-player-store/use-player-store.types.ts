@@ -17,6 +17,7 @@ export interface IOpponentStore {
   updateTargetCoordinateX: (value: string) => void;
   updateTargetCoordinateY: (value: number) => void;
   setMessage: (message: string) => void;
+  restartState: () => void;
 }
 
 export interface IPlayerStore extends IOpponentStore {
