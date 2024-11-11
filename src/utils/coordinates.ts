@@ -6,7 +6,7 @@ export const parseStringCoordinateX = (coor: number): string => {
 };
 
 export const parseNumberCoordinateX = (coor: string): number => {
-  return coor.charCodeAt(0) - 96;
+  return coor.toLowerCase().charCodeAt(0) - 96;
 };
 
 export const isValidCoordinate = (x: string, y: number) => {

@@ -18,3 +18,19 @@ export const getShipPartByIndex = (
   shipLength: number
 ): TShipPart =>
   index === 0 ? "start" : index === shipLength - 1 ? "end" : "middle";
+
+export const isFleetDefeated = (fleet: TFleet) =>
+  fleet.every((ship) => ship.health === 0);
+
+export const calculatePlayerIsWinner = (
+  playerFleet: TFleet,
+  opponentFleet: TFleet
+) => {
+  if (isFleetDefeated(playerFleet)) {
+    return false;
+  } else if (isFleetDefeated(opponentFleet)) {
+    return true;
+  } else {
+    return null;
+  }
+};

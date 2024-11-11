@@ -24,6 +24,7 @@ import {
   getShipPartByIndex,
   calculatePlayerIsWinner,
   prepareFleet,
+  isFleetDefeated,
 } from "~/utils";
 import {
   useGameStore,
@@ -61,11 +62,12 @@ export const GamePage = () => {
     isPlayerWins,
     startGame,
     endGame,
-    toggleTurn,
+    // toggleTurn,
     startsShooting,
-    finishShooting,
+    endShooting,
     setPlayerWins,
     restartState: restartGameState,
+    endShootingAndToggleTurn,
   } = useGameStore();
 
   const {
@@ -121,6 +123,7 @@ export const GamePage = () => {
     restartShipDeployState,
   ]);
 
+  // Only first render
   useEffect(() => {
     setPlayerFleet([...commonFleetArr]);
   }, [commonFleetArr, setPlayerFleet]);
@@ -228,7 +231,6 @@ export const GamePage = () => {
   const handlePlayerFinishesShot = useCallback(() => {
     if (!playerTargetCoordinates) return;
 
-    finishShooting();
     const { fleet: newOpponentFleet, map: newOpponentMap } = attackMap(
       playerTargetCoordinates,
       opponentMap,
@@ -236,15 +238,20 @@ export const GamePage = () => {
     );
     setOpponentMap(newOpponentMap);
     setOpponentFleet(newOpponentFleet);
-    toggleTurn();
+
+    if (isFleetDefeated(newOpponentFleet)) {
+      endShooting();
+    } else {
+      endShootingAndToggleTurn();
+    }
   }, [
-    finishShooting,
+    endShooting,
+    endShootingAndToggleTurn,
     opponentFleet,
     opponentMap,
     playerTargetCoordinates,
     setOpponentFleet,
     setOpponentMap,
-    toggleTurn,
   ]);
 
   const handleOpponentShoot = useCallback(() => {
@@ -265,7 +272,6 @@ export const GamePage = () => {
   const handleOpponentFinishesShooting = useCallback(() => {
     if (!opponentTargetCoordinates) return;
 
-    finishShooting();
     const { fleet: newPlayerFleet, map: newPlayerMap } = attackMap(
       opponentTargetCoordinates,
       playerMap,
@@ -273,15 +279,20 @@ export const GamePage = () => {
     );
     setPlayerMap(newPlayerMap);
     setPlayerFleet(newPlayerFleet);
-    toggleTurn();
+
+    if (isFleetDefeated(newPlayerFleet)) {
+      endShooting();
+    } else {
+      endShootingAndToggleTurn();
+    }
   }, [
-    finishShooting,
+    endShooting,
+    endShootingAndToggleTurn,
     opponentTargetCoordinates,
     playerFleet,
     playerMap,
     setPlayerFleet,
     setPlayerMap,
-    toggleTurn,
   ]);
 
   // Manage player & opponent messages
@@ -376,7 +387,7 @@ export const GamePage = () => {
             <AttackControl
               targetCoordinates={playerTargetCoordinates}
               onChangeTargetCoordinates={handleChangeTargetCoordinates}
-              onShootButtonClick={() => startsShooting()}
+              onShootButtonClick={startsShooting}
             />
           </div>
         )}
@@ -384,10 +395,7 @@ export const GamePage = () => {
       {isPlayerWins !== null ? (
         <EndGameModal
           type={isPlayerWins ? "win" : "fail"}
-          onRetryClick={() => {
-            console.log("on retry");
-            restartGame();
-          }}
+          onRetryClick={restartGame}
           onToHomeClick={() => console.log("To home")}
         />
       ) : (

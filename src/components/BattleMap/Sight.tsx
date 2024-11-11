@@ -3,6 +3,7 @@ import { ISightProps } from "./BattleMap.types";
 import styles from "./BattleMap.module.css";
 import { parseNumberCoordinateX } from "~/utils";
 import { useEffect } from "react";
+import { DEFAULT_ATTACK_DELAY } from "~/constants";
 
 export const Sight = ({
   targetCoordinates,
@@ -19,7 +20,7 @@ export const Sight = ({
   useEffect(() => {
     if (!isShot || !isInTurn) return;
 
-    setTimeout(() => onFinishesShot(), 3000);
+    setTimeout(() => onFinishesShot(), DEFAULT_ATTACK_DELAY);
   }, [isInTurn, isShot, onFinishesShot]);
 
   return (

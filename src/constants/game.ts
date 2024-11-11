@@ -48,3 +48,5 @@ export const AVAILABLE_FLEET_IDS: TShipId[] = [
 ];
 
 export const DEFAULT_ORIENTATION: TOrientationType = "horizontal";
+
+export const DEFAULT_ATTACK_DELAY: number = 100; // In miliseconds

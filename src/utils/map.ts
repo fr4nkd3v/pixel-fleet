@@ -48,16 +48,3 @@ export const attackMap = (
     fleet: newFleet,
   };
 };
-
-export const calculatePlayerIsWinner = (
-  playerFleet: TFleet,
-  opponentFleet: TFleet
-) => {
-  if (playerFleet.every((ship) => ship.health === 0)) {
-    return false;
-  } else if (opponentFleet.every((ship) => ship.health === 0)) {
-    return true;
-  } else {
-    return null;
-  }
-};

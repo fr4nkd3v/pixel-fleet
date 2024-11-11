@@ -11,7 +11,7 @@ export const useGameStore = create<IGameStore>((set) => ({
   endGame: () => set({ gamePhase: "end" }),
   toggleTurn: () => set((state) => ({ isPlayerTurn: !state.isPlayerTurn })),
   startsShooting: () => set({ isShooting: true }),
-  finishShooting: () => set({ isShooting: false }),
+  endShooting: () => set({ isShooting: false }),
   setPlayerWins: (bool: boolean) => set({ isPlayerWins: bool }),
   restartState: () =>
     set({
@@ -20,4 +20,9 @@ export const useGameStore = create<IGameStore>((set) => ({
       isShooting: false,
       isPlayerWins: null,
     }),
+  endShootingAndToggleTurn: () =>
+    set((state) => ({
+      isShooting: false,
+      isPlayerTurn: !state.isPlayerTurn,
+    })),
 }));

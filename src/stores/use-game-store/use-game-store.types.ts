@@ -8,7 +8,8 @@ export interface IGameStore {
   endGame: () => void;
   toggleTurn: () => void;
   startsShooting: () => void;
-  finishShooting: () => void;
+  endShooting: () => void;
   setPlayerWins: (bool: boolean) => void;
   restartState: () => void;
+  endShootingAndToggleTurn: () => void;
 }
