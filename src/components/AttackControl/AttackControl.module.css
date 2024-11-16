@@ -1,4 +1,13 @@
-.AttackControl-container {
+.AttackControl-root {
+  position: relative;
+}
+.AttackControl-root.is-disabled::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.AttackControl-wrapper {
   display: flex;
   gap: var(--size-24);
 }
@@ -15,7 +24,6 @@
 
 .AttackControl-input {
   width: 5rem;
-  /* background-color: var(--white); */
-  padding: .5rem;
+  padding: 0.5rem;
   text-transform: uppercase;
 }

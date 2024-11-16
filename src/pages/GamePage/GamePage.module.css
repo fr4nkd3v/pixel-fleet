@@ -17,7 +17,3 @@
 .GamePage > *:nth-child(even) {
   justify-self: start;
 }
-
-.FloatingAttackControl {
-  width: fit-content;
-}

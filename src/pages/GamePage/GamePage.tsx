@@ -320,6 +320,12 @@ export const GamePage = () => {
     }
   }, [isPlayerTurn, gamePhase, handleOpponentShoot]);
 
+  const isAttackControlDisabled = !(
+    isPlayerTurn &&
+    gamePhase === "start" &&
+    playerTargetCoordinates
+  );
+
   return (
     <>
       <section className={styles["GamePage"]}>
@@ -368,28 +374,17 @@ export const GamePage = () => {
           onChangeCursorLocation={handleChangeCursorLocation}
           onFinishesShot={handlePlayerFinishesShot}
         />
-        {shipOnDeployId && cursorLocation && (
-          <CursorShadowShip
-            length={currentShipOnDeployLength}
-            orientation={shipOnDeployOrientation}
-            locationX={cursorLocation.left}
-            locationY={cursorLocation.top}
-          />
-        )}
+        <AttackControl
+          targetCoordinates={playerTargetCoordinates}
+          onChangeTargetCoordinates={handleChangeTargetCoordinates}
+          onShootButtonClick={startsShooting}
+          disabled={isAttackControlDisabled}
+        />
         {gamePhase === "prestart" && (
           <FloatingStartPanel
             isStartButtonDisabled={!isPlayerFleetDeployed}
             onClick={handleStartGame}
           />
-        )}
-        {isPlayerTurn && gamePhase === "start" && playerTargetCoordinates && (
-          <div className={styles["FloatingAttackControl"]}>
-            <AttackControl
-              targetCoordinates={playerTargetCoordinates}
-              onChangeTargetCoordinates={handleChangeTargetCoordinates}
-              onShootButtonClick={startsShooting}
-            />
-          </div>
         )}
       </section>
       {isPlayerWins !== null ? (
@@ -400,6 +395,14 @@ export const GamePage = () => {
         />
       ) : (
         <></>
+      )}
+      {shipOnDeployId && cursorLocation && (
+        <CursorShadowShip
+          length={currentShipOnDeployLength}
+          orientation={shipOnDeployOrientation}
+          locationX={cursorLocation.left}
+          locationY={cursorLocation.top}
+        />
       )}
     </>
   );
