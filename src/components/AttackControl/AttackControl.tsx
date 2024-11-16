@@ -25,13 +25,15 @@ export function AttackControl({
             </span>
             <div className="nes-field is-inline">
               <input
-                type="number"
+                type="text"
                 id="coordinate-y"
                 className={`nes-input ${css["AttackControl-input"]}`}
                 onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
                   onChangeTargetCoordinates("y", event.target.value);
                 }}
-                value={targetCoordinates?.y.toString() || 0}
+                value={
+                  targetCoordinates?.y ? targetCoordinates?.y.toString() : "-"
+                }
               />
             </div>
             <div className="nes-field is-inline">
@@ -42,7 +44,7 @@ export function AttackControl({
                 onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
                   onChangeTargetCoordinates("x", event.target.value);
                 }}
-                value={targetCoordinates?.x || ""}
+                value={targetCoordinates?.x || "-"}
               />
             </div>
             <span className={css["AttackControl-label"]}>

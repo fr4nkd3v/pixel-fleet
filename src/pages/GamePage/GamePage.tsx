@@ -89,7 +89,6 @@ export const GamePage = () => {
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
     deployShipInFleet,
-    setTargetCoordinates: setPlayerTargetCoordinates,
     updateTargetCoordinateX: updatePlayerTargetCoordinateX,
     updateTargetCoordinateY: updatePlayerTargetCoordinateY,
     message: playerMessage,
@@ -215,24 +214,22 @@ export const GamePage = () => {
   const handleStartGame = () => {
     if (!isPlayerFleetDeployed) return;
     startGame();
-    setPlayerTargetCoordinates({ x: "a", y: 1 });
   };
 
   const handleChangeTargetCoordinates = (
     coordinateAxis: "x" | "y",
     value: string
   ) => {
-    if (!playerTargetCoordinates) return;
     // TODO: add validates for correct coordinates
     if (coordinateAxis === "x") updatePlayerTargetCoordinateX(value);
     else updatePlayerTargetCoordinateY(Number(value));
   };
 
   const handlePlayerFinishesShot = useCallback(() => {
-    if (!playerTargetCoordinates) return;
+    if (!playerTargetCoordinates.x || !playerTargetCoordinates.y) return;
 
     const { fleet: newOpponentFleet, map: newOpponentMap } = attackMap(
-      playerTargetCoordinates,
+      playerTargetCoordinates as TCoordinate,
       opponentMap,
       opponentFleet
     );
@@ -270,10 +267,10 @@ export const GamePage = () => {
   }, [setOpponentTargetCoordinates, startsShooting]);
 
   const handleOpponentFinishesShooting = useCallback(() => {
-    if (!opponentTargetCoordinates) return;
+    if (!opponentTargetCoordinates.x || !opponentTargetCoordinates.y) return;
 
     const { fleet: newPlayerFleet, map: newPlayerMap } = attackMap(
-      opponentTargetCoordinates,
+      opponentTargetCoordinates as TCoordinate,
       playerMap,
       playerFleet
     );
@@ -320,11 +317,7 @@ export const GamePage = () => {
     }
   }, [isPlayerTurn, gamePhase, handleOpponentShoot]);
 
-  const isAttackControlDisabled = !(
-    isPlayerTurn &&
-    gamePhase === "start" &&
-    playerTargetCoordinates
-  );
+  const isAttackControlDisabled = !(isPlayerTurn && gamePhase === "start");
 
   return (
     <>

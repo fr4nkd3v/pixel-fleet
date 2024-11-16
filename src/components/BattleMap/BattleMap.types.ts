@@ -6,13 +6,14 @@ import type {
   TCoveredShip,
   TMap,
   TCoordinate,
+  TEmptyCoordinate,
 } from "~/types/game";
 
 export interface IBattleMapProps {
   mapCoordinates: TMap;
   currentShipOnDeploy: TShipOnDeploy;
   disabled?: boolean;
-  targetCoordinates: TCoordinate | null;
+  targetCoordinates: TCoordinate | TEmptyCoordinate;
   isReady: boolean;
   isShooting: boolean;
   isInTurn: boolean;
@@ -38,7 +39,7 @@ export interface ITileProps {
 }
 
 export interface ISightProps {
-  targetCoordinates: TCoordinate;
+  targetCoordinates: TCoordinate | TEmptyCoordinate;
   isShooting: boolean;
   isInTurn: boolean;
   onFinishesShot: () => void;

@@ -4,12 +4,13 @@ import {
   TMap,
   TShipId,
   TMapCoordinate,
+  TEmptyCoordinate,
 } from "~/types/game";
 
 export interface IOpponentStore {
   fleet: TFleet;
   map: TMap;
-  targetCoordinates: TCoordinate | null;
+  targetCoordinates: TCoordinate | TEmptyCoordinate;
   message: string;
   setFleet: (fleet: TFleet) => void;
   setMap: (map: TMap) => void;

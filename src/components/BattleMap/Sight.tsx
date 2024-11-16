@@ -11,7 +11,7 @@ export const Sight = ({
   onFinishesShot,
   isInTurn,
 }: ISightProps) => {
-  const { x: strX, y } = targetCoordinates;
+  const { x: strX, y = 0 } = targetCoordinates;
   const x = parseNumberCoordinateX(strX);
 
   const left = `calc(var(--tile-size) * ${x})`;

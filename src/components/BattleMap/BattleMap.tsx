@@ -169,7 +169,7 @@ export const BattleMap = ({
         }}
       ></div>
       {/* TODO: try remove isReady for this case 👇 */}
-      {isReady && isInTurn && targetCoordinates && (
+      {isReady && isInTurn && (
         <Sight
           targetCoordinates={targetCoordinates}
           isShooting={isShooting}

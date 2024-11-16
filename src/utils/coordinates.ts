@@ -5,8 +5,8 @@ export const parseStringCoordinateX = (coor: number): string => {
   return String.fromCharCode(coor + 96);
 };
 
-export const parseNumberCoordinateX = (coor: string): number => {
-  return coor.toLowerCase().charCodeAt(0) - 96;
+export const parseNumberCoordinateX = (coor: string | null): number => {
+  return coor ? coor.toLowerCase().charCodeAt(0) - 96 : 0;
 };
 
 export const isValidCoordinate = (x: string, y: number) => {

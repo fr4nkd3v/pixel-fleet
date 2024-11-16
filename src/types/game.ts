@@ -26,6 +26,11 @@ export type TCoordinate = {
   y: number;
 };
 
+export type TEmptyCoordinate = {
+  x: string | null;
+  y: number | null;
+};
+
 export type TMapCoordinate = {
   x: string;
   y: number;
