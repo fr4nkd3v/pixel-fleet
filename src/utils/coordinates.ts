@@ -58,3 +58,16 @@ export const hasCoordinateCovered = (
     return Boolean(coordinateCovered);
   });
 };
+
+export const checkCoordinateValue = (
+  coordinate: "x" | "y",
+  value: string
+): boolean => {
+  if (coordinate === "y") {
+    const regexCoorY = /^(10|[1-9])$/;
+    return regexCoorY.test(value);
+  } else {
+    const regexCoorX = /^[a-j]$/i;
+    return regexCoorX.test(value);
+  }
+};

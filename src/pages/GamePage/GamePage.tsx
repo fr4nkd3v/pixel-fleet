@@ -25,6 +25,7 @@ import {
   calculatePlayerIsWinner,
   prepareFleet,
   isFleetDefeated,
+  checkCoordinateValue,
 } from "~/utils";
 import {
   useGameStore,
@@ -220,9 +221,11 @@ export const GamePage = () => {
     coordinateAxis: "x" | "y",
     value: string
   ) => {
-    // TODO: add validates for correct coordinates
-    if (coordinateAxis === "x") updatePlayerTargetCoordinateX(value);
-    else updatePlayerTargetCoordinateY(Number(value));
+    if (coordinateAxis === "x" && checkCoordinateValue("x", value)) {
+      updatePlayerTargetCoordinateX(value);
+    } else if (coordinateAxis === "y" && checkCoordinateValue("y", value)) {
+      updatePlayerTargetCoordinateY(Number(value));
+    }
   };
 
   const handlePlayerFinishesShot = useCallback(() => {

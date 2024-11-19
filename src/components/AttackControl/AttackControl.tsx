@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Button } from "../button";
 import { Panel } from "../Panel";
 import css from "./AttackControl.module.css";
@@ -9,6 +10,37 @@ export function AttackControl({
   onChangeTargetCoordinates,
   onShootButtonClick,
 }: IAttackControlProps) {
+  const inputY = useRef<HTMLInputElement | null>(null);
+  const inputX = useRef<HTMLInputElement | null>(null);
+
+  const handleChangeCoordinateY = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+    if (value.length > 2) {
+      onChangeTargetCoordinates("y", value[2]);
+    } else if (value.length > 1) {
+      onChangeTargetCoordinates("y", Number(value) === 10 ? value : value[1]);
+    } else {
+      onChangeTargetCoordinates("y", value);
+    }
+  };
+
+  const handleChangeCoordinateX = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = event.target;
+    onChangeTargetCoordinates("x", value.length > 1 ? value[1] : value);
+  };
+
+  const handleKeyDownInputY = (event: React.KeyboardEvent) => {
+    if (event.key === "ArrowRight") inputX.current?.focus();
+  };
+
+  const handleKeyDownInputX = (event: React.KeyboardEvent) => {
+    if (event.key === "ArrowLeft") inputY.current?.focus();
+  };
+
   return (
     <div
       className={`${css["AttackControl-root"]} ${
@@ -28,9 +60,10 @@ export function AttackControl({
                 type="text"
                 id="coordinate-y"
                 className={`nes-input ${css["AttackControl-input"]}`}
-                onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  onChangeTargetCoordinates("y", event.target.value);
-                }}
+                ref={inputY}
+                onKeyDown={handleKeyDownInputY}
+                onFocus={() => inputY.current?.select()}
+                onInput={handleChangeCoordinateY}
                 value={
                   targetCoordinates?.y ? targetCoordinates?.y.toString() : "-"
                 }
@@ -41,9 +74,10 @@ export function AttackControl({
                 type="text"
                 id="coordinate-x"
                 className={`nes-input ${css["AttackControl-input"]}`}
-                onInput={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  onChangeTargetCoordinates("x", event.target.value);
-                }}
+                ref={inputX}
+                onKeyDown={handleKeyDownInputX}
+                onFocus={() => inputX.current?.select()}
+                onInput={handleChangeCoordinateX}
                 value={targetCoordinates?.x || "-"}
               />
             </div>
