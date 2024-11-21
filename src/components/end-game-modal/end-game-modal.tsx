@@ -1,5 +1,5 @@
 import { Button } from "../button";
-import { ShipFail, ShipSuccess } from "../Graph";
+import { ShipFailGraph, ShipSuccessGraph } from "../graph";
 import styles from "./end-game-modal.module.css";
 import { IEndGameModal } from "./end-game-modal.types";
 
@@ -26,7 +26,11 @@ export const EndGameModal = ({
           <p className={styles["EndGameModal-subtitle"]}>{subtitle}</p>
         </div>
         <div className={styles["EndGameModal-icon"]}>
-          {isWinner ? <ShipSuccess size="100%" /> : <ShipFail size="100%" />}
+          {isWinner ? (
+            <ShipSuccessGraph size="100%" />
+          ) : (
+            <ShipFailGraph size="100%" />
+          )}
         </div>
         <div className={styles["EndGameModal-actions"]}>
           <Button

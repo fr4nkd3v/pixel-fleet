@@ -1,6 +1,9 @@
-import { IGraphProps } from './Graph.types';
+import { IGraphProps } from "./graph.types";
 
-export const Ship1 = ({ color='currentcolor', size='200px' }: IGraphProps) => {
+export const ShipGraph = ({
+  color = "currentcolor",
+  size = "200px",
+}: IGraphProps) => {
   return (
     <svg
       viewBox="0 0 200 200"
@@ -16,4 +19,4 @@ export const Ship1 = ({ color='currentcolor', size='200px' }: IGraphProps) => {
       />
     </svg>
   );
-}
+};

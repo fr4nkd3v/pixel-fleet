@@ -4,7 +4,7 @@ export * from "./button";
 export * from "./cursor-shadow-ship";
 export * from "./fleet-menu";
 export * from "./FloatingStartPanel";
-export * from "./Graph";
+export * from "./graph";
 export * from "./Icon";
 export * from "./Panel";
 export * from "./end-game-modal";

@@ -1,5 +1,5 @@
 import { Button } from "~/components/button";
-import { Ship1 } from "~/components/Graph";
+import { ShipGraph } from "~/components/graph";
 import styles from "./WelcomePage.module.css";
 
 export const WelcomePage = () => {
@@ -8,11 +8,11 @@ export const WelcomePage = () => {
       <section className={styles["WelcomePage"]}>
         <div className={styles["WelcomPage-animation"]}>
           <div className={styles["WelcomPage-icon"]}>
-            <Ship1 size="100%" />
+            <ShipGraph size="100%" />
           </div>
           vs
           <div className={styles["WelcomPage-icon"]}>
-            <Ship1 size="100%" />
+            <ShipGraph size="100%" />
           </div>
         </div>
         <div className={styles["WelcomPage-text"]}>
