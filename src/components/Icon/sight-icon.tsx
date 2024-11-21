@@ -1,6 +1,9 @@
-import type { IIconProps } from './Icon.types';
+import { IIconBaseProps } from "./icon.types";
 
-export const SightIcon = ({ color='currentcolor', size='64px' }: IIconProps) => {
+export const SightIcon = ({
+  color = "currentcolor",
+  size = "64px",
+}: IIconBaseProps) => {
   return (
     <svg
       viewBox="0 0 64 64"
@@ -15,5 +18,5 @@ export const SightIcon = ({ color='currentcolor', size='64px' }: IIconProps) => 
         fill={color}
       />
     </svg>
-  )
-}
+  );
+};

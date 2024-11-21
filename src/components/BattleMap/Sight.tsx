@@ -1,4 +1,4 @@
-import { SightIcon } from "../Icon";
+import { SightIcon } from "../icon";
 import { ISightProps } from "./BattleMap.types";
 import styles from "./BattleMap.module.css";
 import { parseNumberCoordinateX } from "~/utils";

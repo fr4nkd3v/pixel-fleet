@@ -1,2 +1,2 @@
-export { ShipIcon } from './ShipIcon';
-export { SightIcon } from './SightIcon';
+export * from "./ship-icon";
+export * from "./sight-icon";

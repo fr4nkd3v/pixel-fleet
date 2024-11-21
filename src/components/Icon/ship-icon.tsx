@@ -1,6 +1,9 @@
-import type { IIconProps } from './Icon.types';
+import { IIconBaseProps } from "./icon.types";
 
-export const ShipIcon = ({ color='currentcolor', size='30px' }: IIconProps) => {
+export const ShipIcon = ({
+  color = "currentcolor",
+  size = "30px",
+}: IIconBaseProps) => {
   return (
     <svg
       viewBox="0 0 30 30"
@@ -19,5 +22,5 @@ export const ShipIcon = ({ color='currentcolor', size='30px' }: IIconProps) => {
         fill={color}
       />
     </svg>
-  )
-}
+  );
+};

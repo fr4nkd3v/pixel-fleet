@@ -5,6 +5,6 @@ export * from "./cursor-shadow-ship";
 export * from "./fleet-menu";
 export * from "./FloatingStartPanel";
 export * from "./graph";
-export * from "./Icon";
+export * from "./icon";
 export * from "./Panel";
 export * from "./end-game-modal";
