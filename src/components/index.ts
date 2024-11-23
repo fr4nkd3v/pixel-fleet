@@ -6,5 +6,6 @@ export * from "./fleet-menu";
 export * from "./FloatingStartPanel";
 export * from "./graph";
 export * from "./icon";
+export * from "./icon-button";
 export * from "./Panel";
 export * from "./end-game-modal";

@@ -1,2 +1,2 @@
-export * from "./ship-icon";
-export * from "./sight-icon";
+export * from "./icon";
+export { type TIconName } from "./icon.types";

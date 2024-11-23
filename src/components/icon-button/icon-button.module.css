@@ -1,0 +1,21 @@
+.icon-button {
+  padding: var(--size-4);
+  width: var(--size-52);
+  aspect-ratio: 1 / 1;
+  color: var(--color-primary-700);
+  background-color: var(--color-primary-200);
+}
+
+.icon-button:hover {
+  color: var(--color-primary-700);
+  background-color: var(--color-primary-300);
+}
+
+.icon-button::after,
+.icon-button:hover::after {
+  box-shadow: inset -3px -3px var(--color-primary-500);
+}
+
+.icon-button:active:not(.is-disabled)::after {
+  box-shadow: inset 3px 3px var(--color-primary-500);
+}

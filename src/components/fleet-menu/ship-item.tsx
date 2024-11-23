@@ -1,6 +1,6 @@
 import type { IShipItemProps } from "./ship-item.types";
 import { SHIP_TYPES } from "~/constants/game";
-import { ShipIcon } from "~/components/icon";
+import { Icon } from "~/components/icon";
 import styles from "./ship-item.module.css";
 
 export const ShipItem = ({
@@ -37,7 +37,7 @@ export const ShipItem = ({
       onClick={handleClickShipItem}
     >
       <div className={styles["ShipItem-icon"]}>
-        <ShipIcon size="100%" />
+        <Icon size="100%" name="ship" />
       </div>
       <div className={styles["ShipItem-name"]}>{SHIP_TYPES[shipType].name}</div>
       <div className={styles["ShipItem-health"]}>{lifes}</div>

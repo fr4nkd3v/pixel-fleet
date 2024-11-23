@@ -1,4 +1,4 @@
-import { SightIcon } from "../icon";
+import { Icon } from "../icon";
 import { ISightProps } from "./BattleMap.types";
 import styles from "./BattleMap.module.css";
 import { parseNumberCoordinateX } from "~/utils";
@@ -30,7 +30,7 @@ export const Sight = ({
       }`}
       style={{ left, top }}
     >
-      <SightIcon size="100%" />
+      <Icon size="100%" name="sight" />
     </div>
   );
 };

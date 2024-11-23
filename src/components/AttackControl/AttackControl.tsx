@@ -1,8 +1,8 @@
 import { useRef } from "react";
-import { Button } from "../button";
 import { Panel } from "../Panel";
 import css from "./AttackControl.module.css";
 import { IAttackControlProps } from "./AttackControl.types";
+import { IconButton } from "../icon-button";
 
 export function AttackControl({
   targetCoordinates,
@@ -87,7 +87,7 @@ export function AttackControl({
               CD
             </span>
           </div>
-          <Button text="attack" onClick={onShootButtonClick} />
+          <IconButton iconName="sight" onClick={onShootButtonClick} />
         </div>
       </Panel>
     </div>
