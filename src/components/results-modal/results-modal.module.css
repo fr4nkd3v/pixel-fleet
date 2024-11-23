@@ -1,10 +1,10 @@
-.EndGameModal-backdrop {
+.ResultsModal-backdrop {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.7);
   z-index: var(--layer-40);
 }
-.EndGameModal {
+.ResultsModal {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -19,35 +19,35 @@
   z-index: var(--layer-40);
 }
 
-.EndGameModal-text {
+.ResultsModal-text {
   display: flex;
   flex-direction: column;
   gap: var(--size-4);
 }
-.EndGameModal-title {
+.ResultsModal-title {
   font-size: var(--size-30);
 }
-.EndGameModal-subtitle {
+.ResultsModal-subtitle {
   font-size: var(--size-14);
 }
-.EndGameModal-icon {
+.ResultsModal-icon {
   width: 8rem;
 }
-.EndGameModal-actions {
+.ResultsModal-actions {
   display: flex;
   gap: var(--size-30);
 }
 
 /* #region SUCCESS */
 
-.EndGameModal--isWinner {
+.ResultsModal--isWinner {
   background-color: var(--color-success-100);
   border: solid var(--size-10) var(--color-success-500);
 }
-.EndGameModal--isWinner .EndGameModal-title {
+.ResultsModal--isWinner .ResultsModal-title {
   color: var(--color-success-500);
 }
-.EndGameModal--isWinner .EndGameModal-subtitle {
+.ResultsModal--isWinner .ResultsModal-subtitle {
   color: var(--color-success-600);
 }
 
@@ -55,19 +55,19 @@
 
 /* #region FAIL */
 
-.EndGameModal--isLoser {
+.ResultsModal--isLoser {
   background-color: var(--color-success-100);
   border: solid var(--size-10) var(--color-success-500);
 }
 
-.EndGameModal--isLoser {
+.ResultsModal--isLoser {
   background-color: var(--color-error-100);
   border: solid var(--size-10) var(--color-error-400);
 }
-.EndGameModal--isLoser .EndGameModal-title {
+.ResultsModal--isLoser .ResultsModal-title {
   color: var(--color-error-400);
 }
-.EndGameModal--isLoser .EndGameModal-subtitle {
+.ResultsModal--isLoser .ResultsModal-subtitle {
   color: var(--color-error-500);
 }
 /* #endregion FAIL */

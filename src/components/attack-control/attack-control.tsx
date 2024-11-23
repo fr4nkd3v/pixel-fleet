@@ -1,8 +1,9 @@
 import { useRef } from "react";
-import { Panel } from "../Panel";
-import css from "./AttackControl.module.css";
-import { IAttackControlProps } from "./AttackControl.types";
+import { Panel } from "../panel";
+import css from "./attack-control.module.css";
+import { IAttackControlProps } from "./attack-control.types";
 import { IconButton } from "../icon-button";
+import clsx from "clsx";
 
 export function AttackControl({
   targetCoordinates,
@@ -43,9 +44,10 @@ export function AttackControl({
 
   return (
     <div
-      className={`${css["AttackControl-root"]} ${
-        disabled ? css["is-disabled"] : ""
-      }`}
+      className={clsx(
+        css["AttackControl-root"],
+        disabled && css["is-disabled"]
+      )}
     >
       <Panel shadowSize="shadow-m">
         <div className={css["AttackControl-wrapper"]}>

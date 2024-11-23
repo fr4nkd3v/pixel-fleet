@@ -10,3 +10,16 @@ export interface IFleetMenuProps {
   ) => void;
   shipOnDeployId: TShipId | null;
 }
+
+export interface IFleetMenuItemProps {
+  shipId: TShipId;
+  shipType: TShipId;
+  fullHealth: number;
+  currentHealth: number;
+  isDeployed: boolean;
+  shipOnDeployId: TShipId | null;
+  onDeploying: (
+    shipId: TShipId,
+    { locationX, locationY }: { locationX: number; locationY: number }
+  ) => void;
+}

@@ -1,5 +1,6 @@
 import { ICursorShadowShipProps } from "./cursor-shadow-ship.types";
-import styles from "./cursor-shadow-ship.module.css";
+import css from "./cursor-shadow-ship.module.css";
+import clsx from "clsx";
 
 export const CursorShadowShip = ({
   length,
@@ -9,17 +10,16 @@ export const CursorShadowShip = ({
 }: ICursorShadowShipProps) => {
   if (!length) return;
 
-  const tiles = [];
-  for (let index = 0; index < length; index++) {
-    tiles.push(<div key={index}></div>);
-  }
+  const tiles = Array.from({ length }, (_, index) => <div key={index}></div>);
 
-  const orientationCSS =
-    orientation === "vertical" ? styles["vertical"] : styles["horizontal"];
+  const combinedClasses = clsx(
+    css["CursorShadowShip"],
+    orientation === "vertical" ? css["vertical"] : css["horizontal"]
+  );
 
   return (
     <div
-      className={`${styles["CursorShadowShip"]} ${orientationCSS}`}
+      className={combinedClasses}
       style={{
         left: `${locationX - 4}px`,
         top: `${locationY - 4}px`,

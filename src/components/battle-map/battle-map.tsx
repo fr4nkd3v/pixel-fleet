@@ -1,8 +1,8 @@
 import { useRef } from "react";
-import { type IBattleMapProps } from "./BattleMap.types";
-import { Tile } from "./Tile";
-import { Sight } from "./Sight";
-import styles from "./BattleMap.module.css";
+import { type IBattleMapProps } from "./battle-map.types";
+import { Tile } from "./battle-map-tile";
+import { Sight } from "./battle-map-sight";
+import css from "./battle-map.module.css";
 import {
   getNextCoordinates,
   getTilesByCoordinates,
@@ -12,6 +12,7 @@ import {
 } from "~/utils";
 import { MAP_SIZE, SHIP_TYPES } from "~/constants";
 import { TOrientationType } from "~/types";
+import clsx from "clsx";
 
 export const BattleMap = ({
   mapCoordinates,
@@ -31,7 +32,7 @@ export const BattleMap = ({
 
   const clearAvailableStyles = (tiles: HTMLElement[] | NodeListOf<Element>) => {
     tiles.forEach((tile) =>
-      tile.classList.remove(styles["is-available"], styles["is-unavailable"])
+      tile.classList.remove(css["is-available"], css["is-unavailable"])
     );
   };
   const handleMouseEnterAndLeaveTile = (
@@ -60,7 +61,7 @@ export const BattleMap = ({
     if (action === "enter") {
       tiles.forEach((tile) =>
         tile.classList.add(
-          styles[isOutOfArea || isCovered ? "is-unavailable" : "is-available"]
+          css[isOutOfArea || isCovered ? "is-unavailable" : "is-available"]
         )
       );
     } else if (action === "leave") {
@@ -78,7 +79,7 @@ export const BattleMap = ({
 
     if (!battleMapRef.current) return;
     const tiles = battleMapRef.current.querySelectorAll(
-      `.${styles["BattleMap-tile"]}.${styles["is-available"]}, .${styles["BattleMap-tile"]}.${styles["is-unavailable"]}`
+      `.${css["BattleMap-tile"]}.${css["is-available"]}, .${css["BattleMap-tile"]}.${css["is-unavailable"]}`
     );
     clearAvailableStyles(tiles);
     handleMouseEnterAndLeaveTile(event, "enter", oppositeOrientation);
@@ -90,7 +91,7 @@ export const BattleMap = ({
       return;
 
     const childTile = (event.target as Element).closest(
-      `.${styles["BattleMap-tile"]}`
+      `.${css["BattleMap-tile"]}`
     );
     if (!childTile) return;
 
@@ -149,9 +150,7 @@ export const BattleMap = ({
 
   return (
     <section
-      className={`${styles["BattleMap"]} ${
-        disabled ? styles["is-disabled"] : ""
-      }`}
+      className={clsx(css["BattleMap"], disabled && css["is-disabled"])}
       style={{
         gridTemplateColumns: `repeat(${sideLength + 1}, var(--tile-size))`,
         gridTemplateRows: `repeat(${sideLength + 1}, var(--tile-size))`,
@@ -162,7 +161,7 @@ export const BattleMap = ({
     >
       {tiles}
       <div
-        className={styles["BattleMap-background"]}
+        className={css["BattleMap-background"]}
         style={{
           width: `calc(var(--tile-size) * ${sideLength})`,
           height: `calc(var(--tile-size) * ${sideLength})`,

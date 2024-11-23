@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { IButtonProps } from "./button.types";
 import css from "./button.module.css";
 
@@ -7,12 +8,15 @@ export const Button = ({
   disabled = false,
   onClick,
 }: IButtonProps) => {
-  const cssClasses = `nes-btn ${css["button"]} ${
-    disabled ? "is-disabled" : ""
-  } ${css[variant]}`;
+  const combinedClasses = clsx(
+    "nes-btn",
+    css["button"],
+    css[variant],
+    disabled && "is-disabled"
+  );
 
   return (
-    <button type="button" className={cssClasses} onClick={onClick}>
+    <button type="button" className={combinedClasses} onClick={onClick}>
       {text}
     </button>
   );

@@ -1,22 +1,22 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { EndGameModal } from "./end-game-modal";
-import { endGameModalTypes } from "./end-game-modal.types";
+import { ResultsModal } from "./results-modal";
+import { resultsModalTypes } from "./results-modal.types";
 
 const meta = {
-  title: "EndGame Modal",
-  component: EndGameModal,
+  title: "Results Modal",
+  component: ResultsModal,
   parameters: {
     layout: "centered",
   },
   tags: ["autodocs"],
   argTypes: {
     isVisible: { control: "boolean" },
-    type: { control: "select", options: endGameModalTypes },
+    type: { control: "select", options: resultsModalTypes },
     onToHomeClick: { action: "to home" },
     onRetryClick: { action: "retry" },
   },
-} satisfies Meta<typeof EndGameModal>;
+} satisfies Meta<typeof ResultsModal>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

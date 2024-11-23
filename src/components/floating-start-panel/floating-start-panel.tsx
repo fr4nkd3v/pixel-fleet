@@ -1,7 +1,7 @@
 import { Button } from "../button";
-import { Panel } from "../Panel";
-import { IFloatingStartPanelProps } from "./FloatingStartPanel.types";
-import css from "./FloatingStartPanel.module.css";
+import { Panel } from "../panel";
+import { IFloatingStartPanelProps } from "./floating-start-panel.types";
+import css from "./floating-start-panel.module.css";
 import { MAP_SIZE } from "~/constants";
 
 export const FloatingStartPanel = ({

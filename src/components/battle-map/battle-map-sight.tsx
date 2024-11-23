@@ -1,9 +1,10 @@
 import { Icon } from "../icon";
-import { ISightProps } from "./BattleMap.types";
-import styles from "./BattleMap.module.css";
+import { ISightProps } from "./battle-map.types";
+import css from "./battle-map.module.css";
 import { parseNumberCoordinateX } from "~/utils";
 import { useEffect } from "react";
 import { DEFAULT_ATTACK_DELAY } from "~/constants";
+import clsx from "clsx";
 
 export const Sight = ({
   targetCoordinates,
@@ -25,9 +26,7 @@ export const Sight = ({
 
   return (
     <div
-      className={`${styles["Sight"]} ${
-        isShot && isInTurn ? styles["is-shooting"] : ""
-      }`}
+      className={clsx(css["Sight"], isShot && isInTurn && css["is-shooting"])}
       style={{ left, top }}
     >
       <Icon size="100%" name="sight" />

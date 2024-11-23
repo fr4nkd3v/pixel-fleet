@@ -1,7 +1,7 @@
 import { SHIP_TYPES } from "~/constants/game";
-import styles from "./fleet-menu.module.css";
+import css from "./fleet-menu.module.css";
 import { type IFleetMenuProps } from "./fleet-menu.types";
-import { ShipItem } from "./ship-item";
+import { FleetMenuItem } from "./fleet-menu-item";
 
 export const FleetMenu = ({
   shipList,
@@ -11,14 +11,14 @@ export const FleetMenu = ({
   shipOnDeployId,
 }: IFleetMenuProps) => {
   return (
-    <div className={styles["FleetMenu"]}>
-      <div className={styles["FleetMenu-texts"]}>
-        <div className={styles["FleetMenu-primaryText"]}>{primaryText}</div>
-        <p className={styles["FleetMenu-secondaryText"]}>{secondaryText}</p>
+    <div className={css["FleetMenu"]}>
+      <div className={css["FleetMenu-texts"]}>
+        <div className={css["FleetMenu-primaryText"]}>{primaryText}</div>
+        <p className={css["FleetMenu-secondaryText"]}>{secondaryText}</p>
       </div>
-      <div className={styles["FleetMenu-ships"]}>
+      <div className={css["FleetMenu-ships"]}>
         {shipList.map((ship) => (
-          <ShipItem
+          <FleetMenuItem
             shipId={ship.id}
             shipType={ship.id}
             key={ship.id}

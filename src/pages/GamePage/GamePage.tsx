@@ -6,7 +6,7 @@ import {
   CursorShadowShip,
   FloatingStartPanel,
   AttackControl,
-  EndGameModal,
+  ResultsModal,
 } from "~/components";
 import {
   TCursorLocation,
@@ -384,7 +384,7 @@ export const GamePage = () => {
         )}
       </section>
       {isPlayerWins !== null ? (
-        <EndGameModal
+        <ResultsModal
           type={isPlayerWins ? "win" : "fail"}
           onRetryClick={restartGame}
           onToHomeClick={() => console.log("To home")}
