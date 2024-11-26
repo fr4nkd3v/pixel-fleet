@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./GamePage.module.css";
 import {
   FleetMenu,
@@ -111,6 +111,8 @@ export const GamePage = () => {
     null
   );
 
+  const coordinateYInputRef = useRef<HTMLInputElement | null>(null);
+
   const restartGame = useCallback(() => {
     restartGameState();
     restartOpponentState();
@@ -215,6 +217,7 @@ export const GamePage = () => {
   const handleStartGame = () => {
     if (!isPlayerFleetDeployed) return;
     startGame();
+    coordinateYInputRef.current?.focus();
   };
 
   const handleChangeTargetCoordinates = (
@@ -372,9 +375,10 @@ export const GamePage = () => {
         />
         <AttackControl
           targetCoordinates={playerTargetCoordinates}
+          disabled={isAttackControlDisabled}
+          coordinateYInputRef={coordinateYInputRef}
           onChangeTargetCoordinates={handleChangeTargetCoordinates}
           onShootButtonClick={startsShooting}
-          disabled={isAttackControlDisabled}
         />
         {gamePhase === "prestart" && (
           <FloatingStartPanel

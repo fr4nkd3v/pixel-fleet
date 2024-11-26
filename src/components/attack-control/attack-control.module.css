@@ -19,11 +19,28 @@
 }
 
 .AttackControl-label {
+  margin: 0 !important;
+  height: 54px;
+  padding: 0 var(--size-6);
+
+  display: flex !important;
+  align-items: center;
+
+  background: var(--color-primary-1000);
+  color: var(--white);
   line-height: 100%;
+}
+.AttackControl-label:nth-child(1) {
+  transform: translateX(4px);
+}
+.AttackControl-label:nth-child(2) {
+  transform: translateX(-4px);
 }
 
 .AttackControl-input {
-  width: 5rem;
-  padding: 0.5rem;
+  width: 4rem;
   text-transform: uppercase;
+  text-align: center;
+  font-size: var(--size-22);
+  line-height: 100%;
 }

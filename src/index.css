@@ -9,7 +9,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   background-color: #242424;
 
   font-synthesis: none;
@@ -54,6 +53,14 @@ p {
 
 button.nes-btn {
   cursor: pointer;
+}
+
+input {
+  background-color: initial;
+}
+input:focus-visible {
+  outline: red auto 1px;
+  outline-offset: 0px;
 }
 
 #root {

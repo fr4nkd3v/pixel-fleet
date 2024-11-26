@@ -16,7 +16,7 @@ export const FleetMenuItem = ({
   const lives = Array.from({ length: fullHealth }, (_, index) => {
     const combinedClasses = clsx(
       css["FleetMenuItem-live"],
-      index > currentHealth && css["is-dead"]
+      index >= currentHealth && css["is-dead"]
     );
     return <div className={combinedClasses} key={index}></div>;
   });

@@ -11,11 +11,16 @@
   background-color: var(--color-primary-300);
 }
 
-.icon-button::after,
-.icon-button:hover::after {
+.icon-button:not(:global(.is-disabled))::after,
+.icon-button:not(:global(.is-disabled)):hover::after {
   box-shadow: inset -3px -3px var(--color-primary-500);
 }
 
-.icon-button:active:not(.is-disabled)::after {
+.icon-button:active:not(:global(.is-disabled))::after {
   box-shadow: inset 3px 3px var(--color-primary-500);
+}
+
+.icon-button:global(.is-disabled) {
+  box-shadow: none !important;
+  opacity: 0.4 !important;
 }

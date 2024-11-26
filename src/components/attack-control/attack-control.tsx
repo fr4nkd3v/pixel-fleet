@@ -1,18 +1,22 @@
-import { useRef } from "react";
+import { FormEvent, useRef } from "react";
 import { Panel } from "../panel";
 import css from "./attack-control.module.css";
 import { IAttackControlProps } from "./attack-control.types";
 import { IconButton } from "../icon-button";
 import clsx from "clsx";
+import { Input } from "../input";
 
 export function AttackControl({
   targetCoordinates,
   disabled,
+  coordinateYInputRef,
   onChangeTargetCoordinates,
   onShootButtonClick,
 }: IAttackControlProps) {
   const inputY = useRef<HTMLInputElement | null>(null);
   const inputX = useRef<HTMLInputElement | null>(null);
+
+  const { x: targetXCoordinate, y: targetYCoordinate } = targetCoordinates;
 
   const handleChangeCoordinateY = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -42,6 +46,11 @@ export function AttackControl({
     if (event.key === "ArrowLeft") inputY.current?.focus();
   };
 
+  const handleShoot = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (targetXCoordinate && targetYCoordinate) onShootButtonClick();
+  };
+
   return (
     <div
       className={clsx(
@@ -50,19 +59,27 @@ export function AttackControl({
       )}
     >
       <Panel shadowSize="shadow-m">
-        <div className={css["AttackControl-wrapper"]}>
+        <form className={css["AttackControl-wrapper"]} onSubmit={handleShoot}>
           <div className={css["AttackControl"]}>
-            <span className={css["AttackControl-label"]}>
-              12
-              <br />
-              34
-            </span>
             <div className="nes-field is-inline">
-              <input
+              <label
+                htmlFor="coordinate-y"
+                className={css["AttackControl-label"]}
+              >
+                12
+                <br />
+                34
+              </label>
+              <Input
+                variant="primary"
                 type="text"
                 id="coordinate-y"
                 className={`nes-input ${css["AttackControl-input"]}`}
-                ref={inputY}
+                innerRef={(element) => {
+                  inputY.current = element;
+                  if (coordinateYInputRef)
+                    coordinateYInputRef.current = element;
+                }}
                 onKeyDown={handleKeyDownInputY}
                 onFocus={() => inputY.current?.select()}
                 onInput={handleChangeCoordinateY}
@@ -72,25 +89,33 @@ export function AttackControl({
               />
             </div>
             <div className="nes-field is-inline">
-              <input
+              <Input
+                variant="primary"
                 type="text"
                 id="coordinate-x"
                 className={`nes-input ${css["AttackControl-input"]}`}
-                ref={inputX}
+                innerRef={inputX}
                 onKeyDown={handleKeyDownInputX}
                 onFocus={() => inputX.current?.select()}
                 onInput={handleChangeCoordinateX}
                 value={targetCoordinates?.x || "-"}
               />
+              <label
+                htmlFor="coordinate-x"
+                className={css["AttackControl-label"]}
+              >
+                AB
+                <br />
+                CD
+              </label>
             </div>
-            <span className={css["AttackControl-label"]}>
-              AB
-              <br />
-              CD
-            </span>
           </div>
-          <IconButton iconName="sight" onClick={onShootButtonClick} />
-        </div>
+          <IconButton
+            type="submit"
+            iconName="sight"
+            disabled={!targetXCoordinate || !targetYCoordinate}
+          />
+        </form>
       </Panel>
     </div>
   );
