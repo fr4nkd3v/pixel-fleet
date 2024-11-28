@@ -1,8 +1,8 @@
-import { Icon } from "../icon";
+import { useEffect, useState } from "react";
+import { Icon } from "~/components/icon";
 import { ISightProps } from "./battle-map.types";
 import css from "./battle-map.module.css";
-import { parseNumberCoordinateX } from "~/utils";
-import { useEffect } from "react";
+import { delay, parseNumberCoordinateX } from "~/utils";
 import { DEFAULT_ATTACK_DELAY } from "~/constants";
 import clsx from "clsx";
 
@@ -12,24 +12,52 @@ export const Sight = ({
   onFinishesShot,
   isInTurn,
 }: ISightProps) => {
-  const { x: strX, y = 0 } = targetCoordinates;
-  const x = parseNumberCoordinateX(strX);
+  const [showAnimation, setShowAnimation] = useState(false);
 
-  const left = `calc(var(--tile-size) * ${x})`;
-  const top = `calc(var(--tile-size) * ${y})`;
+  const { x: strX, y: rawY } = targetCoordinates;
+  const x = parseNumberCoordinateX(strX);
+  const y = rawY ?? 0;
+
+  const sightStyles = {
+    left: `calc(var(--tile-size) * ${x})`,
+    top: `calc(var(--tile-size) * ${y})`,
+  };
+
+  const animationSize = 64;
+  const animationStyles = {
+    left: `calc(var(--tile-size) * ${x} + (var(--tile-size) - ${animationSize}px) / 2)`,
+    top: `calc(var(--tile-size) * ${y} + (var(--tile-size) - ${animationSize}px) / 2)`,
+  };
 
   useEffect(() => {
     if (!isShot || !isInTurn) return;
 
-    setTimeout(() => onFinishesShot(), DEFAULT_ATTACK_DELAY);
+    (async () => {
+      await delay(DEFAULT_ATTACK_DELAY);
+      setShowAnimation(true);
+
+      await delay(800);
+      setShowAnimation(false);
+      onFinishesShot();
+    })();
   }, [isInTurn, isShot, onFinishesShot]);
 
   return (
-    <div
-      className={clsx(css["Sight"], isShot && isInTurn && css["is-shooting"])}
-      style={{ left, top }}
-    >
-      <Icon size="100%" name="sight" />
-    </div>
+    <>
+      {!showAnimation && (
+        <div
+          className={clsx(
+            css["Sight"],
+            isShot && isInTurn && css["is-shooting"]
+          )}
+          style={sightStyles}
+        >
+          <Icon size="100%" name="sight" />
+        </div>
+      )}
+      {showAnimation ? (
+        <i className={css["AttackAnimation"]} style={animationStyles}></i>
+      ) : null}
+    </>
   );
 };

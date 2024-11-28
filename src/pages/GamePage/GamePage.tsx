@@ -26,6 +26,7 @@ import {
   prepareFleet,
   isFleetDefeated,
   checkCoordinateValue,
+  delay,
 } from "~/utils";
 import {
   useGameStore,
@@ -257,19 +258,17 @@ export const GamePage = () => {
     setOpponentMap,
   ]);
 
-  const handleOpponentShoot = useCallback(() => {
+  const handleOpponentShoot = useCallback(async () => {
     let targetCoordinates: null | TCoordinate = null;
-    let secs = 1;
-    const timer = setInterval(() => {
-      if (secs === 2) {
-        targetCoordinates = getRandomCoordinate();
-        setOpponentTargetCoordinates(targetCoordinates);
-      } else if (secs === 3) {
-        startsShooting();
-        clearInterval(timer);
-      }
-      secs++;
-    }, 1000);
+
+    // Opponent randomly selects a pair of coordinates after 2 seconds
+    await delay(2000);
+    targetCoordinates = getRandomCoordinate();
+    setOpponentTargetCoordinates(targetCoordinates);
+
+    // Then after 1 second starts firing
+    await delay(1000);
+    startsShooting();
   }, [setOpponentTargetCoordinates, startsShooting]);
 
   const handleOpponentFinishesShooting = useCallback(() => {
