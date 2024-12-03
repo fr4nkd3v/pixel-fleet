@@ -11,13 +11,15 @@ export const FleetMenuItem = ({
   currentHealth,
   isDeployed,
   shipOnDeployId,
+  isHidden = false,
   onDeploying,
 }: IFleetMenuItemProps) => {
   const lives = Array.from({ length: fullHealth }, (_, index) => {
-    const combinedClasses = clsx(
-      css["FleetMenuItem-live"],
-      index >= currentHealth && css["is-dead"]
-    );
+    const cssIsDead =
+      (isHidden && currentHealth === 0) || (!isHidden && index >= currentHealth)
+        ? css["is-dead"]
+        : null;
+    const combinedClasses = clsx(css["FleetMenuItem-live"], cssIsDead);
     return <div className={combinedClasses} key={index}></div>;
   });
 

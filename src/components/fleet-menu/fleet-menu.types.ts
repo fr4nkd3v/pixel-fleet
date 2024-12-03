@@ -4,11 +4,12 @@ export interface IFleetMenuProps {
   shipList: TFleet;
   primaryText: string;
   secondaryText: string;
+  shipOnDeployId: TShipId | null;
+  isHidden?: boolean;
   onDeployingShip: (
     shipId: TShipId,
     { locationX, locationY }: { locationX: number; locationY: number }
   ) => void;
-  shipOnDeployId: TShipId | null;
 }
 
 export interface IFleetMenuItemProps {
@@ -18,6 +19,7 @@ export interface IFleetMenuItemProps {
   currentHealth: number;
   isDeployed: boolean;
   shipOnDeployId: TShipId | null;
+  isHidden?: boolean;
   onDeploying: (
     shipId: TShipId,
     { locationX, locationY }: { locationX: number; locationY: number }

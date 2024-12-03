@@ -7,8 +7,9 @@ export const FleetMenu = ({
   shipList,
   primaryText,
   secondaryText,
-  onDeployingShip,
   shipOnDeployId,
+  isHidden = false,
+  onDeployingShip,
 }: IFleetMenuProps) => {
   return (
     <div className={css["FleetMenu"]}>
@@ -26,6 +27,7 @@ export const FleetMenu = ({
             currentHealth={ship.health}
             isDeployed={ship.isDeployed}
             shipOnDeployId={shipOnDeployId}
+            isHidden={isHidden}
             onDeploying={onDeployingShip}
           />
         ))}

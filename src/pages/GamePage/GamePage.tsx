@@ -58,13 +58,11 @@ export const GamePage = () => {
 
   const {
     gamePhase,
-    // hasGameStarted,
     isPlayerTurn,
     isShooting,
     isPlayerWins,
     startGame,
     endGame,
-    // toggleTurn,
     startsShooting,
     endShooting,
     setPlayerWins,
@@ -76,10 +74,10 @@ export const GamePage = () => {
     fleet: opponentFleet,
     map: opponentMap,
     targetCoordinates: opponentTargetCoordinates,
+    message: opponentMessage,
     setFleet: setOpponentFleet,
     setMap: setOpponentMap,
     setTargetCoordinates: setOpponentTargetCoordinates,
-    message: opponentMessage,
     setMessage: setOpponentMessage,
     restartState: restartOpponentState,
   } = useOpponentStore();
@@ -88,12 +86,12 @@ export const GamePage = () => {
     fleet: playerFleet,
     map: playerMap,
     targetCoordinates: playerTargetCoordinates,
+    message: playerMessage,
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
     deployShipInFleet,
     updateTargetCoordinateX: updatePlayerTargetCoordinateX,
     updateTargetCoordinateY: updatePlayerTargetCoordinateY,
-    message: playerMessage,
     setMessage: setPlayerMessage,
     restartState: restartPlayerState,
   } = usePlayerStore();
@@ -189,19 +187,21 @@ export const GamePage = () => {
       SHIP_TYPES[shipId].length,
       shipOnDeployOrientation
     );
-    const coveredCoordinates: TMap = nextCoordinates.map((coor, index) => {
-      const shipPart = getShipPartByIndex(index, nextCoordinates.length);
-      return {
-        x: coor.x,
-        y: Number(coor.y),
-        covered: {
-          shipId,
-          orientation,
-          shipPart,
-        },
-        attacked: false,
-      };
-    });
+    const coveredCoordinates: TMap = nextCoordinates.map(
+      (coordinate, index) => {
+        const shipPart = getShipPartByIndex(index, nextCoordinates.length);
+        return {
+          x: coordinate.x,
+          y: Number(coordinate.y),
+          covered: {
+            shipId,
+            orientation,
+            shipPart,
+          },
+          attacked: false,
+        };
+      }
+    );
 
     deployShipInFleet(shipId, coveredCoordinates);
     clearShipOnDeploy();
@@ -338,8 +338,9 @@ export const GamePage = () => {
           shipList={opponentFleet}
           primaryText="flota enemiga"
           secondaryText={opponentMessage}
-          onDeployingShip={handleDeployingShip}
           shipOnDeployId={shipOnDeployId}
+          isHidden
+          onDeployingShip={handleDeployingShip}
         />
         <BattleMap
           mapCoordinates={playerMap}
@@ -367,6 +368,7 @@ export const GamePage = () => {
           isReady={gamePhase === "start"}
           isShooting={isShooting}
           isInTurn={isPlayerTurn}
+          isHidden
           onDeployedShip={handleDeployedShip}
           onChangeOrientation={handleChangeOrientation}
           onChangeCursorLocation={handleChangeCursorLocation}

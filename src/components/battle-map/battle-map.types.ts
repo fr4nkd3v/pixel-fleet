@@ -17,6 +17,7 @@ export interface IBattleMapProps {
   isReady: boolean;
   isShooting: boolean;
   isInTurn: boolean;
+  isHidden?: boolean;
   onDeployedShip: (
     shipId: TShipId,
     locationX: string,
@@ -33,6 +34,7 @@ export interface ITileProps {
   locationY: number;
   isCovered: false | TCoveredShip;
   isAttacked: boolean;
+  isHidden?: boolean;
   onMouseEnter?: (event: React.MouseEvent) => void;
   onMouseLeave?: (event: React.MouseEvent) => void;
   onContextMenu?: (event: React.MouseEvent) => void;

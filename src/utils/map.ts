@@ -8,17 +8,17 @@ export const attackMap = (
   const { x, y } = targetCoordinates;
   const newMap: TMap = [];
   let newFleet: TFleet = [...fleet];
-  let foundCoordinateShooted = false;
+  let foundCoordinate = false;
 
-  for (const coor of map) {
-    if (coor.x === x && coor.y === y) {
+  for (const coordinate of map) {
+    if (coordinate.x === x && coordinate.y === y) {
       // If is the same coordinate
-      foundCoordinateShooted = true;
-      newMap.push({ ...coor, attacked: true });
+      foundCoordinate = true;
+      newMap.push({ ...coordinate, attacked: true });
 
-      if (coor.covered !== false) {
+      if (coordinate.covered) {
         // If a ship is located in the coordinate
-        const { shipId } = coor.covered;
+        const { shipId } = coordinate.covered;
         newFleet = newFleet.map((ship) => {
           if (ship.id === shipId) {
             return { ...ship, health: ship.health - 1 };
@@ -29,11 +29,11 @@ export const attackMap = (
       }
     } else {
       // If is a different coordinate
-      newMap.push({ ...coor });
+      newMap.push({ ...coordinate });
     }
   }
 
-  if (!foundCoordinateShooted) {
+  if (!foundCoordinate) {
     // If the coordinate was not found
     newMap.push({
       x,

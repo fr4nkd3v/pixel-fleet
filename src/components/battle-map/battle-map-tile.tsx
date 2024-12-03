@@ -8,13 +8,14 @@ export const Tile = ({
   locationY,
   isCovered,
   isAttacked,
+  isHidden = false,
   onMouseEnter,
   onMouseLeave,
   onContextMenu,
 }: ITileProps) => {
   const coordinateX = parseStringCoordinateX(locationX);
-  const isValidCoor = isValidCoordinate(coordinateX, locationY);
-  const id = isValidCoor ? `${locationY}${coordinateX}` : undefined;
+  const validCoordinate = isValidCoordinate(coordinateX, locationY);
+  const id = validCoordinate ? `${locationY}${coordinateX}` : undefined;
 
   let text = null;
   if (locationX === 0 && locationY > 0 && locationY < 11) {
@@ -24,20 +25,22 @@ export const Tile = ({
   }
 
   const { shipPart = "", orientation = "" } = isCovered || {};
+
   const combinedClasses = clsx(
     css["BattleMap-tile"],
     isCovered && [css["is-covered"], css[shipPart], css[orientation]],
-    isAttacked && css["is-attacked"]
+    isAttacked && css["is-attacked"],
+    isHidden && css["is-hidden"]
   );
 
   return (
     <div
       id={id}
       className={combinedClasses}
-      data-location-x={isValidCoor ? coordinateX : undefined}
-      data-location-y={isValidCoor ? locationY : undefined}
-      onMouseEnter={isValidCoor ? onMouseEnter : undefined}
-      onMouseLeave={isValidCoor ? onMouseLeave : undefined}
+      data-location-x={validCoordinate ? coordinateX : undefined}
+      data-location-y={validCoordinate ? locationY : undefined}
+      onMouseEnter={validCoordinate ? onMouseEnter : undefined}
+      onMouseLeave={validCoordinate ? onMouseLeave : undefined}
       onContextMenu={onContextMenu}
     >
       {text}

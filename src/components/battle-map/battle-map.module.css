@@ -14,6 +14,15 @@
   pointer-events: none;
 }
 
+.BattleMap-background {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-image: url(/src/assets/ocean-pattern.png);
+  background-size: 9.375rem;
+  opacity: 90%;
+}
+
 .BattleMap-tile {
   display: flex;
   justify-content: center;
@@ -39,7 +48,7 @@
   background: var(--ship-pattern);
 }
 .BattleMap-tile.is-attacked {
-  background: rgba(233, 144, 34, 0.5);
+  background: rgba(57, 57, 57, 0.5);
 }
 .BattleMap-tile.is-covered.is-attacked {
   background: linear-gradient(rgb(219, 47, 64, 0.5), rgb(219, 47, 64, 0.5)),
@@ -78,22 +87,26 @@
   border-top: none;
 }
 
-.BattleMap-background {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background-image: url(/src/assets/ocean-pattern.png);
-  background-size: 9.375rem;
-  opacity: 90%;
+.BattleMap-tile.is-covered.is-hidden {
+  background: none;
 }
+.BattleMap-tile.is-covered.is-hidden::after {
+  border: none;
+}
+.BattleMap-tile.is-covered.is-attacked.is-hidden {
+  background: hsla(354deg 71% 58% / 70%);
+}
+
+/* #region Sight */
 
 .Sight {
   position: absolute;
   width: var(--tile-size);
   aspect-ratio: 1 / 1;
   z-index: var(--layer-30);
-  color: var(--color-warning-300);
+  color: #ffbd3f;
   background-color: var(--background-color-sight);
+  filter: drop-shadow(0px 0px 5px rgba(0, 0, 0, 0.7));
 }
 
 .Sight.is-shooting {
@@ -137,6 +150,10 @@
   }
 }
 
+/* #endregion Sight */
+
+/* #region Attack Animation */
+
 .AttackAnimation {
   width: 64px;
   height: 64px;
@@ -158,3 +175,5 @@
     background-position-x: calc(-64px * 5);
   }
 }
+
+/* #endregion Attack Animation */

@@ -17,14 +17,6 @@ export const useOpponentStore = create<IOpponentStore>((set) => ({
   setMap: (map: TMap) => set({ map }),
   setTargetCoordinates: (targetCoordinates: TCoordinate) =>
     set({ targetCoordinates }),
-  updateTargetCoordinateX: (value: string) =>
-    set((state) => ({
-      targetCoordinates: { y: state.targetCoordinates?.y || 1, x: value },
-    })),
-  updateTargetCoordinateY: (value: number) =>
-    set((state) => ({
-      targetCoordinates: { y: value, x: state.targetCoordinates?.x || "a" },
-    })),
   setMessage: (message: string) => set({ message }),
   restartState: () =>
     set({
