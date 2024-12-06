@@ -1,6 +1,10 @@
 .AttackControl-root {
   position: relative;
 }
+.AttackControl-root.is-disabled {
+  position: relative;
+  pointer-events: none;
+}
 .AttackControl-root.is-disabled::after {
   content: "";
   position: absolute;

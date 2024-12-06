@@ -288,6 +288,7 @@ export const GamePage = () => {
     } else {
       endShootingAndToggleTurn();
     }
+    coordinateYInputRef.current?.focus();
   }, [
     endShooting,
     endShootingAndToggleTurn,
@@ -323,7 +324,8 @@ export const GamePage = () => {
     }
   }, [isPlayerTurn, gamePhase, handleOpponentShoot]);
 
-  const isAttackControlDisabled = !(isPlayerTurn && gamePhase === "start");
+  const isAttackControlDisabled =
+    !isPlayerTurn || gamePhase !== "start" || isShooting;
 
   return (
     <>

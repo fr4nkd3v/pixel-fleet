@@ -48,6 +48,8 @@ export function AttackControl({
 
   const handleShoot = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    inputX.current?.blur();
+    inputY.current?.blur();
     if (targetXCoordinate && targetYCoordinate) onShootButtonClick();
   };
 
