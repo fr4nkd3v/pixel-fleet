@@ -24,13 +24,13 @@ export const Tile = ({
     text = coordinateX;
   }
 
-  const { shipPart = "", orientation = "" } = isCovered || {};
+  const { shipPart = "", orientation = "", isDefeated } = isCovered || {};
 
   const combinedClasses = clsx(
     css["BattleMap-tile"],
     isCovered && [css["is-covered"], css[shipPart], css[orientation]],
     isAttacked && css["is-attacked"],
-    isHidden && css["is-hidden"]
+    isHidden && !isDefeated && css["is-hidden"]
   );
 
   return (

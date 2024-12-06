@@ -20,7 +20,6 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
       });
     }
   }
-  // console.log('coordenadas disponibles:', availableCoordinates.length);
 
   // 2. Iterate fleet
   fleet.forEach((ship) => {
@@ -34,22 +33,23 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
       map
     );
     if (!nextMapCoordinates) {
-      console.log(
-        `❌ No se pudieron encontrar coordenadas para el barco ${name}`
-      );
+      console.error(`❌ No coordinates could be found for the ${name} ship.`);
       return;
     }
 
     // ✅ Deploy
 
     // Update available coordinates
-    availableCoordinates = availableCoordinates.filter((availableCoor) => {
-      const isMatch = nextMapCoordinates.some(
-        (nextCoor) =>
-          nextCoor.x === availableCoor.x && nextCoor.y === availableCoor.y
-      );
-      return !isMatch;
-    });
+    availableCoordinates = availableCoordinates.filter(
+      (availableCoordinate) => {
+        const isMatch = nextMapCoordinates.some(
+          (nextCoordinate) =>
+            nextCoordinate.x === availableCoordinate.x &&
+            nextCoordinate.y === availableCoordinate.y
+        );
+        return !isMatch;
+      }
+    );
 
     // Save coordinates in map array
     map.push(...nextMapCoordinates);
@@ -65,7 +65,6 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
         return ship;
       }
     });
-    // console.log(`✅ Si se pudieron encontrar coordenadas para el barco ${name}`);
   });
 
   const isFleetDeployedSuccessfully = fleet.every((ship) => ship.isDeployed);
@@ -102,19 +101,19 @@ function tryRandomCoordinate(
       nextCoordinates.length === shipLength &&
       !hasCoordinateCovered(nextCoordinates, map);
 
-    nextMapCoordinates = nextCoordinates.map((coor, index) => ({
-      x: coor.x,
-      y: coor.y,
+    nextMapCoordinates = nextCoordinates.map((coordinate, index) => ({
+      x: coordinate.x,
+      y: coordinate.y,
       covered: {
         shipId,
         orientation: randomOrientation,
         shipPart: getShipPartByIndex(index, nextCoordinates.length),
+        isDefeated: false,
       },
       attacked: false,
     }));
 
     counterTries++;
-    // console.log(`tryRandomCoordinate - Intento ${counterTries}, Coordenadas propuestas: ${nextCoordinates.map(c => `${c.x}${c.y}`).join('|')}, Está disponible: ${isAvailable}`);
   }
 
   if (isAvailable) {
@@ -124,4 +123,4 @@ function tryRandomCoordinate(
   }
 }
 
-// TODO: make algorithm fallback for try no-ramdon search available coordinates
+// TODO: make algorithm fallback for try no-random search available coordinates

@@ -1,4 +1,4 @@
-import { TCoordinate, TFleet, TMap } from "~/types/game";
+import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
 
 export const attackMap = (
   targetCoordinates: TCoordinate,
@@ -6,27 +6,33 @@ export const attackMap = (
   fleet: TFleet
 ) => {
   const { x, y } = targetCoordinates;
-  const newMap: TMap = [];
+  let newMap: TMap = [];
   let newFleet: TFleet = [...fleet];
   let foundCoordinate = false;
+  let shipDestroyedId: null | string = null;
 
   for (const coordinate of map) {
     if (coordinate.x === x && coordinate.y === y) {
       // If is the same coordinate
       foundCoordinate = true;
-      newMap.push({ ...coordinate, attacked: true });
+      const attackedCoordinate: TMapCoordinate = {
+        ...coordinate,
+        attacked: true,
+      };
 
       if (coordinate.covered) {
         // If a ship is located in the coordinate
         const { shipId } = coordinate.covered;
         newFleet = newFleet.map((ship) => {
-          if (ship.id === shipId) {
-            return { ...ship, health: ship.health - 1 };
-          } else {
-            return ship;
-          }
+          if (ship.id !== shipId) return ship;
+
+          const newHealth = ship.health - 1;
+          if (newHealth <= 0) shipDestroyedId = shipId;
+          return { ...ship, health: newHealth };
         });
       }
+
+      newMap.push(attackedCoordinate);
     } else {
       // If is a different coordinate
       newMap.push({ ...coordinate });
@@ -40,6 +46,20 @@ export const attackMap = (
       y,
       attacked: true,
       covered: false,
+    });
+  }
+
+  if (shipDestroyedId) {
+    // If a ship was destroyed
+    newMap = newMap.map((coordinate) => {
+      if (coordinate.covered && coordinate.covered.shipId === shipDestroyedId) {
+        return {
+          ...coordinate,
+          covered: { ...coordinate.covered, isDefeated: true },
+        };
+      } else {
+        return coordinate;
+      }
     });
   }
 

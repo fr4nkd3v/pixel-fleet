@@ -197,6 +197,7 @@ export const GamePage = () => {
             shipId,
             orientation,
             shipPart,
+            isDefeated: false,
           },
           attacked: false,
         };

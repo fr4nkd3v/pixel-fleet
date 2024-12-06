@@ -19,6 +19,7 @@ export type TCoveredShip = {
   shipId: TShipId;
   shipPart: TShipPart;
   orientation: TOrientationType;
+  isDefeated: boolean;
 };
 
 export type TCoordinate = {
