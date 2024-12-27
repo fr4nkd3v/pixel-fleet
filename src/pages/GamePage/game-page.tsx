@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import styles from "./GamePage.module.css";
+import styles from "./game-page.module.css";
 import {
   FleetMenu,
   BattleMap,
@@ -74,7 +74,7 @@ export const GamePage = () => {
     fleet: opponentFleet,
     map: opponentMap,
     targetCoordinates: opponentTargetCoordinates,
-    message: opponentMessage,
+    // message: opponentMessage,
     setFleet: setOpponentFleet,
     setMap: setOpponentMap,
     setTargetCoordinates: setOpponentTargetCoordinates,
@@ -86,7 +86,7 @@ export const GamePage = () => {
     fleet: playerFleet,
     map: playerMap,
     targetCoordinates: playerTargetCoordinates,
-    message: playerMessage,
+    // message: playerMessage,
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
     deployShipInFleet,
@@ -100,7 +100,7 @@ export const GamePage = () => {
     shipId: shipOnDeployId,
     orientation: shipOnDeployOrientation,
     hasShipOnDeploy,
-    setShipOnDeploy,
+    // setShipOnDeploy,
     setOrientation,
     clearShipOnDeploy,
     restartState: restartShipDeployState,
@@ -161,17 +161,6 @@ export const GamePage = () => {
       setPlayerWins(isWinner);
     }
   }, [endGame, gamePhase, opponentFleet, playerFleet, setPlayerWins]);
-
-  const handleDeployingShip = (
-    shipId: TShipId,
-    { locationX, locationY }: { locationX: number; locationY: number }
-  ) => {
-    setShipOnDeploy(shipId);
-    setCursorLocation({
-      left: locationX,
-      top: locationY,
-    });
-  };
 
   const handleDeployedShip = (
     shipId: TShipId,
@@ -330,21 +319,8 @@ export const GamePage = () => {
   return (
     <>
       <section className={styles["GamePage"]}>
-        <FleetMenu
-          shipList={playerFleet}
-          primaryText="mi flota"
-          secondaryText={playerMessage}
-          onDeployingShip={handleDeployingShip}
-          shipOnDeployId={shipOnDeployId}
-        />
-        <FleetMenu
-          shipList={opponentFleet}
-          primaryText="flota enemiga"
-          secondaryText={opponentMessage}
-          shipOnDeployId={shipOnDeployId}
-          isHidden
-          onDeployingShip={handleDeployingShip}
-        />
+        <FleetMenu variant="player" setCursorLocation={setCursorLocation} />
+        <FleetMenu variant="opponent" />
         <BattleMap
           mapCoordinates={playerMap}
           currentShipOnDeploy={{

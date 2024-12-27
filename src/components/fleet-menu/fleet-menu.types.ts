@@ -1,25 +1,14 @@
-import { TShipId, TFleet } from "~/types/game";
+import { TShipId, TCursorLocation, TShip } from "~/types/game";
 
 export interface IFleetMenuProps {
-  shipList: TFleet;
-  primaryText: string;
-  secondaryText: string;
-  shipOnDeployId: TShipId | null;
-  isHidden?: boolean;
-  onDeployingShip: (
-    shipId: TShipId,
-    { locationX, locationY }: { locationX: number; locationY: number }
-  ) => void;
+  variant: "player" | "opponent";
+  setCursorLocation?: (cursorLocation: TCursorLocation) => void;
 }
 
 export interface IFleetMenuItemProps {
-  shipId: TShipId;
-  shipType: TShipId;
-  fullHealth: number;
-  currentHealth: number;
-  isDeployed: boolean;
-  shipOnDeployId: TShipId | null;
+  shipData: TShip;
   isHidden?: boolean;
+  shipOnDeployId: TShipId | null;
   onDeploying: (
     shipId: TShipId,
     { locationX, locationY }: { locationX: number; locationY: number }

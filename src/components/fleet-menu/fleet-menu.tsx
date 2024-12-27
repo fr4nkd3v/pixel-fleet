@@ -1,34 +1,45 @@
-import { SHIP_TYPES } from "~/constants/game";
 import css from "./fleet-menu.module.css";
 import { type IFleetMenuProps } from "./fleet-menu.types";
 import { FleetMenuItem } from "./fleet-menu-item";
+import { useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
+import { TShipId } from "~/types";
 
-export const FleetMenu = ({
-  shipList,
-  primaryText,
-  secondaryText,
-  shipOnDeployId,
-  isHidden = false,
-  onDeployingShip,
-}: IFleetMenuProps) => {
+export const FleetMenu = ({ variant, setCursorLocation }: IFleetMenuProps) => {
+  const { fleet: playerFleet } = usePlayerStore();
+  const { fleet: opponentFleet } = useOpponentStore();
+  const { shipId: shipOnDeployId, setShipOnDeploy } = useShipDeployStore();
+
+  const isPlayer = variant === "player";
+
+  const title = isPlayer ? "Mi flota" : "Flota enemiga";
+  const shipList = isPlayer ? playerFleet : opponentFleet;
+  const isHidden = !isPlayer;
+
+  const handleDeployingShip = (
+    shipId: TShipId,
+    { locationX, locationY }: { locationX: number; locationY: number }
+  ) => {
+    setShipOnDeploy(shipId);
+    if (setCursorLocation)
+      setCursorLocation({
+        left: locationX,
+        top: locationY,
+      });
+  };
+
   return (
     <div className={css["FleetMenu"]}>
       <div className={css["FleetMenu-texts"]}>
-        <div className={css["FleetMenu-primaryText"]}>{primaryText}</div>
-        <p className={css["FleetMenu-secondaryText"]}>{secondaryText}</p>
+        <div className={css["FleetMenu-primaryText"]}>{title}</div>
       </div>
       <div className={css["FleetMenu-ships"]}>
         {shipList.map((ship) => (
           <FleetMenuItem
-            shipId={ship.id}
-            shipType={ship.id}
             key={ship.id}
-            fullHealth={SHIP_TYPES[ship.id].length}
-            currentHealth={ship.health}
-            isDeployed={ship.isDeployed}
-            shipOnDeployId={shipOnDeployId}
+            shipData={ship}
             isHidden={isHidden}
-            onDeploying={onDeployingShip}
+            shipOnDeployId={shipOnDeployId}
+            onDeploying={handleDeployingShip}
           />
         ))}
       </div>

@@ -5,15 +5,14 @@ import css from "./fleet-menu.module.css";
 import clsx from "clsx";
 
 export const FleetMenuItem = ({
-  shipId,
-  shipType,
-  fullHealth,
-  currentHealth,
-  isDeployed,
-  shipOnDeployId,
+  shipData,
   isHidden = false,
+  shipOnDeployId,
   onDeploying,
 }: IFleetMenuItemProps) => {
+  const { id: shipId, health: currentHealth, isDeployed } = shipData;
+  const fullHealth = SHIP_TYPES[shipId].length;
+
   const lives = Array.from({ length: fullHealth }, (_, index) => {
     const cssIsDead =
       (isHidden && currentHealth === 0) || (!isHidden && index >= currentHealth)
@@ -40,9 +39,7 @@ export const FleetMenuItem = ({
       <div className={css["FleetMenuItem-icon"]}>
         <Icon size="100%" name="ship" />
       </div>
-      <div className={css["FleetMenuItem-name"]}>
-        {SHIP_TYPES[shipType].name}
-      </div>
+      <div className={css["FleetMenuItem-name"]}>{SHIP_TYPES[shipId].name}</div>
       <div className={css["FleetMenuItem-health"]}>{lives}</div>
     </div>
   );
