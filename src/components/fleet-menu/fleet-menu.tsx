@@ -4,12 +4,15 @@ import { FleetMenuItem } from "./fleet-menu-item";
 import { useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { TShipId } from "~/types";
 
-export const FleetMenu = ({ variant, setCursorLocation }: IFleetMenuProps) => {
+export const FleetMenu = ({
+  perspective,
+  setCursorLocation,
+}: IFleetMenuProps) => {
   const { fleet: playerFleet } = usePlayerStore();
   const { fleet: opponentFleet } = useOpponentStore();
   const { shipId: shipOnDeployId, setShipOnDeploy } = useShipDeployStore();
 
-  const isPlayer = variant === "player";
+  const isPlayer = perspective === "player";
 
   const title = isPlayer ? "Mi flota" : "Flota enemiga";
   const shipList = isPlayer ? playerFleet : opponentFleet;

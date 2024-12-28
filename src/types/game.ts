@@ -50,3 +50,5 @@ export type TCursorLocation = {
   left: number;
   top: number;
 };
+
+export type TPerspective = "player" | "opponent";

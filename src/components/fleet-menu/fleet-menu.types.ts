@@ -1,7 +1,7 @@
-import { TShipId, TCursorLocation, TShip } from "~/types/game";
+import { TShipId, TCursorLocation, TShip, TPerspective } from "~/types/game";
 
 export interface IFleetMenuProps {
-  variant: "player" | "opponent";
+  perspective: TPerspective;
   setCursorLocation?: (cursorLocation: TCursorLocation) => void;
 }
 

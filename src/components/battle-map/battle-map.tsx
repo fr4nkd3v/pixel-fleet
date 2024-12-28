@@ -5,29 +5,53 @@ import { Sight } from "./battle-map-sight";
 import css from "./battle-map.module.css";
 import {
   getNextCoordinates,
+  getShipPartByIndex,
   getTilesByCoordinates,
   hasCoordinateCovered,
   parseStringCoordinateX,
   toggleOrientation,
 } from "~/utils";
 import { MAP_SIZE, SHIP_TYPES } from "~/constants";
-import { TOrientationType } from "~/types";
+import { TMap, TOrientationType, TShipId } from "~/types";
 import clsx from "clsx";
+import {
+  useGameStore,
+  useOpponentStore,
+  usePlayerStore,
+  useShipDeployStore,
+} from "~/stores";
 
 export const BattleMap = ({
-  mapCoordinates,
-  currentShipOnDeploy,
-  disabled = false,
-  targetCoordinates,
-  isReady,
-  isShooting,
-  isInTurn,
-  isHidden = false,
-  onDeployedShip,
-  onChangeOrientation,
-  onChangeCursorLocation,
+  perspective,
+  setCursorLocation,
   onFinishesShot,
 }: IBattleMapProps) => {
+  const {
+    map: playerMap,
+    targetCoordinates: opponentTargetCoordinates,
+    deployShipInFleet,
+  } = usePlayerStore();
+  const { map: opponentMap, targetCoordinates: playerTargetCoordinates } =
+    useOpponentStore();
+  const {
+    shipId: shipOnDeployId,
+    orientation: shipOnDeployOrientation,
+    hasShipOnDeploy,
+    clearShipOnDeploy,
+    setOrientation,
+  } = useShipDeployStore();
+  const { gamePhase, isPlayerTurn, isShooting } = useGameStore();
+
+  const isPlayer = perspective === "player";
+
+  const mapCoordinates = isPlayer ? playerMap : opponentMap;
+  const targetCoordinates = isPlayer
+    ? playerTargetCoordinates
+    : opponentTargetCoordinates;
+  const isInTurn = isPlayer ? !isPlayerTurn : isPlayerTurn;
+  const isDisabled = !isPlayer && gamePhase !== "start";
+  const isReady = gamePhase === "start";
+
   const sideLength = MAP_SIZE;
   const battleMapRef = useRef<null | HTMLElement>(null);
 
@@ -36,23 +60,58 @@ export const BattleMap = ({
       tile.classList.remove(css["is-available"], css["is-unavailable"])
     );
   };
+
+  const handleDeployedShip = (
+    shipId: TShipId,
+    locationX: string,
+    locationY: number,
+    orientation: TOrientationType
+  ) => {
+    if (!hasShipOnDeploy) return;
+
+    const nextCoordinates = getNextCoordinates(
+      locationX,
+      Number(locationY),
+      SHIP_TYPES[shipId].length,
+      shipOnDeployOrientation
+    );
+    const coveredCoordinates: TMap = nextCoordinates.map(
+      (coordinate, index) => {
+        const shipPart = getShipPartByIndex(index, nextCoordinates.length);
+        return {
+          x: coordinate.x,
+          y: Number(coordinate.y),
+          covered: {
+            shipId,
+            orientation,
+            shipPart,
+            isDefeated: false,
+          },
+          attacked: false,
+        };
+      }
+    );
+
+    deployShipInFleet(shipId, coveredCoordinates);
+    clearShipOnDeploy();
+  };
+
   const handleMouseEnterAndLeaveTile = (
     event: React.MouseEvent,
     action: "enter" | "leave",
     forcedOrientation?: TOrientationType
   ) => {
-    if (!(currentShipOnDeploy.shipId && currentShipOnDeploy.orientation))
-      return;
+    if (!(shipOnDeployId && shipOnDeployOrientation)) return;
 
     const { locationX, locationY } = (event.target as HTMLElement).dataset;
     if (!locationX || !locationY) return;
 
-    const length: number = SHIP_TYPES[currentShipOnDeploy.shipId].length;
+    const length: number = SHIP_TYPES[shipOnDeployId].length;
     const nextCoordinates = getNextCoordinates(
       locationX,
       Number(locationY),
       length,
-      forcedOrientation || currentShipOnDeploy.orientation
+      forcedOrientation || shipOnDeployOrientation
     );
 
     const isOutOfArea = nextCoordinates.length < length;
@@ -72,11 +131,9 @@ export const BattleMap = ({
 
   const handleContextMenuTile = (event: React.MouseEvent) => {
     event.preventDefault();
-    if (!currentShipOnDeploy.orientation) return;
-    const oppositeOrientation = toggleOrientation(
-      currentShipOnDeploy.orientation
-    );
-    onChangeOrientation(oppositeOrientation);
+    if (!shipOnDeployOrientation) return;
+    const oppositeOrientation = toggleOrientation(shipOnDeployOrientation);
+    setOrientation(oppositeOrientation);
 
     if (!battleMapRef.current) return;
     const tiles = battleMapRef.current.querySelectorAll(
@@ -88,8 +145,7 @@ export const BattleMap = ({
 
   const handleClickBattleMap = (event: React.MouseEvent) => {
     // Validate data & elements
-    if (!(currentShipOnDeploy.shipId && currentShipOnDeploy.orientation))
-      return;
+    if (!(shipOnDeployId && shipOnDeployOrientation)) return;
 
     const childTile = (event.target as Element).closest(
       `.${css["BattleMap-tile"]}`
@@ -100,12 +156,12 @@ export const BattleMap = ({
     if (!locationX || !locationY) return;
 
     // Get coordinates that form the ship deployed
-    const length: number = SHIP_TYPES[currentShipOnDeploy.shipId].length;
+    const length: number = SHIP_TYPES[shipOnDeployId].length;
     const nextCoordinates = getNextCoordinates(
       locationX,
       Number(locationY),
       length,
-      currentShipOnDeploy.orientation
+      shipOnDeployOrientation
     );
     if (nextCoordinates.length < length) return; // ❌ Is unavailable | out-of-area location
 
@@ -113,19 +169,21 @@ export const BattleMap = ({
     if (isCovered) return; // ❌ Is unavailable | location covered by another ship
 
     // ✅ Is available
-    onDeployedShip(
-      currentShipOnDeploy.shipId,
+    handleDeployedShip(
+      shipOnDeployId,
       locationX,
       Number(locationY),
-      currentShipOnDeploy.orientation
+      shipOnDeployOrientation
     );
     const tiles = getTilesByCoordinates(nextCoordinates);
     clearAvailableStyles(tiles);
   };
 
   const handleMouseMoveBattleMap = (event: React.MouseEvent) => {
+    if (!setCursorLocation) return;
+
     const { clientX, clientY } = event;
-    onChangeCursorLocation({ left: clientX, top: clientY });
+    setCursorLocation({ left: clientX, top: clientY });
   };
 
   const tiles = [];
@@ -141,7 +199,7 @@ export const BattleMap = ({
           locationY={h}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
-          isHidden={isHidden}
+          isHidden={!isPlayer}
           onMouseEnter={(event) => handleMouseEnterAndLeaveTile(event, "enter")}
           onMouseLeave={(event) => handleMouseEnterAndLeaveTile(event, "leave")}
           onContextMenu={handleContextMenuTile}
@@ -152,7 +210,7 @@ export const BattleMap = ({
 
   return (
     <section
-      className={clsx(css["BattleMap"], disabled && css["is-disabled"])}
+      className={clsx(css["BattleMap"], isDisabled && css["is-disabled"])}
       style={{
         gridTemplateColumns: `repeat(${sideLength + 1}, var(--tile-size))`,
         gridTemplateRows: `repeat(${sideLength + 1}, var(--tile-size))`,
@@ -169,7 +227,7 @@ export const BattleMap = ({
           height: `calc(var(--tile-size) * ${sideLength})`,
         }}
       ></div>
-      {/* TODO: try remove isReady for this case 👇 */}
+
       {isReady && isInTurn && (
         <Sight
           targetCoordinates={targetCoordinates}

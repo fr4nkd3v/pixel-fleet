@@ -8,20 +8,12 @@ import {
   AttackControl,
   ResultsModal,
 } from "~/components";
-import {
-  TCursorLocation,
-  TOrientationType,
-  TShipId,
-  TMap,
-  TCoordinate,
-} from "~/types/game";
+import { TCursorLocation, TCoordinate } from "~/types/game";
 import { AVAILABLE_FLEET_IDS, MAP_SIZE, SHIP_TYPES } from "~/constants/game";
 import {
   attackMap,
   autoFleetDeploy,
-  getNextCoordinates,
   getRandomCoordinate,
-  getShipPartByIndex,
   calculatePlayerIsWinner,
   prepareFleet,
   isFleetDefeated,
@@ -89,7 +81,7 @@ export const GamePage = () => {
     // message: playerMessage,
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
-    deployShipInFleet,
+    // deployShipInFleet,
     updateTargetCoordinateX: updatePlayerTargetCoordinateX,
     updateTargetCoordinateY: updatePlayerTargetCoordinateY,
     setMessage: setPlayerMessage,
@@ -99,10 +91,10 @@ export const GamePage = () => {
   const {
     shipId: shipOnDeployId,
     orientation: shipOnDeployOrientation,
-    hasShipOnDeploy,
+    // hasShipOnDeploy,
     // setShipOnDeploy,
-    setOrientation,
-    clearShipOnDeploy,
+    // setOrientation,
+    // clearShipOnDeploy,
     restartState: restartShipDeployState,
   } = useShipDeployStore();
 
@@ -161,49 +153,6 @@ export const GamePage = () => {
       setPlayerWins(isWinner);
     }
   }, [endGame, gamePhase, opponentFleet, playerFleet, setPlayerWins]);
-
-  const handleDeployedShip = (
-    shipId: TShipId,
-    locationX: string,
-    locationY: number,
-    orientation: TOrientationType
-  ) => {
-    if (!hasShipOnDeploy) return;
-
-    const nextCoordinates = getNextCoordinates(
-      locationX,
-      Number(locationY),
-      SHIP_TYPES[shipId].length,
-      shipOnDeployOrientation
-    );
-    const coveredCoordinates: TMap = nextCoordinates.map(
-      (coordinate, index) => {
-        const shipPart = getShipPartByIndex(index, nextCoordinates.length);
-        return {
-          x: coordinate.x,
-          y: Number(coordinate.y),
-          covered: {
-            shipId,
-            orientation,
-            shipPart,
-            isDefeated: false,
-          },
-          attacked: false,
-        };
-      }
-    );
-
-    deployShipInFleet(shipId, coveredCoordinates);
-    clearShipOnDeploy();
-  };
-
-  const handleChangeOrientation = (orientation: TOrientationType) => {
-    setOrientation(orientation);
-  };
-
-  const handleChangeCursorLocation = ({ left, top }: TCursorLocation) => {
-    setCursorLocation({ left, top });
-  };
 
   const handleStartGame = () => {
     if (!isPlayerFleetDeployed) return;
@@ -319,38 +268,15 @@ export const GamePage = () => {
   return (
     <>
       <section className={styles["GamePage"]}>
-        <FleetMenu variant="player" setCursorLocation={setCursorLocation} />
-        <FleetMenu variant="opponent" />
+        <FleetMenu perspective="player" setCursorLocation={setCursorLocation} />
+        <FleetMenu perspective="opponent" />
         <BattleMap
-          mapCoordinates={playerMap}
-          currentShipOnDeploy={{
-            shipId: shipOnDeployId,
-            orientation: shipOnDeployOrientation,
-          }}
-          targetCoordinates={opponentTargetCoordinates}
-          isReady={gamePhase === "start"}
-          isShooting={isShooting}
-          isInTurn={!isPlayerTurn}
-          onDeployedShip={handleDeployedShip}
-          onChangeOrientation={handleChangeOrientation}
-          onChangeCursorLocation={handleChangeCursorLocation}
+          perspective="player"
+          setCursorLocation={setCursorLocation}
           onFinishesShot={handleOpponentFinishesShooting}
         />
         <BattleMap
-          mapCoordinates={opponentMap}
-          currentShipOnDeploy={{
-            shipId: shipOnDeployId,
-            orientation: shipOnDeployOrientation,
-          }}
-          targetCoordinates={playerTargetCoordinates}
-          disabled={gamePhase !== "start"}
-          isReady={gamePhase === "start"}
-          isShooting={isShooting}
-          isInTurn={isPlayerTurn}
-          isHidden
-          onDeployedShip={handleDeployedShip}
-          onChangeOrientation={handleChangeOrientation}
-          onChangeCursorLocation={handleChangeCursorLocation}
+          perspective="opponent"
           onFinishesShot={handlePlayerFinishesShot}
         />
         <AttackControl
