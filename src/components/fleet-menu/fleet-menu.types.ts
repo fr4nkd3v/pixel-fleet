@@ -7,7 +7,7 @@ export interface IFleetMenuProps {
 
 export interface IFleetMenuItemProps {
   shipData: TShip;
-  isHidden?: boolean;
+  perspective: TPerspective;
   shipOnDeployId: TShipId | null;
   onDeploying: (
     shipId: TShipId,

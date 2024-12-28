@@ -3,6 +3,7 @@ import { type IFleetMenuProps } from "./fleet-menu.types";
 import { FleetMenuItem } from "./fleet-menu-item";
 import { useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { TShipId } from "~/types";
+import clsx from "clsx";
 
 export const FleetMenu = ({
   perspective,
@@ -16,7 +17,6 @@ export const FleetMenu = ({
 
   const title = isPlayer ? "Mi flota" : "Flota enemiga";
   const shipList = isPlayer ? playerFleet : opponentFleet;
-  const isHidden = !isPlayer;
 
   const handleDeployingShip = (
     shipId: TShipId,
@@ -31,7 +31,12 @@ export const FleetMenu = ({
   };
 
   return (
-    <div className={css["FleetMenu"]}>
+    <div
+      className={clsx(
+        css["FleetMenu"],
+        css[isPlayer ? "is-player" : "is-opponent"]
+      )}
+    >
       <div className={css["FleetMenu-texts"]}>
         <div className={css["FleetMenu-primaryText"]}>{title}</div>
       </div>
@@ -40,7 +45,7 @@ export const FleetMenu = ({
           <FleetMenuItem
             key={ship.id}
             shipData={ship}
-            isHidden={isHidden}
+            perspective={perspective}
             shipOnDeployId={shipOnDeployId}
             onDeploying={handleDeployingShip}
           />
