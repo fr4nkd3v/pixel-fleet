@@ -1,6 +1,6 @@
 import { Button } from "~/components/button";
 import { ShipGraph } from "~/components/graph";
-import styles from "./WelcomePage.module.css";
+import styles from "./welcome-page.module.css";
 
 export const WelcomePage = () => {
   return (

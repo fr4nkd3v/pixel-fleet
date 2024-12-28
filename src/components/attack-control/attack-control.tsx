@@ -5,29 +5,49 @@ import { IAttackControlProps } from "./attack-control.types";
 import { IconButton } from "../icon-button";
 import clsx from "clsx";
 import { Input } from "../input";
+import { useGameStore, usePlayerStore } from "~/stores";
+import { checkCoordinateValue } from "~/utils";
 
-export function AttackControl({
-  targetCoordinates,
-  disabled,
-  coordinateYInputRef,
-  onChangeTargetCoordinates,
-  onShootButtonClick,
-}: IAttackControlProps) {
+export function AttackControl({ coordinateYInputRef }: IAttackControlProps) {
+  const {
+    targetCoordinates,
+    updateTargetCoordinateX: updatePlayerTargetCoordinateX,
+    updateTargetCoordinateY: updatePlayerTargetCoordinateY,
+  } = usePlayerStore();
+  const { gamePhase, isPlayerTurn, isShooting, startsShooting } =
+    useGameStore();
+
+  const disabled = !isPlayerTurn || gamePhase !== "start" || isShooting;
+
   const inputY = useRef<HTMLInputElement | null>(null);
   const inputX = useRef<HTMLInputElement | null>(null);
 
   const { x: targetXCoordinate, y: targetYCoordinate } = targetCoordinates;
+
+  const handleChangeTargetCoordinates = (
+    coordinateAxis: "x" | "y",
+    value: string
+  ) => {
+    if (coordinateAxis === "x" && checkCoordinateValue("x", value)) {
+      updatePlayerTargetCoordinateX(value);
+    } else if (coordinateAxis === "y" && checkCoordinateValue("y", value)) {
+      updatePlayerTargetCoordinateY(Number(value));
+    }
+  };
 
   const handleChangeCoordinateY = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
     if (value.length > 2) {
-      onChangeTargetCoordinates("y", value[2]);
+      handleChangeTargetCoordinates("y", value[2]);
     } else if (value.length > 1) {
-      onChangeTargetCoordinates("y", Number(value) === 10 ? value : value[1]);
+      handleChangeTargetCoordinates(
+        "y",
+        Number(value) === 10 ? value : value[1]
+      );
     } else {
-      onChangeTargetCoordinates("y", value);
+      handleChangeTargetCoordinates("y", value);
     }
   };
 
@@ -35,7 +55,7 @@ export function AttackControl({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value } = event.target;
-    onChangeTargetCoordinates("x", value.length > 1 ? value[1] : value);
+    handleChangeTargetCoordinates("x", value.length > 1 ? value[1] : value);
   };
 
   const handleKeyDownInputY = (event: React.KeyboardEvent) => {
@@ -50,7 +70,7 @@ export function AttackControl({
     event.preventDefault();
     inputX.current?.blur();
     inputY.current?.blur();
-    if (targetXCoordinate && targetYCoordinate) onShootButtonClick();
+    if (targetXCoordinate && targetYCoordinate) startsShooting();
   };
 
   return (

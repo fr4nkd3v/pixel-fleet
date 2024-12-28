@@ -17,7 +17,6 @@ import {
   calculatePlayerIsWinner,
   prepareFleet,
   isFleetDefeated,
-  checkCoordinateValue,
   delay,
 } from "~/utils";
 import {
@@ -51,7 +50,7 @@ export const GamePage = () => {
   const {
     gamePhase,
     isPlayerTurn,
-    isShooting,
+    // isShooting,
     isPlayerWins,
     startGame,
     endGame,
@@ -82,8 +81,8 @@ export const GamePage = () => {
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
     // deployShipInFleet,
-    updateTargetCoordinateX: updatePlayerTargetCoordinateX,
-    updateTargetCoordinateY: updatePlayerTargetCoordinateY,
+    // updateTargetCoordinateX: updatePlayerTargetCoordinateX,
+    // updateTargetCoordinateY: updatePlayerTargetCoordinateY,
     setMessage: setPlayerMessage,
     restartState: restartPlayerState,
   } = usePlayerStore();
@@ -158,17 +157,6 @@ export const GamePage = () => {
     if (!isPlayerFleetDeployed) return;
     startGame();
     coordinateYInputRef.current?.focus();
-  };
-
-  const handleChangeTargetCoordinates = (
-    coordinateAxis: "x" | "y",
-    value: string
-  ) => {
-    if (coordinateAxis === "x" && checkCoordinateValue("x", value)) {
-      updatePlayerTargetCoordinateX(value);
-    } else if (coordinateAxis === "y" && checkCoordinateValue("y", value)) {
-      updatePlayerTargetCoordinateY(Number(value));
-    }
   };
 
   const handlePlayerFinishesShot = useCallback(() => {
@@ -262,9 +250,6 @@ export const GamePage = () => {
     }
   }, [isPlayerTurn, gamePhase, handleOpponentShoot]);
 
-  const isAttackControlDisabled =
-    !isPlayerTurn || gamePhase !== "start" || isShooting;
-
   return (
     <>
       <section className={styles["GamePage"]}>
@@ -279,13 +264,7 @@ export const GamePage = () => {
           perspective="opponent"
           onFinishesShot={handlePlayerFinishesShot}
         />
-        <AttackControl
-          targetCoordinates={playerTargetCoordinates}
-          disabled={isAttackControlDisabled}
-          coordinateYInputRef={coordinateYInputRef}
-          onChangeTargetCoordinates={handleChangeTargetCoordinates}
-          onShootButtonClick={startsShooting}
-        />
+        <AttackControl coordinateYInputRef={coordinateYInputRef} />
         {gamePhase === "prestart" && (
           <FloatingStartPanel
             isStartButtonDisabled={!isPlayerFleetDeployed}
