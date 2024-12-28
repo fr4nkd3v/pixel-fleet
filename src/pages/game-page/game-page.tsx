@@ -9,7 +9,7 @@ import {
   ResultsModal,
 } from "~/components";
 import { TCursorLocation, TCoordinate } from "~/types/game";
-import { AVAILABLE_FLEET_IDS, MAP_SIZE, SHIP_TYPES } from "~/constants/game";
+import { AVAILABLE_FLEET_IDS, MAP_SIZE } from "~/constants/game";
 import {
   attackMap,
   autoFleetDeploy,
@@ -88,8 +88,8 @@ export const GamePage = () => {
   } = usePlayerStore();
 
   const {
-    shipId: shipOnDeployId,
-    orientation: shipOnDeployOrientation,
+    // shipId: shipOnDeployId,
+    // orientation: shipOnDeployOrientation,
     // hasShipOnDeploy,
     // setShipOnDeploy,
     // setOrientation,
@@ -135,10 +135,6 @@ export const GamePage = () => {
     setOpponentMap,
     setPlayerFleet,
   ]);
-
-  const currentShipOnDeployLength = shipOnDeployId
-    ? SHIP_TYPES[shipOnDeployId].length
-    : null;
 
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
 
@@ -274,17 +270,14 @@ export const GamePage = () => {
       </section>
       {isPlayerWins !== null ? (
         <ResultsModal
-          type={isPlayerWins ? "win" : "fail"}
           onRetryClick={restartGame}
           onToHomeClick={() => console.log("To home")}
         />
       ) : (
         <></>
       )}
-      {shipOnDeployId && cursorLocation && (
+      {cursorLocation && (
         <CursorShadowShip
-          length={currentShipOnDeployLength}
-          orientation={shipOnDeployOrientation}
           locationX={cursorLocation.left}
           locationY={cursorLocation.top}
         />

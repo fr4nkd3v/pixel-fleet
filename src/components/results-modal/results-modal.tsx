@@ -3,22 +3,20 @@ import { Button } from "../button";
 import { ShipFailGraph, ShipSuccessGraph } from "../graph";
 import css from "./results-modal.module.css";
 import { IResultsModal } from "./results-modal.types";
+import { useGameStore } from "~/stores";
 
 export const ResultsModal = ({
-  isVisible = true,
-  type,
-  onToHomeClick,
   onRetryClick,
+  onToHomeClick,
 }: IResultsModal) => {
-  if (!isVisible) return null;
+  const { isPlayerWins } = useGameStore();
 
-  const isWinner = type === "win";
-  const title = isWinner ? "¡Victoria!" : "Perdiste";
-  const subtitle = isWinner ? "Bien jugado" : "Suerte para la próxima";
+  const title = isPlayerWins ? "¡Victoria!" : "Perdiste";
+  const subtitle = isPlayerWins ? "Bien jugado" : "Suerte para la próxima";
 
   const combinedClasses = clsx(
     css["ResultsModal"],
-    isWinner ? css["ResultsModal--isWinner"] : css["ResultsModal--isLoser"]
+    isPlayerWins ? css["ResultsModal--isWinner"] : css["ResultsModal--isLoser"]
   );
 
   return (
@@ -30,7 +28,7 @@ export const ResultsModal = ({
           <p className={css["ResultsModal-subtitle"]}>{subtitle}</p>
         </div>
         <div className={css["ResultsModal-icon"]}>
-          {isWinner ? (
+          {isPlayerWins ? (
             <ShipSuccessGraph size="100%" />
           ) : (
             <ShipFailGraph size="100%" />
@@ -38,12 +36,12 @@ export const ResultsModal = ({
         </div>
         <div className={css["ResultsModal-actions"]}>
           <Button
-            variant={isWinner ? "success" : "dark"}
+            variant={isPlayerWins ? "success" : "dark"}
             text="Inicio"
             onClick={onToHomeClick}
           />
           <Button
-            variant={isWinner ? "success" : "dark"}
+            variant={isPlayerWins ? "success" : "dark"}
             text="Revancha"
             onClick={onRetryClick}
           />
