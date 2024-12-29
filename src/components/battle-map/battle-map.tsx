@@ -199,7 +199,7 @@ export const BattleMap = ({
           locationY={h}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
-          isHidden={!isPlayer}
+          perspective={perspective}
           onMouseEnter={(event) => handleMouseEnterAndLeaveTile(event, "enter")}
           onMouseLeave={(event) => handleMouseEnterAndLeaveTile(event, "leave")}
           onContextMenu={handleContextMenuTile}
@@ -210,7 +210,11 @@ export const BattleMap = ({
 
   return (
     <section
-      className={clsx(css["BattleMap"], isDisabled && css["is-disabled"])}
+      className={clsx(
+        css["BattleMap"],
+        isDisabled && css["is-disabled"],
+        !isPlayer && css["is-opponent"]
+      )}
       style={{
         gridTemplateColumns: `repeat(${sideLength + 1}, var(--tile-size))`,
         gridTemplateRows: `repeat(${sideLength + 1}, var(--tile-size))`,

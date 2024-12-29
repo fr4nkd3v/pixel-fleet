@@ -1,3 +1,5 @@
+/* #region BattleMap */
+
 .BattleMap {
   place-self: center;
   display: grid;
@@ -23,6 +25,14 @@
   opacity: 90%;
 }
 
+.BattleMap.is-opponent .BattleMap-background {
+  filter: hue-rotate(25deg) saturate(1.5) grayscale(0.3);
+}
+
+/* #endregion BattleMap */
+
+/* #region BattleMap Tile */
+
 .BattleMap-tile {
   display: flex;
   justify-content: center;
@@ -30,13 +40,21 @@
   position: relative;
   z-index: var(--layer-10);
 
-  color: var(--color-primary);
-  text-shadow: 2px 2px 0 var(--color-dark-1);
   text-transform: uppercase;
   font-size: var(--size-18);
   border-left: rgba(0, 0, 0, 0.15) 1px solid;
   border-top: rgba(0, 0, 0, 0.15) 1px solid;
 }
+
+.BattleMap-tile.is-player {
+  color: var(--color-primary);
+  text-shadow: 2px 2px 0 var(--color-dark-1);
+}
+.BattleMap-tile.is-opponent {
+  color: var(--color-dark-1);
+  text-shadow: 2px 2px 0 var(--color-primary);
+}
+
 .BattleMap-tile.is-available {
   background-color: var(--color-success-400);
 }
@@ -96,6 +114,8 @@
 .BattleMap-tile.is-covered.is-attacked.is-hidden {
   background: hsla(354deg 71% 58% / 70%);
 }
+
+/* #endregion BattleMap Tile */
 
 /* #region Sight */
 

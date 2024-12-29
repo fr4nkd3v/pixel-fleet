@@ -17,7 +17,7 @@ export interface ITileProps {
   locationY: number;
   isCovered: false | TCoveredShip;
   isAttacked: boolean;
-  isHidden?: boolean;
+  perspective: TPerspective;
   onMouseEnter?: (event: React.MouseEvent) => void;
   onMouseLeave?: (event: React.MouseEvent) => void;
   onContextMenu?: (event: React.MouseEvent) => void;

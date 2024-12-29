@@ -8,11 +8,13 @@ export const Tile = ({
   locationY,
   isCovered,
   isAttacked,
-  isHidden = false,
+  perspective,
   onMouseEnter,
   onMouseLeave,
   onContextMenu,
 }: ITileProps) => {
+  const isPlayer = perspective === "player";
+
   const coordinateX = parseStringCoordinateX(locationX);
   const validCoordinate = isValidCoordinate(coordinateX, locationY);
   const id = validCoordinate ? `${locationY}${coordinateX}` : undefined;
@@ -28,9 +30,10 @@ export const Tile = ({
 
   const combinedClasses = clsx(
     css["BattleMap-tile"],
+    isPlayer ? css["is-player"] : css["is-opponent"],
     isCovered && [css["is-covered"], css[shipPart], css[orientation]],
     isAttacked && css["is-attacked"],
-    isHidden && !isDefeated && css["is-hidden"]
+    !isPlayer && !isDefeated && css["is-hidden"]
   );
 
   return (
