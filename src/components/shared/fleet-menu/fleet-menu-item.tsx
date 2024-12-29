@@ -1,6 +1,6 @@
 import type { IFleetMenuItemProps } from "./fleet-menu.types";
 import { SHIP_TYPES } from "~/constants/game";
-import { Icon } from "~/components/icon";
+import { Icon } from "~/components/shared/icon";
 import css from "./fleet-menu.module.css";
 import clsx from "clsx";
 

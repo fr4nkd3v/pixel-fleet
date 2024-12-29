@@ -1,5 +1,5 @@
-import { Button } from "~/components/button";
-import { ShipGraph } from "~/components/graph";
+import { Button } from "~/components/shared/button";
+import { ShipGraph } from "~/components/shared/graph";
 import styles from "./welcome-page.module.css";
 
 export const WelcomePage = () => {

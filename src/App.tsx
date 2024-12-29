@@ -2,7 +2,7 @@ import "./App.css";
 
 import "nes.css/css/nes.min.css";
 // import { WelcomePage } from "./pages/WelcomePage";
-import { GamePage } from "./pages/game-page";
+import { GamePage } from "./components/pages/game-page";
 
 function App() {
   return (

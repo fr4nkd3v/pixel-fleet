@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Icon } from "~/components/icon";
+import { Icon } from "~/components/shared/icon";
 import { ISightProps } from "./battle-map.types";
 import css from "./battle-map.module.css";
 import { delay, parseNumberCoordinateX } from "~/utils";
