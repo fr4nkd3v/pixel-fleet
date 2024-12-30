@@ -1,30 +1,36 @@
 import { Button } from "~/components/shared/button";
 import { ShipGraph } from "~/components/shared/graph";
 import styles from "./welcome-page.module.css";
+import { useTranslation } from "react-i18next";
 
 export const WelcomePage = () => {
+  const { t } = useTranslation();
+
   return (
-    <div className={styles["WelcomePage-autocontainer"]}>
+    <div className={styles["WelcomePage-container"]}>
       <section className={styles["WelcomePage"]}>
-        <div className={styles["WelcomPage-animation"]}>
-          <div className={styles["WelcomPage-icon"]}>
+        <div className={styles["WelcomePage-animation"]}>
+          <div className={styles["WelcomePage-icon"]}>
             <ShipGraph size="100%" />
           </div>
           vs
-          <div className={styles["WelcomPage-icon"]}>
+          <div className={styles["WelcomePage-icon"]}>
             <ShipGraph size="100%" />
           </div>
         </div>
-        <div className={styles["WelcomPage-text"]}>
-          <h1 className={styles["WelcomPage-title"]}>BATALLA NAVAL</h1>
-          <h2 className={styles["WelcomPage-subtitle"]}>
-            Estrategia y Destrucción de Barcos
+        <div className={styles["WelcomePage-text"]}>
+          <h1 className={styles["WelcomePage-title"]}>{t("welcome:title")}</h1>
+          <h2 className={styles["WelcomePage-subtitle"]}>
+            {t("welcome:description")}
           </h2>
         </div>
-        <div className={styles["WelcomPage-buttonsGroup"]}>
-          <Button text="Start" onClick={() => console.log("click en start")} />
+        <div className={styles["WelcomePage-buttonsGroup"]}>
           <Button
-            text="Settings"
+            text={t("welcome:button.play")}
+            onClick={() => console.log("click en start")}
+          />
+          <Button
+            text={t("welcome:button.settings")}
             onClick={() => console.log("click en Settings")}
           />
         </div>
