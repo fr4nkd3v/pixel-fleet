@@ -1,0 +1,18 @@
+{
+  "ship": {
+    "missile_launcher": "Lanzamisiles",
+    "battleship": "Acorazado",
+    "destroyer": "Destructor",
+    "submarine": "Submarino",
+    "speedboat": "Lanchero"
+  },
+  "player": {
+    "fleet_menu_text": "Mi Flota"
+  },
+  "opponent": {
+    "fleet_menu_text": "Flota Enemiga"
+  },
+  "button": {
+    "start": "Iniciar"
+  }
+}

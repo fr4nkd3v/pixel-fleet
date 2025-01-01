@@ -39,6 +39,8 @@ export const SHIP_TYPES: TShipType = {
     length: 1,
   },
 };
+// "battlecruiser": "Cruiser de Batalla",
+// "carrier": "Portaavion",
 
 export const AVAILABLE_FLEET_IDS: TShipId[] = [
   // 'missile_launcher',

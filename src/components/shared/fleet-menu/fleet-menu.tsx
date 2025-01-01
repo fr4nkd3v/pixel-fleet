@@ -4,18 +4,21 @@ import { FleetMenuItem } from "./fleet-menu-item";
 import { useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { TShipId } from "~/types";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 export const FleetMenu = ({
   perspective,
   setCursorLocation,
 }: IFleetMenuProps) => {
+  const { t } = useTranslation();
+
   const { fleet: playerFleet } = usePlayerStore();
   const { fleet: opponentFleet } = useOpponentStore();
   const { shipId: shipOnDeployId, setShipOnDeploy } = useShipDeployStore();
 
   const isPlayer = perspective === "player";
 
-  const title = isPlayer ? "Mi flota" : "Flota enemiga";
+  const title = t(`game:${isPlayer ? "player" : "opponent"}.fleet_menu_text`);
   const shipList = isPlayer ? playerFleet : opponentFleet;
 
   const handleDeployingShip = (
