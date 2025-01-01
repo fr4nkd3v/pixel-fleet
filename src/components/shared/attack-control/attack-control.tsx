@@ -1,5 +1,5 @@
 import { FormEvent, useRef } from "react";
-import { Panel } from "../panel";
+import { Card } from "../card";
 import css from "./attack-control.module.css";
 import { IAttackControlProps } from "./attack-control.types";
 import { IconButton } from "../icon-button";
@@ -80,7 +80,7 @@ export function AttackControl({ coordinateYInputRef }: IAttackControlProps) {
         disabled && css["is-disabled"]
       )}
     >
-      <Panel shadowSize="shadow-m">
+      <Card shadowSize="shadow-m">
         <form className={css["AttackControl-wrapper"]} onSubmit={handleShoot}>
           <div className={css["AttackControl"]}>
             <div className="nes-field is-inline">
@@ -138,7 +138,7 @@ export function AttackControl({ coordinateYInputRef }: IAttackControlProps) {
             disabled={!targetXCoordinate || !targetYCoordinate}
           />
         </form>
-      </Panel>
+      </Card>
     </div>
   );
 }

@@ -7,5 +7,5 @@ export * from "./shared/floating-start-panel";
 export * from "./shared/graph";
 export * from "./shared/icon";
 export * from "./shared/icon-button";
-export * from "./shared/panel";
+export * from "./shared/card";
 export * from "./shared/results-modal";

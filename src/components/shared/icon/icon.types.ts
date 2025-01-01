@@ -3,7 +3,7 @@ export interface IIconBaseProps {
   size?: string;
 }
 
-export type TIconName = "ship" | "sight";
+export type TIconName = "ship" | "sight" | "map";
 
 export interface IIconProps extends IIconBaseProps {
   name: TIconName;

@@ -1,15 +1,15 @@
-import { IPanelProps } from "./panel.types";
-import css from "./panel.module.css";
+import { ICardProps } from "./card.types";
+import css from "./card.module.css";
 
-export const Panel = ({
+export const Card = ({
   children,
   width = "auto",
   height = "auto",
   shadowSize = "shadow-s",
-}: IPanelProps) => {
+}: ICardProps) => {
   return (
     <div
-      className={css["panel"]}
+      className={css["Card"]}
       style={{ width, height, boxShadow: `var(--${shadowSize})` }}
     >
       {children}

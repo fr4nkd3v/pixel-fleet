@@ -1,5 +1,5 @@
 import { Button } from "../button";
-import { Panel } from "../panel";
+import { Card } from "../card";
 import { IFloatingStartPanelProps } from "./floating-start-panel.types";
 import css from "./floating-start-panel.module.css";
 import { MAP_SIZE } from "~/constants";
@@ -20,7 +20,7 @@ export const FloatingStartPanel = ({
         }) / 2))`,
       }}
     >
-      <Panel width="250px" height="120px" shadowSize="shadow-l">
+      <Card width="250px" height="120px" shadowSize="shadow-l">
         <div className={css["FloatingStartPanel-content"]}>
           <Button
             text={t("game:button.start")}
@@ -28,7 +28,7 @@ export const FloatingStartPanel = ({
             onClick={onClick}
           />
         </div>
-      </Panel>
+      </Card>
     </div>
   );
 };
