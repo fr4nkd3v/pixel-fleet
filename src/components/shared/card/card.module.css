@@ -1,5 +1,4 @@
 .Card {
-  padding: var(--size-16);
   box-shadow: var(--shadow-m);
 }
 

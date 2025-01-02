@@ -17,3 +17,7 @@
 .GamePage > *:nth-child(even) {
   justify-self: start;
 }
+
+.GamePage-GuideBoard {
+  max-width: 36rem;
+}

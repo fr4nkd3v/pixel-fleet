@@ -7,6 +7,7 @@ import {
   FloatingStartPanel,
   AttackControl,
   ResultsModal,
+  GuideBoard,
 } from "~/components";
 import { TCursorLocation, TCoordinate } from "~/types/game";
 import { AVAILABLE_FLEET_IDS, MAP_SIZE } from "~/constants/game";
@@ -260,6 +261,9 @@ export const GamePage = () => {
           perspective="opponent"
           onFinishesShot={handlePlayerFinishesShot}
         />
+        <div className={styles["GamePage-GuideBoard"]}>
+          <GuideBoard />
+        </div>
         <AttackControl coordinateYInputRef={coordinateYInputRef} />
         {gamePhase === "prestart" && (
           <FloatingStartPanel

@@ -1,0 +1,22 @@
+{
+  "player_deploy": {
+    "title": "Despliega tus unidades",
+    "description": "Selecciona y despliega tu flota en las casillas de tu mapa de batalla"
+  },
+  "player_attack": {
+    "title": "Tu turno de atacar",
+    "description": "Digita una coordenada para disparar el mapa de la flota enemiga"
+  },
+  "opponent_calculating": {
+    "title": "Turno del oponente",
+    "description": "Calculando el objetivo..."
+  },
+  "opponent_in_sight": {
+    "title": "Turno del oponente",
+    "description": "Objetivo en la mira, preparando ataque..."
+  },
+  "opponent_shooting": {
+    "title": "Turno del oponente",
+    "description": "Disparando al objetivo..."
+  }
+}

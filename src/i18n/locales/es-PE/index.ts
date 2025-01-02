@@ -1,7 +1,9 @@
-import welcome from "./welcome.json";
 import game from "./game.json";
+import guide_messages from "./guide_messages.json";
+import welcome from "./welcome.json";
 
 export default {
-  welcome,
   game,
+  guide_messages,
+  welcome,
 };

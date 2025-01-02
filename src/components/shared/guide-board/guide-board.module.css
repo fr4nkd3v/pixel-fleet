@@ -1,0 +1,22 @@
+.GuideBoard {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: var(--size-16);
+}
+.GuideBoard-icon {
+  width: 4.4rem;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+/* .GuideBoard-info {
+} */
+.GuideBoard-title {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 150%;
+}
+.GuideBoard-desc {
+  font-size: 0.65rem;
+  line-height: 160%;
+}
