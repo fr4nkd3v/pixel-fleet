@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { GuideBoard } from "./guide-board";
+import { GuideBar } from "./guide-bar";
 
-const meta: Meta<typeof GuideBoard> = {
-  title: "Guide Board",
-  component: GuideBoard,
+const meta: Meta<typeof GuideBar> = {
+  title: "GuideBar",
+  component: GuideBar,
   parameters: {
     layout: "padded",
   },
@@ -11,6 +11,6 @@ const meta: Meta<typeof GuideBoard> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof GuideBoard>;
+type Story = StoryObj<typeof GuideBar>;
 
 export const Default: Story = {};
