@@ -20,7 +20,7 @@ export const FloatingStartPanel = ({
         }) / 2))`,
       }}
     >
-      <Card width="250px" height="120px" shadowSize="shadow-l">
+      <Card>
         <div className={css["FloatingStartPanel-content"]}>
           <Button
             text={t("game:button.start")}

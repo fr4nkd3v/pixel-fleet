@@ -80,7 +80,7 @@ export function AttackControl({ coordinateYInputRef }: IAttackControlProps) {
         disabled && css["is-disabled"]
       )}
     >
-      <Card shadowSize="shadow-m">
+      <Card>
         <form className={css["AttackControl-wrapper"]} onSubmit={handleShoot}>
           <div className={css["AttackControl"]}>
             <div className="nes-field is-inline">

@@ -1,16 +1,23 @@
 import { ICardProps } from "./card.types";
 import css from "./card.module.css";
+import clsx from "clsx";
 
 export const Card = ({
   children,
-  width = "auto",
-  height = "auto",
-  shadowSize = "shadow-s",
+  fullWidth = false,
+  variant = "light",
+  disabled = false,
+  notShadow = false,
 }: ICardProps) => {
   return (
     <div
-      className={css["Card"]}
-      style={{ width, height, boxShadow: `var(--${shadowSize})` }}
+      className={clsx(
+        css["Card"],
+        css[`is-${variant}`],
+        notShadow && css["not-shadow"],
+        disabled && css["is-disabled"]
+      )}
+      style={{ width: fullWidth ? "100%" : "fit-content" }}
     >
       {children}
     </div>
