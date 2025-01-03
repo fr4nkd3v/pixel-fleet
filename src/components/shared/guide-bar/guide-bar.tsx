@@ -1,4 +1,4 @@
-import { Card, Icon } from "~/components";
+import { Card, Icon, TIconName } from "~/components";
 import css from "./guide-bar.module.css";
 import { useGameStore, useOpponentStore } from "~/stores";
 import { useTranslation } from "react-i18next";
@@ -18,13 +18,21 @@ export const GuideBar = () => {
     }
   };
 
+  const getIconName = (): TIconName => {
+    return gamePhase === "prestart"
+      ? "map"
+      : isPlayerTurn
+      ? "fireball"
+      : "skull";
+  };
+
   const key = getTranslationKey();
 
   return (
-    <Card>
+    <Card fullWidth>
       <article className={css["GuideBar"]}>
         <div className={css["GuideBar-icon"]}>
-          <Icon name="map" size="100%" />
+          <Icon name={getIconName()} size="100%" />
         </div>
         <div className={css["GuideBar-info"]}>
           <h1 className={css["GuideBar-title"]}>
