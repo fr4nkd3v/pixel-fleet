@@ -8,6 +8,7 @@ export const Card = ({
   variant = "light",
   disabled = false,
   notShadow = false,
+  cardClassName,
 }: ICardProps) => {
   return (
     <div
@@ -15,7 +16,8 @@ export const Card = ({
         css["Card"],
         css[`is-${variant}`],
         notShadow && css["not-shadow"],
-        disabled && css["is-disabled"]
+        disabled && css["is-disabled"],
+        cardClassName
       )}
       style={{ width: fullWidth ? "100%" : "fit-content" }}
     >

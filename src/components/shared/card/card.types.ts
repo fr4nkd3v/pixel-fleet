@@ -4,4 +4,5 @@ export interface ICardProps {
   variant?: "light" | "dark";
   disabled?: boolean;
   notShadow?: boolean;
+  cardClassName?: string;
 }

@@ -12,5 +12,6 @@ export interface IButtonProps {
   text: string;
   variant?: TButtonVariant;
   disabled?: boolean;
-  onClick: () => void;
+  fullWidth?: boolean;
+  onClick?: () => void;
 }

@@ -6,6 +6,7 @@ export const Button = ({
   variant = "default",
   text,
   disabled = false,
+  fullWidth = false,
   onClick,
 }: IButtonProps) => {
   const combinedClasses = clsx(
@@ -16,7 +17,12 @@ export const Button = ({
   );
 
   return (
-    <button type="button" className={combinedClasses} onClick={onClick}>
+    <button
+      type="button"
+      className={combinedClasses}
+      onClick={onClick}
+      style={{ width: fullWidth ? "100%" : "auto" }}
+    >
       {text}
     </button>
   );

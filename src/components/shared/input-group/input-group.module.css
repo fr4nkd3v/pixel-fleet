@@ -1,0 +1,25 @@
+.InputGroup {
+  display: flex;
+  width: 100%;
+}
+
+.InputGroup-label {
+  width: 2ch;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--size-6);
+  margin: 0;
+
+  background-color: var(--color-primary-1000);
+  color: var(--white);
+  line-height: 100%;
+  box-sizing: content-box;
+  cursor: default;
+}
+
+.InputGroup-label.is-leading {
+  margin-right: -4px;
+}
+.InputGroup-label.is-trailing {
+  margin-left: -4px;
+}

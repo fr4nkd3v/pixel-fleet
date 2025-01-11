@@ -2,6 +2,8 @@
   padding: var(--size-4);
   width: var(--size-52);
   aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+
   color: var(--color-primary-700);
   background-color: var(--color-primary-200);
 }

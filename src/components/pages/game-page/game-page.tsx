@@ -4,10 +4,10 @@ import {
   FleetMenu,
   BattleMap,
   CursorShadowShip,
-  FloatingStartPanel,
-  AttackControl,
+  // AttackControl,
   ResultsModal,
   GuideBar,
+  ActionBar,
 } from "~/components";
 import { TCursorLocation, TCoordinate } from "~/types/game";
 import { AVAILABLE_FLEET_IDS, MAP_SIZE } from "~/constants/game";
@@ -264,13 +264,11 @@ export const GamePage = () => {
         <div className={styles["GamePage-GuideBar"]}>
           <GuideBar />
         </div>
-        <AttackControl coordinateYInputRef={coordinateYInputRef} />
-        {gamePhase === "prestart" && (
-          <FloatingStartPanel
-            isStartButtonDisabled={!isPlayerFleetDeployed}
-            onClick={handleStartGame}
-          />
-        )}
+        <ActionBar
+          coordinateYInputRef={coordinateYInputRef}
+          onStart={handleStartGame}
+        />
+        {/* <AttackControl coordinateYInputRef={coordinateYInputRef} /> */}
       </section>
       {isPlayerWins !== null ? (
         <ResultsModal
