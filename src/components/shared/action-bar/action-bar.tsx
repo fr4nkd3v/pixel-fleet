@@ -1,67 +1,36 @@
-import { Button, Card, IconButton, InputGroup } from "~/components";
+import { Card } from "~/components";
 import css from "./action-bar.module.css";
 import { useGameStore, usePlayerStore } from "~/stores";
-import { useTranslation } from "react-i18next";
-import { IActionBarProps } from "./action-bar.types";
+import { StartControl } from "./start-control";
+import { AttackControl } from "./attack-control";
 
-export const ActionBar = ({
-  coordinateYInputRef,
-  onStart,
-}: IActionBarProps) => {
-  const handleSubmit = () => console.log("submit");
-  const { gamePhase } = useGameStore();
+export const ActionBar = () => {
+  const { gamePhase, isPlayerTurn, isShooting, startGame } = useGameStore();
   const { fleet: playerFleet } = usePlayerStore();
-  const { t } = useTranslation();
 
-  const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
   const isGameStart = gamePhase === "start";
+  const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
 
-  const startControl = (
-    <form className={css["ActionBar"]} onSubmit={handleSubmit}>
-      <Button
-        text={t("game:button.start")}
-        variant="primary"
-        onClick={onStart}
-        fullWidth
-      />
-    </form>
-  );
+  const isStartControlDisabled = !isPlayerFleetDeployed;
+  const isAttackControlDisabled =
+    !isPlayerTurn || gamePhase !== "start" || isShooting;
 
-  const attackControl = (
-    <form className={css["ActionBar"]} onSubmit={handleSubmit}>
-      <div className={css["ActionBar-inputsGroup"]}>
-        <div className={css["ActionBar-inputWrapper"]}>
-          <InputGroup
-            addonType="numeric"
-            addonLocation="leading"
-            id="coordinate-x"
-            variant="primary"
-            inputClassName={css["ActionBar-input"]}
-          />
-        </div>
-        <div className={css["ActionBar-inputWrapper"]}>
-          <InputGroup
-            addonType="alphabetic"
-            addonLocation="trailing"
-            id="coordinate-y"
-            variant="primary"
-            innerRef={coordinateYInputRef}
-            inputClassName={css["ActionBar-input"]}
-          />
-        </div>
-      </div>
+  const isDisabled = isGameStart
+    ? isAttackControlDisabled
+    : isStartControlDisabled;
 
-      <IconButton iconName="sight" type="submit" />
-    </form>
-  );
+  const onStart = () => {
+    if (!isPlayerFleetDeployed) return;
+    startGame();
+  };
 
   return (
     <Card
       cardClassName={css["Container-ActionBar"]}
-      disabled={!isPlayerFleetDeployed}
+      disabled={isDisabled}
       fullWidth
     >
-      {isGameStart ? attackControl : startControl}
+      {isGameStart ? <AttackControl /> : <StartControl onStart={onStart} />}
     </Card>
   );
 };

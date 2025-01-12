@@ -1,5 +1,4 @@
 export * from "./shared/action-bar";
-export * from "./shared/attack-control";
 export * from "./shared/battle-map";
 export * from "./shared/button";
 export * from "./shared/card";

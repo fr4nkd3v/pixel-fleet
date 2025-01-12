@@ -22,6 +22,7 @@
   max-width: 8rem;
 }
 .ActionBar-input {
-  text-align: center;
   font-size: var(--size-22);
+  text-align: center;
+  text-transform: uppercase;
 }

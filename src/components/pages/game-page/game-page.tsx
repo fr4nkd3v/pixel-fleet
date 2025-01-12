@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import styles from "./game-page.module.css";
 import {
   FleetMenu,
   BattleMap,
   CursorShadowShip,
-  // AttackControl,
   ResultsModal,
   GuideBar,
   ActionBar,
@@ -51,9 +50,7 @@ export const GamePage = () => {
   const {
     gamePhase,
     isPlayerTurn,
-    // isShooting,
     isPlayerWins,
-    startGame,
     endGame,
     startsShooting,
     endShooting,
@@ -102,8 +99,6 @@ export const GamePage = () => {
     null
   );
 
-  const coordinateYInputRef = useRef<HTMLInputElement | null>(null);
-
   const restartGame = useCallback(() => {
     restartGameState();
     restartOpponentState();
@@ -137,8 +132,6 @@ export const GamePage = () => {
     setPlayerFleet,
   ]);
 
-  const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
-
   // Calculate winner
   useEffect(() => {
     if (!playerFleet.length || !opponentFleet.length) return;
@@ -149,12 +142,6 @@ export const GamePage = () => {
       setPlayerWins(isWinner);
     }
   }, [endGame, gamePhase, opponentFleet, playerFleet, setPlayerWins]);
-
-  const handleStartGame = () => {
-    if (!isPlayerFleetDeployed) return;
-    startGame();
-    coordinateYInputRef.current?.focus();
-  };
 
   const handlePlayerFinishesShot = useCallback(() => {
     if (!playerTargetCoordinates.x || !playerTargetCoordinates.y) return;
@@ -211,7 +198,6 @@ export const GamePage = () => {
     } else {
       endShootingAndToggleTurn();
     }
-    coordinateYInputRef.current?.focus();
   }, [
     endShooting,
     endShootingAndToggleTurn,
@@ -264,11 +250,7 @@ export const GamePage = () => {
         <div className={styles["GamePage-GuideBar"]}>
           <GuideBar />
         </div>
-        <ActionBar
-          coordinateYInputRef={coordinateYInputRef}
-          onStart={handleStartGame}
-        />
-        {/* <AttackControl coordinateYInputRef={coordinateYInputRef} /> */}
+        <ActionBar />
       </section>
       {isPlayerWins !== null ? (
         <ResultsModal
