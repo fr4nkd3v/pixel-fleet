@@ -11,7 +11,7 @@
   margin: 0;
 
   background-color: var(--color-primary-1000);
-  color: var(--white);
+  color: var(--white-2);
   line-height: 100%;
   box-sizing: content-box;
   cursor: default;

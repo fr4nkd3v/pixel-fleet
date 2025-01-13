@@ -3,6 +3,7 @@ import { SHIP_TYPES } from "~/constants/game";
 import { Icon } from "~/components/shared/icon";
 import css from "./fleet-menu.module.css";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 export const FleetMenuItem = ({
   shipData,
@@ -10,6 +11,7 @@ export const FleetMenuItem = ({
   shipOnDeployId,
   onDeploying,
 }: IFleetMenuItemProps) => {
+  const { t } = useTranslation();
   const isPlayer = perspective === "player";
 
   const { id: shipId, health: currentHealth, isDeployed } = shipData;
@@ -54,9 +56,11 @@ export const FleetMenuItem = ({
           <Icon size="100%" name="ship" />
         </div>
         <div className={css["FleetMenuItem-name"]}>
-          {SHIP_TYPES[shipId].name}
+          {isPlayer ? SHIP_TYPES[shipId].name : t("game:unidentified")}
         </div>
-        <div className={css["FleetMenuItem-health"]}>{lives}</div>
+        <div className={css["FleetMenuItem-health"]}>
+          {isPlayer ? lives : "???"}
+        </div>
       </div>
     </div>
   );

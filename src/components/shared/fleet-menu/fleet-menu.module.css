@@ -54,7 +54,7 @@
 }
 
 .FleetMenuItem.is-deployed {
-  background-color: var(--white);
+  background-color: var(--white-2);
 }
 .FleetMenuItem.not-deployed {
   top: -7px;
@@ -69,7 +69,7 @@
   top: -9px;
   left: -5px;
   transform: rotate(-3deg);
-  background-color: var(--white);
+  background-color: var(--white-2);
 }
 
 .FleetMenuItem-icon {
@@ -81,11 +81,13 @@
 }
 .FleetMenuItem-name {
   font-size: 10.5px;
-  color: var(--gray-4);
+  color: var(--gray-8);
 }
 .FleetMenuItem-health {
   display: flex;
   gap: 3px;
+  color: var(--color-primary-600);
+  line-height: 100%;
 }
 .FleetMenuItem-live {
   width: var(--size-14);

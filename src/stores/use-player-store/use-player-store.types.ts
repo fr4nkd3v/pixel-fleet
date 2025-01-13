@@ -11,11 +11,9 @@ export interface IOpponentStore {
   fleet: TFleet;
   map: TMap;
   targetCoordinates: TCoordinate | TEmptyCoordinate;
-  message: string;
   setFleet: (fleet: TFleet) => void;
   setMap: (map: TMap) => void;
   setTargetCoordinates: (targetCoordinates: TCoordinate) => void;
-  setMessage: (message: string) => void;
   restartState: () => void;
 }
 

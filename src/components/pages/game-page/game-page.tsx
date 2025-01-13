@@ -63,11 +63,9 @@ export const GamePage = () => {
     fleet: opponentFleet,
     map: opponentMap,
     targetCoordinates: opponentTargetCoordinates,
-    // message: opponentMessage,
     setFleet: setOpponentFleet,
     setMap: setOpponentMap,
     setTargetCoordinates: setOpponentTargetCoordinates,
-    setMessage: setOpponentMessage,
     restartState: restartOpponentState,
   } = useOpponentStore();
 
@@ -75,13 +73,11 @@ export const GamePage = () => {
     fleet: playerFleet,
     map: playerMap,
     targetCoordinates: playerTargetCoordinates,
-    // message: playerMessage,
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
     // deployShipInFleet,
     // updateTargetCoordinateX: updatePlayerTargetCoordinateX,
     // updateTargetCoordinateY: updatePlayerTargetCoordinateY,
-    setMessage: setPlayerMessage,
     restartState: restartPlayerState,
   } = usePlayerStore();
 
@@ -207,24 +203,6 @@ export const GamePage = () => {
     setPlayerFleet,
     setPlayerMap,
   ]);
-
-  // Manage player & opponent messages
-  useEffect(() => {
-    setPlayerMessage(
-      gamePhase === "prestart"
-        ? "Despliega tus unidades y comienza la batalla"
-        : isPlayerTurn
-        ? "Es turno de atacar!"
-        : "Es el turno del oponente"
-    );
-    setOpponentMessage(
-      gamePhase === "prestart"
-        ? "En espera"
-        : isPlayerTurn
-        ? "Esperando turno"
-        : "Buscando objetivo..."
-    );
-  }, [gamePhase, isPlayerTurn, setOpponentMessage, setPlayerMessage]);
 
   // Manage opponent shooting
   useEffect(() => {

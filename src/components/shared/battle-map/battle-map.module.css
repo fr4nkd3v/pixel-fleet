@@ -26,7 +26,8 @@
 }
 
 .BattleMap.is-opponent .BattleMap-background {
-  filter: hue-rotate(25deg) saturate(1.5) grayscale(0.3);
+  filter: hue-rotate(18deg) saturate(1.5) contrast(1.4) grayscale(0.4)
+    brightness(0.8);
 }
 
 /* #endregion BattleMap */
@@ -79,7 +80,7 @@
   content: "";
   position: absolute;
   inset: -1px;
-  border: solid 5px var(--white);
+  border: solid 5px var(--white-2);
 }
 .BattleMap-tile.is-covered.is-attacked::after {
   border-color: rgb(237, 149, 158);

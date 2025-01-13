@@ -13,6 +13,7 @@
     "fleet_menu_text": "Flota Enemiga"
   },
   "button": {
-    "start": "Iniciar"
-  }
+    "start": "INICIAR"
+  },
+  "unidentified": "Unidentified"
 }
