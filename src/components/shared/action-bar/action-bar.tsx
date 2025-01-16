@@ -3,8 +3,9 @@ import css from "./action-bar.module.css";
 import { useGameStore, usePlayerStore } from "~/stores";
 import { StartControl } from "./start-control";
 import { AttackControl } from "./attack-control";
+import clsx from "clsx";
 
-export const ActionBar = () => {
+export const ActionBar = ({ className }: { className?: string }) => {
   const { gamePhase, isPlayerTurn, isShooting, startGame } = useGameStore();
   const { fleet: playerFleet } = usePlayerStore();
 
@@ -26,7 +27,11 @@ export const ActionBar = () => {
 
   return (
     <Card
-      cardClassName={css["Container-ActionBar"]}
+      cardClassName={clsx(
+        css["Container-ActionBar"],
+        className,
+        isStartControlDisabled && css["is-hidden"]
+      )}
       disabled={isDisabled}
       fullWidth
     >

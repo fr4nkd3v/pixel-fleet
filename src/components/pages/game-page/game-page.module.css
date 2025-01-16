@@ -1,24 +1,84 @@
 .GamePage {
-  height: 100%;
   width: 100%;
-  padding: 2rem;
 
   display: grid;
   gap: var(--size-32);
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr auto;
-
-  /* transition: opacity .5s ease-out; */
+  grid-template-columns: 1fr;
 }
 
-.GamePage > *:nth-child(odd) {
-  justify-self: end;
+.GamePage-FleetOpponent {
+  order: 1;
+  padding: 0 var(--size-24);
 }
-.GamePage > *:nth-child(even) {
-  justify-self: start;
+.GamePage-BattleMapOpponent {
+  order: 2;
+  padding: 0 var(--size-24);
+}
+.GamePage-BattleMapPlayer {
+  order: 3;
+  padding: 0 var(--size-24);
+}
+.GamePage-FleetPlayer {
+  order: 4;
+  padding: 0 var(--size-24);
 }
 
 .GamePage-GuideBar {
-  max-width: 36rem;
   width: 100%;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: var(--layer-40);
+
+  order: 0;
+}
+
+.GamePage-ActionBar {
+  width: 100%;
+  position: sticky !important;
+  bottom: 0;
+  left: 0;
+  z-index: var(--layer-40);
+
+  order: 5;
+}
+
+/* Desktop Device */
+
+@media (min-width: 1024px) {
+  .GamePage {
+    height: 100%;
+    padding: var(--size-32);
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .GamePage > *:nth-child(odd) {
+    justify-self: end;
+  }
+  .GamePage > *:nth-child(even) {
+    justify-self: start;
+  }
+
+  .GamePage-FleetOpponent {
+    order: initial;
+  }
+  .GamePage-BattleMapOpponent {
+    order: initial;
+  }
+  .GamePage-BattleMapPlayer {
+    order: initial;
+  }
+  .GamePage-FleetPlayer {
+    order: initial;
+  }
+
+  .GamePage-GuideBar {
+    max-width: 36rem;
+    order: initial;
+  }
+  .GamePage-ActionBar {
+    order: initial;
+  }
 }

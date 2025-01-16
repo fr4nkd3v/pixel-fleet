@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import styles from "./game-page.module.css";
+import css from "./game-page.module.css";
 import {
   FleetMenu,
   BattleMap,
@@ -75,21 +75,10 @@ export const GamePage = () => {
     targetCoordinates: playerTargetCoordinates,
     setFleet: setPlayerFleet,
     setMap: setPlayerMap,
-    // deployShipInFleet,
-    // updateTargetCoordinateX: updatePlayerTargetCoordinateX,
-    // updateTargetCoordinateY: updatePlayerTargetCoordinateY,
     restartState: restartPlayerState,
   } = usePlayerStore();
 
-  const {
-    // shipId: shipOnDeployId,
-    // orientation: shipOnDeployOrientation,
-    // hasShipOnDeploy,
-    // setShipOnDeploy,
-    // setOrientation,
-    // clearShipOnDeploy,
-    restartState: restartShipDeployState,
-  } = useShipDeployStore();
+  const { restartState: restartShipDeployState } = useShipDeployStore();
 
   const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
     null
@@ -106,38 +95,6 @@ export const GamePage = () => {
     restartPlayerState,
     restartShipDeployState,
   ]);
-
-  // Only first render
-  useEffect(() => {
-    setPlayerFleet([...commonFleetArr]);
-  }, [commonFleetArr, setPlayerFleet]);
-
-  // When prestart game for player action
-  useEffect(() => {
-    if (gamePhase !== "prestart") return;
-
-    const { fleet, map } = autoFleetDeploy(MAP_SIZE, [...commonFleetArr], []);
-    setOpponentMap(map);
-    setOpponentFleet(fleet);
-    setPlayerFleet([...commonFleetArr]);
-  }, [
-    commonFleetArr,
-    gamePhase,
-    setOpponentFleet,
-    setOpponentMap,
-    setPlayerFleet,
-  ]);
-
-  // Calculate winner
-  useEffect(() => {
-    if (!playerFleet.length || !opponentFleet.length) return;
-
-    const isWinner = calculatePlayerIsWinner(playerFleet, opponentFleet);
-    if (isWinner !== null && gamePhase === "start") {
-      endGame();
-      setPlayerWins(isWinner);
-    }
-  }, [endGame, gamePhase, opponentFleet, playerFleet, setPlayerWins]);
 
   const handlePlayerFinishesShot = useCallback(() => {
     if (!playerTargetCoordinates.x || !playerTargetCoordinates.y) return;
@@ -204,6 +161,38 @@ export const GamePage = () => {
     setPlayerMap,
   ]);
 
+  // Only first render
+  useEffect(() => {
+    setPlayerFleet([...commonFleetArr]);
+  }, [commonFleetArr, setPlayerFleet]);
+
+  // When prestart game for player action
+  useEffect(() => {
+    if (gamePhase !== "prestart") return;
+
+    const { fleet, map } = autoFleetDeploy(MAP_SIZE, [...commonFleetArr], []);
+    setOpponentMap(map);
+    setOpponentFleet(fleet);
+    setPlayerFleet([...commonFleetArr]);
+  }, [
+    commonFleetArr,
+    gamePhase,
+    setOpponentFleet,
+    setOpponentMap,
+    setPlayerFleet,
+  ]);
+
+  // Calculate winner
+  useEffect(() => {
+    if (!playerFleet.length || !opponentFleet.length) return;
+
+    const isWinner = calculatePlayerIsWinner(playerFleet, opponentFleet);
+    if (isWinner !== null && gamePhase === "start") {
+      endGame();
+      setPlayerWins(isWinner);
+    }
+  }, [endGame, gamePhase, opponentFleet, playerFleet, setPlayerWins]);
+
   // Manage opponent shooting
   useEffect(() => {
     if (gamePhase === "start" && !isPlayerTurn) {
@@ -213,22 +202,31 @@ export const GamePage = () => {
 
   return (
     <>
-      <section className={styles["GamePage"]}>
-        <FleetMenu perspective="player" setCursorLocation={setCursorLocation} />
-        <FleetMenu perspective="opponent" />
-        <BattleMap
+      <section className={css["GamePage"]}>
+        <FleetMenu
           perspective="player"
+          className={css["GamePage-FleetPlayer"]}
           setCursorLocation={setCursorLocation}
-          onFinishesShot={handleOpponentFinishesShooting}
         />
-        <BattleMap
+        <FleetMenu
           perspective="opponent"
-          onFinishesShot={handlePlayerFinishesShot}
+          className={css["GamePage-FleetOpponent"]}
         />
-        <div className={styles["GamePage-GuideBar"]}>
-          <GuideBar />
+        <div className={css["GamePage-BattleMapPlayer"]}>
+          <BattleMap
+            perspective="player"
+            setCursorLocation={setCursorLocation}
+            onFinishesShot={handleOpponentFinishesShooting}
+          />
         </div>
-        <ActionBar />
+        <div className={css["GamePage-BattleMapOpponent"]}>
+          <BattleMap
+            perspective="opponent"
+            onFinishesShot={handlePlayerFinishesShot}
+          />
+        </div>
+        <GuideBar className={css["GamePage-GuideBar"]} />
+        <ActionBar className={css["GamePage-ActionBar"]} />
       </section>
       {isPlayerWins !== null ? (
         <ResultsModal

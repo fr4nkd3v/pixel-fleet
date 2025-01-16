@@ -3,7 +3,7 @@ import css from "./guide-bar.module.css";
 import { useGameStore, useOpponentStore } from "~/stores";
 import { useTranslation } from "react-i18next";
 
-export const GuideBar = () => {
+export const GuideBar = ({ className }: { className?: string }) => {
   const { gamePhase, isPlayerTurn, isShooting } = useGameStore();
   const { targetCoordinates } = useOpponentStore();
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ export const GuideBar = () => {
   const key = getTranslationKey();
 
   return (
-    <Card fullWidth>
+    <Card fullWidth cardClassName={className}>
       <article className={css["GuideBar"]}>
         <div className={css["GuideBar-icon"]}>
           <Icon name={getIconName()} size="100%" />

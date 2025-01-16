@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 
 export const FleetMenu = ({
   perspective,
+  className,
   setCursorLocation,
 }: IFleetMenuProps) => {
   const { t } = useTranslation();
@@ -37,7 +38,8 @@ export const FleetMenu = ({
     <div
       className={clsx(
         css["FleetMenu"],
-        css[isPlayer ? "is-player" : "is-opponent"]
+        css[isPlayer ? "is-player" : "is-opponent"],
+        className
       )}
     >
       <div className={css["FleetMenu-texts"]}>

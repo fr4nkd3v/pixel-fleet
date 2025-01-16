@@ -1,7 +1,9 @@
 .Container-ActionBar {
   display: flex;
   align-items: center;
-  max-width: 36rem;
+}
+.Container-ActionBar.is-hidden {
+  display: none;
 }
 
 .ActionBar {
@@ -25,4 +27,15 @@
   font-size: var(--size-22);
   text-align: center;
   text-transform: uppercase;
+}
+
+/* Desktop Device */
+
+@media (min-width: 1024px) {
+  .Container-ActionBar {
+    max-width: 36rem;
+  }
+  .Container-ActionBar.is-hidden {
+    display: initial;
+  }
 }

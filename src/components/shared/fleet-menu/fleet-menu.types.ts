@@ -2,6 +2,7 @@ import { TShipId, TCursorLocation, TShip, TPerspective } from "~/types/game";
 
 export interface IFleetMenuProps {
   perspective: TPerspective;
+  className?: string;
   setCursorLocation?: (cursorLocation: TCursorLocation) => void;
 }
 

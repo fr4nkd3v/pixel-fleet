@@ -30,6 +30,11 @@
     brightness(0.8);
 }
 
+/* Desktop Device */
+
+@media (min-width: 1024px) {
+}
+
 /* #endregion BattleMap */
 
 /* #region BattleMap Tile */
@@ -42,18 +47,18 @@
   z-index: var(--layer-10);
 
   text-transform: uppercase;
-  font-size: var(--size-18);
+  font-size: var(--size-14);
   border-left: rgba(0, 0, 0, 0.15) 1px solid;
   border-top: rgba(0, 0, 0, 0.15) 1px solid;
 }
 
 .BattleMap-tile.is-player {
   color: var(--color-primary);
-  text-shadow: 2px 2px 0 var(--color-dark-1);
+  text-shadow: 1px 1px 0 var(--color-dark-1);
 }
 .BattleMap-tile.is-opponent {
   color: var(--color-dark-1);
-  text-shadow: 2px 2px 0 var(--color-primary);
+  text-shadow: 1px 1px 0 var(--color-primary);
 }
 
 .BattleMap-tile.is-available {
@@ -80,7 +85,7 @@
   content: "";
   position: absolute;
   inset: -1px;
-  border: solid 5px var(--white-2);
+  border: solid 4px var(--white-2);
 }
 .BattleMap-tile.is-covered.is-attacked::after {
   border-color: rgb(237, 149, 158);
@@ -116,6 +121,27 @@
   background: hsla(354deg 71% 58% / 70%);
 }
 
+/* Desktop Device */
+
+@media (min-width: 1024px) {
+  .BattleMap-tile {
+    font-size: var(--size-18);
+  }
+
+  .BattleMap-tile.is-player {
+    text-shadow: 2px 2px 0 var(--color-dark-1);
+  }
+  .BattleMap-tile.is-opponent {
+    text-shadow: 2px 2px 0 var(--color-primary);
+  }
+
+  .BattleMap-tile.start::after,
+  .BattleMap-tile.middle::after,
+  .BattleMap-tile.end:after {
+    border-width: 5px;
+  }
+}
+
 /* #endregion BattleMap Tile */
 
 /* #region Sight */
@@ -131,43 +157,24 @@
 }
 
 .Sight.is-shooting {
-  animation: shooting 3s infinite;
+  animation: shooting 3s steps(10) infinite;
 }
 
-/* TODO: Mejorar esta animacion, que sea parpadeante y no tenga transicion */
 @keyframes shooting {
-  0% {
-    opacity: 1;
-  }
-  10% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  60% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 0;
-  }
-  80% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 0;
-  }
+  0%,
+  20%,
+  40%,
+  60%,
+  80%,
   100% {
     opacity: 1;
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    opacity: 0;
   }
 }
 

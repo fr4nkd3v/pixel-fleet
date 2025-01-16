@@ -23,6 +23,7 @@ import {
 
 export const BattleMap = ({
   perspective,
+  className,
   setCursorLocation,
   onFinishesShot,
 }: IBattleMapProps) => {
@@ -213,7 +214,8 @@ export const BattleMap = ({
       className={clsx(
         css["BattleMap"],
         isDisabled && css["is-disabled"],
-        !isPlayer && css["is-opponent"]
+        !isPlayer && css["is-opponent"],
+        className
       )}
       style={{
         gridTemplateColumns: `repeat(${sideLength + 1}, var(--tile-size))`,
