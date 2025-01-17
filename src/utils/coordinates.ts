@@ -17,7 +17,7 @@ export const getTilesByCoordinates = (
   coordinates: TCoordinate[]
 ): HTMLElement[] => {
   const tiles = coordinates
-    .map((coor) => document.getElementById(`${coor.y}${coor.x}`))
+    .map((coor) => document.getElementById(`player${coor.y}${coor.x}`))
     .filter((tile) => tile !== null);
   return tiles;
 };

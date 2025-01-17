@@ -25,6 +25,7 @@ import {
   usePlayerStore,
   useShipDeployStore,
 } from "~/stores";
+import { useBreakpoints } from "~/hooks";
 
 export const GamePage = () => {
   // Set fleet & map size for each player
@@ -80,9 +81,12 @@ export const GamePage = () => {
 
   const { restartState: restartShipDeployState } = useShipDeployStore();
 
+  const { isDesktopOrHigher } = useBreakpoints();
+
   const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
     null
   );
+  const [scrollY, setScrollY] = useState(0);
 
   const restartGame = useCallback(() => {
     restartGameState();
@@ -161,6 +165,28 @@ export const GamePage = () => {
     setPlayerMap,
   ]);
 
+  const handleMouseMoveInPage = (event: React.MouseEvent) => {
+    const { clientX, clientY } = event;
+    const verticalScrollLength = document.scrollingElement?.scrollTop ?? 0;
+    setCursorLocation({
+      left: clientX,
+      top: clientY,
+    });
+    setScrollY(verticalScrollLength);
+  };
+
+  const handleScrollInPage = useCallback(() => {
+    const scrollY = window.scrollY;
+    setScrollY(scrollY);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScrollInPage);
+    return () => {
+      window.removeEventListener("scroll", handleScrollInPage);
+    };
+  }, [handleScrollInPage]);
+
   // Only first render
   useEffect(() => {
     setPlayerFleet([...commonFleetArr]);
@@ -202,31 +228,62 @@ export const GamePage = () => {
 
   return (
     <>
-      <section className={css["GamePage"]}>
-        <FleetMenu
-          perspective="player"
-          className={css["GamePage-FleetPlayer"]}
-          setCursorLocation={setCursorLocation}
-        />
-        <FleetMenu
-          perspective="opponent"
-          className={css["GamePage-FleetOpponent"]}
-        />
-        <div className={css["GamePage-BattleMapPlayer"]}>
-          <BattleMap
-            perspective="player"
-            setCursorLocation={setCursorLocation}
-            onFinishesShot={handleOpponentFinishesShooting}
-          />
-        </div>
-        <div className={css["GamePage-BattleMapOpponent"]}>
-          <BattleMap
-            perspective="opponent"
-            onFinishesShot={handlePlayerFinishesShot}
-          />
-        </div>
-        <GuideBar className={css["GamePage-GuideBar"]} />
-        <ActionBar className={css["GamePage-ActionBar"]} />
+      <section className={css["GamePage"]} onMouseMove={handleMouseMoveInPage}>
+        {isDesktopOrHigher ? (
+          <>
+            <FleetMenu
+              perspective="player"
+              className={css["GamePage-FleetPlayer"]}
+              setCursorLocation={setCursorLocation}
+            />
+            <FleetMenu
+              perspective="opponent"
+              className={css["GamePage-FleetOpponent"]}
+            />
+            <div className={css["GamePage-BattleMapPlayer"]}>
+              <BattleMap
+                perspective="player"
+                onFinishesShot={handleOpponentFinishesShooting}
+              />
+            </div>
+            <div className={css["GamePage-BattleMapOpponent"]}>
+              <BattleMap
+                perspective="opponent"
+                onFinishesShot={handlePlayerFinishesShot}
+              />
+            </div>
+            <GuideBar className={css["GamePage-GuideBar"]} />
+            <ActionBar className={css["GamePage-ActionBar"]} />
+          </>
+        ) : (
+          <>
+            <GuideBar className={css["GamePage-GuideBar"]} />
+            <div className={css["GamePage-Container"]}>
+              <FleetMenu
+                perspective="opponent"
+                className={css["GamePage-FleetOpponent"]}
+              />
+              <div className={css["GamePage-BattleMapOpponent"]}>
+                <BattleMap
+                  perspective="opponent"
+                  onFinishesShot={handlePlayerFinishesShot}
+                />
+              </div>
+              <div className={css["GamePage-BattleMapPlayer"]}>
+                <BattleMap
+                  perspective="player"
+                  onFinishesShot={handleOpponentFinishesShooting}
+                />
+              </div>
+              <FleetMenu
+                perspective="player"
+                className={css["GamePage-FleetPlayer"]}
+                setCursorLocation={setCursorLocation}
+              />
+            </div>
+            <ActionBar className={css["GamePage-ActionBar"]} />
+          </>
+        )}
       </section>
       {isPlayerWins !== null ? (
         <ResultsModal
@@ -239,7 +296,7 @@ export const GamePage = () => {
       {cursorLocation && (
         <CursorShadowShip
           locationX={cursorLocation.left}
-          locationY={cursorLocation.top}
+          locationY={cursorLocation.top + scrollY}
         />
       )}
     </>

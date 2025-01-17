@@ -1,7 +1,7 @@
 .CursorShadowShip {
   position: absolute;
   display: flex;
-  z-index: var(--layer-20);
+  z-index: var(--layer-40);
   pointer-events: none;
 }
 

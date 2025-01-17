@@ -1,5 +1,4 @@
 import type {
-  TCursorLocation,
   TCoveredShip,
   TCoordinate,
   TEmptyCoordinate,
@@ -9,7 +8,6 @@ import type {
 export interface IBattleMapProps {
   perspective: TPerspective;
   className?: string;
-  setCursorLocation?: (cursorLocation: TCursorLocation) => void;
   onFinishesShot: () => void;
 }
 

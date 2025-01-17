@@ -24,7 +24,6 @@ import {
 export const BattleMap = ({
   perspective,
   className,
-  setCursorLocation,
   onFinishesShot,
 }: IBattleMapProps) => {
   const {
@@ -56,7 +55,7 @@ export const BattleMap = ({
   const sideLength = MAP_SIZE;
   const battleMapRef = useRef<null | HTMLElement>(null);
 
-  const clearAvailableStyles = (tiles: HTMLElement[] | NodeListOf<Element>) => {
+  const clearAvailableStyles = (tiles: Element[] | NodeListOf<Element>) => {
     tiles.forEach((tile) =>
       tile.classList.remove(css["is-available"], css["is-unavailable"])
     );
@@ -180,13 +179,6 @@ export const BattleMap = ({
     clearAvailableStyles(tiles);
   };
 
-  const handleMouseMoveBattleMap = (event: React.MouseEvent) => {
-    if (!setCursorLocation) return;
-
-    const { clientX, clientY } = event;
-    setCursorLocation({ left: clientX, top: clientY });
-  };
-
   const tiles = [];
   for (let h = 0; h <= sideLength; h++) {
     for (let w = 0; w <= sideLength; w++) {
@@ -222,7 +214,6 @@ export const BattleMap = ({
         gridTemplateRows: `repeat(${sideLength + 1}, var(--tile-size))`,
       }}
       onClick={handleClickBattleMap}
-      onMouseMove={handleMouseMoveBattleMap}
       ref={battleMapRef}
     >
       {tiles}

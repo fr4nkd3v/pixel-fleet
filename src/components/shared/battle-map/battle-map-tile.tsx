@@ -17,7 +17,9 @@ export const Tile = ({
 
   const coordinateX = parseStringCoordinateX(locationX);
   const validCoordinate = isValidCoordinate(coordinateX, locationY);
-  const id = validCoordinate ? `${locationY}${coordinateX}` : undefined;
+  const id = validCoordinate
+    ? `${isPlayer ? "player" : "opponent"}${locationY}${coordinateX}`
+    : undefined;
 
   let text = null;
   if (locationX === 0 && locationY > 0 && locationY < 11) {
