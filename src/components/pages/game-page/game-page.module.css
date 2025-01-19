@@ -16,6 +16,11 @@
   padding: var(--size-8) 0;
 }
 
+.GamePage-BattleMapOpponent,
+.GamePage-BattleMapPlayer {
+  width: 100%;
+}
+
 .GamePage-GuideBar {
   width: 100%;
   position: sticky;
@@ -55,11 +60,22 @@
     justify-self: start;
   }
 
+  .GamePage-BattleMapOpponent {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .GamePage-BattleMapPlayer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
   .GamePage-GuideBar {
     max-width: 36rem;
     order: initial;
+    position: static;
   }
   .GamePage-ActionBar {
     order: initial;
+    position: relative !important;
   }
 }

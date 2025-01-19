@@ -1,10 +1,10 @@
 /* #region BattleMap */
 
 .BattleMap {
+  width: 100%;
+  max-width: 35rem;
   place-self: center;
   display: grid;
-  width: fit-content;
-  height: fit-content;
   position: relative;
 
   border-right: rgba(0, 0, 0, 0.15) 1px solid;
@@ -43,11 +43,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 100%;
+
   position: relative;
   z-index: var(--layer-10);
 
   text-transform: uppercase;
-  font-size: var(--size-14);
+  font-size: clamp(var(--size-8), 1vw + 0.65rem, var(--size-24));
   border-left: rgba(0, 0, 0, 0.15) 1px solid;
   border-top: rgba(0, 0, 0, 0.15) 1px solid;
 }
@@ -119,6 +121,13 @@
 }
 .BattleMap-tile.is-covered.is-attacked.is-hidden {
   background: hsla(354deg 71% 58% / 70%);
+}
+
+.BattleMap-tileText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 /* Desktop Device */

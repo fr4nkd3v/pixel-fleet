@@ -30,7 +30,7 @@ export const ActionBar = ({ className }: { className?: string }) => {
       cardClassName={clsx(
         css["Container-ActionBar"],
         className,
-        isStartControlDisabled && css["is-hidden"]
+        isDisabled && css["is-hidden"]
       )}
       disabled={isDisabled}
       fullWidth

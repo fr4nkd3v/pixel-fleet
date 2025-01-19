@@ -210,8 +210,7 @@ export const BattleMap = ({
         className
       )}
       style={{
-        gridTemplateColumns: `repeat(${sideLength + 1}, var(--tile-size))`,
-        gridTemplateRows: `repeat(${sideLength + 1}, var(--tile-size))`,
+        gridTemplateColumns: `repeat(${sideLength + 1}, auto)`,
       }}
       onClick={handleClickBattleMap}
       ref={battleMapRef}
@@ -220,8 +219,8 @@ export const BattleMap = ({
       <div
         className={css["BattleMap-background"]}
         style={{
-          width: `calc(var(--tile-size) * ${sideLength})`,
-          height: `calc(var(--tile-size) * ${sideLength})`,
+          width: `calc(100% - 100% / ${sideLength + 1})`,
+          height: `calc(100% - 100% / ${sideLength + 1})`,
         }}
       ></div>
 

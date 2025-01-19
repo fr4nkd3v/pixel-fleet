@@ -27,8 +27,8 @@
 
 @media (min-width: 1024px) {
   .FleetMenu {
-    min-width: 36rem;
-    width: min-content;
+    min-width: 26rem;
+    width: 100%;
     padding: var(--size-18);
     box-shadow: var(--shadow-m);
   }

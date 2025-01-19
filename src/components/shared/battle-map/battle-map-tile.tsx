@@ -40,7 +40,7 @@ export const Tile = ({
 
   return (
     <div
-      id={id}
+      id={locationX === 0 && locationY === 0 ? "first-tile" : id}
       className={combinedClasses}
       data-location-x={validCoordinate ? coordinateX : undefined}
       data-location-y={validCoordinate ? locationY : undefined}
@@ -48,7 +48,7 @@ export const Tile = ({
       onMouseLeave={validCoordinate ? onMouseLeave : undefined}
       onContextMenu={onContextMenu}
     >
-      {text}
+      <span className={css["BattleMap-tileText"]}>{text}</span>
     </div>
   );
 };

@@ -11,7 +11,9 @@
   gap: var(--size-20);
   padding: var(--size-16);
   width: 100%;
+  height: 100%;
   justify-content: center;
+  align-items: center;
 }
 
 .ActionBar-inputsGroup {

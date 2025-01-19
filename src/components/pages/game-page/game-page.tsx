@@ -83,6 +83,8 @@ export const GamePage = () => {
 
   const { isDesktopOrHigher } = useBreakpoints();
 
+  const domRoot = useMemo(() => document.querySelector(":root"), []);
+
   const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
     null
   );
@@ -186,6 +188,24 @@ export const GamePage = () => {
       window.removeEventListener("scroll", handleScrollInPage);
     };
   }, [handleScrollInPage]);
+
+  const handleResize = useCallback(() => {
+    const tile = document.getElementById("first-tile");
+    if (domRoot && tile) {
+      (domRoot as HTMLElement).style.setProperty(
+        "--tile-size",
+        `${tile.offsetWidth}px`
+      );
+    }
+  }, [domRoot]);
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [handleResize]);
 
   // Only first render
   useEffect(() => {
