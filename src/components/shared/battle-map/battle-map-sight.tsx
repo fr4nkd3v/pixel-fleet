@@ -4,6 +4,7 @@ import { ISightProps } from "./battle-map.types";
 import css from "./battle-map.module.css";
 import { delay, parseNumberCoordinateX } from "~/utils";
 import { DEFAULT_ATTACK_DELAY } from "~/constants";
+import sprites from "~/assets/sprites-effect.png";
 import clsx from "clsx";
 
 export const Sight = ({
@@ -20,17 +21,18 @@ export const Sight = ({
 
   const sightStyles = {
     left: `calc(var(--tile-size) * ${x})`,
-    top: `calc(var(--tile-size) * ${y})`,
+    top: `calc((var(--tile-size) + 1px) * ${y})`,
   };
 
   const animationSize = 64;
   const animationStyles = {
     left: `calc(var(--tile-size) * ${x} + (var(--tile-size) - ${animationSize}px) / 2)`,
     top: `calc(var(--tile-size) * ${y} + (var(--tile-size) - ${animationSize}px) / 2)`,
+    backgroundImage: `url(${sprites})`,
   };
 
   useEffect(() => {
-    if (!isShot || !isInTurn) return;
+    if (!isShot || isInTurn) return;
 
     (async () => {
       await delay(DEFAULT_ATTACK_DELAY);
@@ -48,7 +50,7 @@ export const Sight = ({
         <div
           className={clsx(
             css["Sight"],
-            isShot && isInTurn && css["is-shooting"]
+            isShot && !isInTurn && css["is-shooting"]
           )}
           style={sightStyles}
         >

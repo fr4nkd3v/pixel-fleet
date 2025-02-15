@@ -48,7 +48,7 @@ export const BattleMap = ({
   const targetCoordinates = isPlayer
     ? playerTargetCoordinates
     : opponentTargetCoordinates;
-  const isInTurn = isPlayer ? !isPlayerTurn : isPlayerTurn;
+  const isInTurn = isPlayer ? isPlayerTurn : !isPlayerTurn;
   const isDisabled = !isPlayer && gamePhase !== "start";
   const isReady = gamePhase === "start";
 
@@ -224,7 +224,7 @@ export const BattleMap = ({
         }}
       ></div>
 
-      {isReady && isInTurn && (
+      {isReady && !isInTurn && (
         <Sight
           targetCoordinates={targetCoordinates}
           isShooting={isShooting}

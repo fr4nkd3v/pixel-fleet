@@ -90,6 +90,8 @@ export const GamePage = () => {
   );
   const [scrollY, setScrollY] = useState(0);
 
+  const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
+
   const restartGame = useCallback(() => {
     restartGameState();
     restartOpponentState();
@@ -168,6 +170,8 @@ export const GamePage = () => {
   ]);
 
   const handleMouseMoveInPage = (event: React.MouseEvent) => {
+    if (isPlayerFleetDeployed) return;
+
     const { clientX, clientY } = event;
     const verticalScrollLength = document.scrollingElement?.scrollTop ?? 0;
     setCursorLocation({
@@ -178,9 +182,11 @@ export const GamePage = () => {
   };
 
   const handleScrollInPage = useCallback(() => {
+    if (isPlayerFleetDeployed) return;
+
     const scrollY = window.scrollY;
     setScrollY(scrollY);
-  }, []);
+  }, [isPlayerFleetDeployed]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScrollInPage);

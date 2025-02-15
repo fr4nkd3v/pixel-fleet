@@ -196,10 +196,6 @@
   height: 64px;
   position: absolute;
   z-index: var(--layer-30);
-  /* top: 25rem;
-  left: 25rem; */
-  background-image: url(../../assets/sprites-effect.png);
-  /* background-position-x: calc(-64px * 1); */
   background-position-y: calc(-64px * 15);
   animation: attack 800ms steps(5) infinite;
 }
