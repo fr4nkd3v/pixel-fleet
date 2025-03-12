@@ -92,19 +92,12 @@ export const FleetMenuItem = ({
     clearShipOnDeploy();
   };
 
-  const handlePointerMove = (
-    mapCoordinates: TMap,
-    locationXY: [number, number],
-    forcedOrientation?: TOrientationType
-  ) => {
-    if (!(shipOnDeployId && shipOnDeployOrientation)) return;
+  const handlePointerMove = (target: Element | null, mapCoordinates: TMap) => {
+    if (!(shipOnDeployId && shipOnDeployOrientation) || !target) return;
+
     const shipLength: number = SHIP_TYPES[shipOnDeployId].length;
 
-    const [x, y] = locationXY;
-    const target = document.elementFromPoint(x, y);
-
-    if (!target || !target.classList.contains(battleMapCSS["BattleMap-tile"]))
-      return;
+    if (!target.classList.contains(battleMapCSS["BattleMap-tile"])) return;
 
     const { locationX, locationY } = (target as HTMLElement).dataset;
     if (!locationX || !locationY) return;
@@ -119,7 +112,7 @@ export const FleetMenuItem = ({
           previousLocationX,
           Number(previousLocationY),
           shipLength,
-          forcedOrientation || shipOnDeployOrientation
+          shipOnDeployOrientation
         );
 
         const previousTiles = getTilesByCoordinates(previousNextCoordinates);
@@ -135,7 +128,7 @@ export const FleetMenuItem = ({
         locationX,
         Number(locationY),
         shipLength,
-        forcedOrientation || shipOnDeployOrientation
+        shipOnDeployOrientation
       );
 
       const isOutOfArea = nextCoordinates.length < shipLength;
@@ -155,6 +148,49 @@ export const FleetMenuItem = ({
     }
   };
 
+  const handlePointerUp = (target: Element | null, mapCoordinates: TMap) => {
+    if (
+      !shipOnDeployId ||
+      !shipOnDeployOrientation ||
+      !target ||
+      !target.classList.contains(battleMapCSS["BattleMap-tile"])
+    ) {
+      clearShipOnDeploy();
+      return;
+    }
+
+    const { locationX, locationY } = (target as HTMLElement).dataset;
+    if (!locationX || !locationY) return;
+
+    // Get coordinates that form the ship deployed
+    const length: number = SHIP_TYPES[shipOnDeployId].length;
+    const nextCoordinates = getNextCoordinates(
+      locationX,
+      Number(locationY),
+      length,
+      shipOnDeployOrientation
+    );
+    const nexTiles = getTilesByCoordinates(nextCoordinates);
+
+    const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
+
+    // ❌ Is unavailable | out-of-area location or location covered by another ship
+    if (nextCoordinates.length < length || isCovered) {
+      clearShipOnDeploy();
+      clearTilesAvailableStyles(nexTiles);
+      return;
+    }
+
+    // ✅ Is available
+    handleDeployedShip(
+      shipOnDeployId,
+      locationX,
+      Number(locationY),
+      shipOnDeployOrientation
+    );
+    clearTilesAvailableStyles(nexTiles);
+  };
+
   const bind = useDrag((state) => {
     const {
       xy: [x, y],
@@ -163,6 +199,8 @@ export const FleetMenuItem = ({
 
     if (isDeployed) return;
 
+    const target = document.elementFromPoint(x, y);
+
     if (type === "pointerdown") {
       onDeploying(shipId, { locationX: x, locationY: y });
     } else if (type === "pointermove") {
@@ -170,44 +208,9 @@ export const FleetMenuItem = ({
         left: x,
         top: y,
       });
-      handlePointerMove(mapCoordinates, [x, y]);
+      handlePointerMove(target, mapCoordinates);
     } else if (type === "pointerup") {
-      const target = document.elementFromPoint(x, y);
-
-      if (
-        shipOnDeployId &&
-        shipOnDeployOrientation &&
-        target &&
-        target.classList.contains(battleMapCSS["BattleMap-tile"])
-      ) {
-        const { locationX, locationY } = (target as HTMLElement).dataset;
-        if (!locationX || !locationY) return;
-
-        // Get coordinates that form the ship deployed
-        const length: number = SHIP_TYPES[shipOnDeployId].length;
-        const nextCoordinates = getNextCoordinates(
-          locationX,
-          Number(locationY),
-          length,
-          shipOnDeployOrientation
-        );
-        if (nextCoordinates.length < length) return; // ❌ Is unavailable | out-of-area location
-
-        const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
-        if (isCovered) return; // ❌ Is unavailable | location covered by another ship
-
-        // ✅ Is available
-        handleDeployedShip(
-          shipOnDeployId,
-          locationX,
-          Number(locationY),
-          shipOnDeployOrientation
-        );
-        const tiles = getTilesByCoordinates(nextCoordinates);
-        clearTilesAvailableStyles(tiles);
-      } else {
-        clearShipOnDeploy();
-      }
+      handlePointerUp(target, mapCoordinates);
     }
   });
 

@@ -14,15 +14,6 @@ export const isValidCoordinate = (x: string, y: number) => {
   return "abcdefghij".includes(x) && y > 0 && y < 11;
 };
 
-export const getTilesByCoordinates = (
-  coordinates: TCoordinate[]
-): HTMLElement[] => {
-  const tiles = coordinates
-    .map((coor) => document.getElementById(`player${coor.y}${coor.x}`))
-    .filter((tile) => tile !== null);
-  return tiles;
-};
-
 export const getNextCoordinates = (
   x: string,
   y: number,
