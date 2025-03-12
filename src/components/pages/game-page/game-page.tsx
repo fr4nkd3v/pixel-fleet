@@ -169,18 +169,6 @@ export const GamePage = () => {
     setPlayerMap,
   ]);
 
-  const handleMouseMoveInPage = (event: React.MouseEvent) => {
-    if (isPlayerFleetDeployed) return;
-
-    const { clientX, clientY } = event;
-    const verticalScrollLength = document.scrollingElement?.scrollTop ?? 0;
-    setCursorLocation({
-      left: clientX,
-      top: clientY,
-    });
-    setScrollY(verticalScrollLength);
-  };
-
   const handleScrollInPage = useCallback(() => {
     if (isPlayerFleetDeployed) return;
 
@@ -254,7 +242,7 @@ export const GamePage = () => {
 
   return (
     <>
-      <section className={css["GamePage"]} onMouseMove={handleMouseMoveInPage}>
+      <section className={css["GamePage"]}>
         {isDesktopOrHigher ? (
           <>
             <FleetMenu
@@ -265,6 +253,7 @@ export const GamePage = () => {
             <FleetMenu
               perspective="opponent"
               className={css["GamePage-FleetOpponent"]}
+              setCursorLocation={setCursorLocation}
             />
             <div className={css["GamePage-BattleMapPlayer"]}>
               <BattleMap
@@ -288,6 +277,7 @@ export const GamePage = () => {
               <FleetMenu
                 perspective="opponent"
                 className={css["GamePage-FleetOpponent"]}
+                setCursorLocation={setCursorLocation}
               />
               <div className={css["GamePage-BattleMapOpponent"]}>
                 <BattleMap

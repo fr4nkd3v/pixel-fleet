@@ -3,6 +3,8 @@
   display: flex;
   z-index: var(--layer-40);
   pointer-events: none;
+  pointer-events: none;
+  touch-action: none;
 }
 
 .CursorShadowShip::after {

@@ -53,6 +53,7 @@ export const FleetMenu = ({
             perspective={perspective}
             shipOnDeployId={shipOnDeployId}
             onDeploying={handleDeployingShip}
+            setCursorLocation={setCursorLocation}
           />
         ))}
       </div>

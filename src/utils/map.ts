@@ -1,4 +1,5 @@
 import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
+import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 
 export const attackMap = (
   targetCoordinates: TCoordinate,
@@ -67,4 +68,15 @@ export const attackMap = (
     map: newMap,
     fleet: newFleet,
   };
+};
+
+export const clearTilesAvailableStyles = (
+  tiles: Element[] | NodeListOf<Element>
+) => {
+  tiles.forEach((tile) =>
+    tile.classList.remove(
+      battleMapCSS["is-available"],
+      battleMapCSS["is-unavailable"]
+    )
+  );
 };

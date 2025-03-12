@@ -57,6 +57,7 @@
 
 .FleetMenuItem-wrapper {
   position: relative;
+  touch-action: none;
 }
 .FleetMenuItem-back {
   position: absolute;

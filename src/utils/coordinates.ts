@@ -1,5 +1,6 @@
 import { MAP_SIZE } from "~/constants/game";
-import { TCoordinate, TMap, TOrientationType } from "~/types/game";
+import { TCoordinate, TMap, TOrientationType, TShipId } from "~/types/game";
+import { getShipPartByIndex } from "./fleet";
 
 export const parseStringCoordinateX = (coor: number): string => {
   return String.fromCharCode(coor + 96);
@@ -44,6 +45,30 @@ export const getNextCoordinates = (
     if (coordinate) coordinates.push(coordinate);
   }
   return coordinates;
+};
+
+export const getCoveredCoordinates = (
+  coordinatesToCover: TCoordinate[],
+  coveredShipId: TShipId,
+  shipOrientation: TOrientationType
+): TMap => {
+  const coveredCoordinates = coordinatesToCover.map((coordinate, index) => {
+    const shipPart = getShipPartByIndex(index, coordinatesToCover.length);
+
+    return {
+      x: coordinate.x,
+      y: Number(coordinate.y),
+      covered: {
+        shipId: coveredShipId,
+        orientation: shipOrientation,
+        shipPart,
+        isDefeated: false,
+      },
+      attacked: false,
+    };
+  });
+
+  return coveredCoordinates;
 };
 
 export const hasCoordinateCovered = (
