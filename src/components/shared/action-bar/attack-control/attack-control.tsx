@@ -81,6 +81,7 @@ export const AttackControl = () => {
             onInput={handleChangeCoordinateY}
             onFocus={() => inputY && inputY.current?.select()}
             value={targetCoordinates.y ?? "-"}
+            autoComplete="off"
           />
         </div>
         <div className={css["ActionBar-inputWrapper"]}>
@@ -95,6 +96,7 @@ export const AttackControl = () => {
             onInput={handleChangeCoordinateX}
             onFocus={() => inputX.current?.select()}
             value={targetCoordinates.x ?? "-"}
+            autoComplete="off"
           />
         </div>
       </div>
