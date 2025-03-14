@@ -1,5 +1,6 @@
 import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
 import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
+import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
 
 export const attackMap = (
   targetCoordinates: TCoordinate,
@@ -81,11 +82,20 @@ export const clearTilesAvailableStyles = (
   );
 };
 
-export const getTilesByCoordinates = (
+export const getPlayerTilesByCoordinates = (
   coordinates: TCoordinate[]
-): HTMLElement[] => {
+): Element[] | null => {
+  const playerMap = document.querySelector(
+    "." + gamePageCSS["GamePage-BattleMapPlayer"]
+  );
+  if (!playerMap) return null;
+
   const tiles = coordinates
-    .map((coor) => document.getElementById(`player${coor.y}${coor.x}`))
+    .map((coor) =>
+      playerMap.querySelector(
+        `[data-location-x="${coor.x}"][data-location-y="${coor.y}"]`
+      )
+    )
     .filter((tile) => tile !== null);
   return tiles;
 };

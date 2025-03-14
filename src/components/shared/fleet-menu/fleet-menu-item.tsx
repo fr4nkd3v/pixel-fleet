@@ -10,7 +10,7 @@ import {
   clearTilesAvailableStyles,
   getCoveredCoordinates,
   getNextCoordinates,
-  getTilesByCoordinates,
+  getPlayerTilesByCoordinates,
   hasCoordinateCovered,
 } from "~/utils";
 import { TMap, TOrientationType, TShipId } from "~/types";
@@ -115,8 +115,10 @@ export const FleetMenuItem = ({
           shipOnDeployOrientation
         );
 
-        const previousTiles = getTilesByCoordinates(previousNextCoordinates);
-        clearTilesAvailableStyles(previousTiles);
+        const previousTiles = getPlayerTilesByCoordinates(
+          previousNextCoordinates
+        );
+        if (previousTiles) clearTilesAvailableStyles(previousTiles);
       }
     }
 
@@ -134,7 +136,8 @@ export const FleetMenuItem = ({
       const isOutOfArea = nextCoordinates.length < shipLength;
       const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
 
-      const nextTiles = getTilesByCoordinates(nextCoordinates);
+      const nextTiles = getPlayerTilesByCoordinates(nextCoordinates);
+      if (!nextTiles) return;
 
       nextTiles.forEach((tile) => {
         tile.classList.add(
@@ -170,14 +173,14 @@ export const FleetMenuItem = ({
       length,
       shipOnDeployOrientation
     );
-    const nexTiles = getTilesByCoordinates(nextCoordinates);
+    const nexTiles = getPlayerTilesByCoordinates(nextCoordinates);
 
     const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
 
     // ❌ Is unavailable | out-of-area location or location covered by another ship
     if (nextCoordinates.length < length || isCovered) {
       clearShipOnDeploy();
-      clearTilesAvailableStyles(nexTiles);
+      if (nexTiles) clearTilesAvailableStyles(nexTiles);
       return;
     }
 
@@ -188,7 +191,7 @@ export const FleetMenuItem = ({
       Number(locationY),
       shipOnDeployOrientation
     );
-    clearTilesAvailableStyles(nexTiles);
+    if (nexTiles) clearTilesAvailableStyles(nexTiles);
   };
 
   const bind = useDrag((state) => {

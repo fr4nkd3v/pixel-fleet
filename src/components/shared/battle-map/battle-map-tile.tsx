@@ -17,9 +17,6 @@ export const Tile = ({
 
   const coordinateX = parseStringCoordinateX(locationX);
   const validCoordinate = isValidCoordinate(coordinateX, locationY);
-  const id = validCoordinate
-    ? `${isPlayer ? "player" : "opponent"}${locationY}${coordinateX}`
-    : undefined;
 
   let text = null;
   if (locationX === 0 && locationY > 0 && locationY < 11) {
@@ -40,7 +37,6 @@ export const Tile = ({
 
   return (
     <div
-      id={id}
       className={combinedClasses}
       data-location-x={validCoordinate ? coordinateX : undefined}
       data-location-y={validCoordinate ? locationY : undefined}
