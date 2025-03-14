@@ -40,7 +40,7 @@ export const Tile = ({
 
   return (
     <div
-      id={locationX === 0 && locationY === 0 ? "first-tile" : id}
+      id={id}
       className={combinedClasses}
       data-location-x={validCoordinate ? coordinateX : undefined}
       data-location-y={validCoordinate ? locationY : undefined}

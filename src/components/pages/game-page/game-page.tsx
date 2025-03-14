@@ -26,6 +26,7 @@ import {
   useShipDeployStore,
 } from "~/stores";
 import { useBreakpoints } from "~/hooks";
+import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 
 export const GamePage = () => {
   // Set fleet & map size for each player
@@ -184,13 +185,12 @@ export const GamePage = () => {
   }, [handleScrollInPage]);
 
   const handleResize = useCallback(() => {
-    const tile = document.getElementById("first-tile");
-    if (domRoot && tile) {
-      (domRoot as HTMLElement).style.setProperty(
-        "--tile-size",
-        `${tile.offsetWidth}px`
-      );
-    }
+    const tile = document.querySelector("." + battleMapCSS["BattleMap-tile"]);
+
+    if (!domRoot || !tile) return;
+
+    const tileSize = (tile as HTMLElement).offsetWidth;
+    (domRoot as HTMLElement).style.setProperty("--tile-size", `${tileSize}px`);
   }, [domRoot]);
 
   useEffect(() => {
