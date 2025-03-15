@@ -1,11 +1,11 @@
 import { type ITileProps } from "./battle-map.types";
 import css from "./battle-map.module.css";
-import { isValidCoordinate, parseStringCoordinateX } from "~/utils/coordinates";
+import { isValidCoordinate, parseNumberCoordinateX } from "~/utils/coordinates";
 import clsx from "clsx";
 
 export const Tile = ({
-  locationX,
-  locationY,
+  coordinateX,
+  coordinateY,
   isCovered,
   isAttacked,
   perspective,
@@ -15,13 +15,17 @@ export const Tile = ({
 }: ITileProps) => {
   const isPlayer = perspective === "player";
 
-  const coordinateX = parseStringCoordinateX(locationX);
-  const validCoordinate = isValidCoordinate(coordinateX, locationY);
+  const validCoordinate = isValidCoordinate(coordinateX, coordinateY);
+  const numberCoordinateX = parseNumberCoordinateX(coordinateX);
 
   let text = null;
-  if (locationX === 0 && locationY > 0 && locationY < 11) {
-    text = locationY.toString();
-  } else if (locationY === 0 && locationX > 0 && locationX < 11) {
+  if (numberCoordinateX === 0 && coordinateY > 0 && coordinateY < 11) {
+    text = coordinateY.toString();
+  } else if (
+    coordinateY === 0 &&
+    numberCoordinateX > 0 &&
+    numberCoordinateX < 11
+  ) {
     text = coordinateX;
   }
 
@@ -38,8 +42,8 @@ export const Tile = ({
   return (
     <div
       className={combinedClasses}
-      data-location-x={validCoordinate ? coordinateX : undefined}
-      data-location-y={validCoordinate ? locationY : undefined}
+      data-coordinate-x={validCoordinate ? coordinateX : undefined}
+      data-coordinate-y={validCoordinate ? coordinateY : undefined}
       onMouseEnter={validCoordinate ? onMouseEnter : undefined}
       onMouseLeave={validCoordinate ? onMouseLeave : undefined}
       onContextMenu={onContextMenu}

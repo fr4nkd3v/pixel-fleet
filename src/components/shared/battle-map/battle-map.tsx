@@ -52,11 +52,12 @@ export const BattleMap = ({
       const mapCoordinateFound = mapCoordinates.find(
         ({ x, y }) => x === parseStringCoordinateX(w) && y === h
       );
+
       tiles.push(
         <Tile
           key={`${h}${w}`}
-          locationX={w}
-          locationY={h}
+          coordinateX={parseStringCoordinateX(w)}
+          coordinateY={h}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
           perspective={perspective}

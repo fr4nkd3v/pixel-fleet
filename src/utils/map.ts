@@ -91,9 +91,9 @@ export const getPlayerTilesByCoordinates = (
   if (!playerMap) return null;
 
   const tiles = coordinates
-    .map((coor) =>
+    .map((coordinate) =>
       playerMap.querySelector(
-        `[data-location-x="${coor.x}"][data-location-y="${coor.y}"]`
+        `[data-coordinate-x="${coordinate.x}"][data-coordinate-y="${coordinate.y}"]`
       )
     )
     .filter((tile) => tile !== null);

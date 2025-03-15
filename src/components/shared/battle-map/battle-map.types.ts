@@ -12,8 +12,8 @@ export interface IBattleMapProps {
 }
 
 export interface ITileProps {
-  locationX: number;
-  locationY: number;
+  coordinateX: string;
+  coordinateY: number;
   isCovered: false | TCoveredShip;
   isAttacked: boolean;
   perspective: TPerspective;

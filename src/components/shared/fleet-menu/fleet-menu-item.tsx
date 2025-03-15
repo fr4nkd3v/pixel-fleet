@@ -99,18 +99,19 @@ export const FleetMenuItem = ({
 
     if (!target.classList.contains(battleMapCSS["BattleMap-tile"])) return;
 
-    const { locationX, locationY } = (target as HTMLElement).dataset;
-    if (!locationX || !locationY) return;
+    const { coordinateX, coordinateY } = (target as HTMLElement).dataset;
+    if (!coordinateX || !coordinateY) return;
 
     if (hoveredTile.current && hoveredTile.current !== target) {
-      const { locationX: previousLocationX, locationY: previousLocationY } = (
-        hoveredTile.current as HTMLElement
-      ).dataset;
+      const {
+        coordinateX: previousCoordinateX,
+        coordinateY: previousCoordinateY,
+      } = (hoveredTile.current as HTMLElement).dataset;
 
-      if (previousLocationX && previousLocationY) {
+      if (previousCoordinateX && previousCoordinateY) {
         const previousNextCoordinates = getNextCoordinates(
-          previousLocationX,
-          Number(previousLocationY),
+          previousCoordinateX,
+          Number(previousCoordinateY),
           shipLength,
           shipOnDeployOrientation
         );
@@ -127,8 +128,8 @@ export const FleetMenuItem = ({
       (hoveredTile.current && hoveredTile.current !== target)
     ) {
       const nextCoordinates = getNextCoordinates(
-        locationX,
-        Number(locationY),
+        coordinateX,
+        Number(coordinateY),
         shipLength,
         shipOnDeployOrientation
       );
@@ -162,14 +163,14 @@ export const FleetMenuItem = ({
       return;
     }
 
-    const { locationX, locationY } = (target as HTMLElement).dataset;
-    if (!locationX || !locationY) return;
+    const { coordinateX, coordinateY } = (target as HTMLElement).dataset;
+    if (!coordinateX || !coordinateY) return;
 
     // Get coordinates that form the ship deployed
     const length: number = SHIP_TYPES[shipOnDeployId].length;
     const nextCoordinates = getNextCoordinates(
-      locationX,
-      Number(locationY),
+      coordinateX,
+      Number(coordinateY),
       length,
       shipOnDeployOrientation
     );
@@ -187,8 +188,8 @@ export const FleetMenuItem = ({
     // ✅ Is available
     handleDeployedShip(
       shipOnDeployId,
-      locationX,
-      Number(locationY),
+      coordinateX,
+      Number(coordinateY),
       shipOnDeployOrientation
     );
     if (nexTiles) clearTilesAvailableStyles(nexTiles);
