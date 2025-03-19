@@ -259,12 +259,14 @@ export const GamePage = () => {
               <BattleMap
                 perspective="player"
                 onFinishesShot={handleOpponentFinishesShooting}
+                setCursorLocation={setCursorLocation}
               />
             </div>
             <div className={css["GamePage-BattleMapOpponent"]}>
               <BattleMap
                 perspective="opponent"
                 onFinishesShot={handlePlayerFinishesShot}
+                setCursorLocation={setCursorLocation}
               />
             </div>
             <GuideBar className={css["GamePage-GuideBar"]} />
@@ -283,12 +285,14 @@ export const GamePage = () => {
                 <BattleMap
                   perspective="opponent"
                   onFinishesShot={handlePlayerFinishesShot}
+                  setCursorLocation={setCursorLocation}
                 />
               </div>
               <div className={css["GamePage-BattleMapPlayer"]}>
                 <BattleMap
                   perspective="player"
                   onFinishesShot={handleOpponentFinishesShooting}
+                  setCursorLocation={setCursorLocation}
                 />
               </div>
               <FleetMenu

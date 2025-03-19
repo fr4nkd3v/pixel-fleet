@@ -1,11 +1,4 @@
-import {
-  TCoordinate,
-  TFleet,
-  TMap,
-  TShipId,
-  TMapCoordinate,
-  TEmptyCoordinate,
-} from "~/types/game";
+import { TCoordinate, TFleet, TMap, TShipId, TMapCoordinate, TEmptyCoordinate } from "~/types/game";
 
 export interface IOpponentStore {
   fleet: TFleet;
@@ -17,12 +10,9 @@ export interface IOpponentStore {
   restartState: () => void;
 }
 
-export interface IPlayerStore
-  extends Omit<IOpponentStore, "setTargetCoordinates"> {
-  deployShipInFleet: (
-    shipId: TShipId,
-    coveredCoordinates: TMapCoordinate[]
-  ) => void;
+export interface IPlayerStore extends Omit<IOpponentStore, "setTargetCoordinates"> {
+  deployShipInFleet: (shipId: TShipId, coveredCoordinates: TMapCoordinate[]) => void;
+  removeShipOnFeet: (shipId: TShipId) => void;
   updateTargetCoordinateX: (value: string) => void;
   updateTargetCoordinateY: (value: number) => void;
 }

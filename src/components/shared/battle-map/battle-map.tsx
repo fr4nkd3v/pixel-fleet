@@ -12,6 +12,7 @@ export const BattleMap = ({
   perspective,
   className,
   onFinishesShot,
+  setCursorLocation,
 }: IBattleMapProps) => {
   const { map: playerMap, targetCoordinates: opponentTargetCoordinates } =
     usePlayerStore();
@@ -61,6 +62,7 @@ export const BattleMap = ({
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
           perspective={perspective}
+          setCursorLocation={setCursorLocation}
         />
       );
     }

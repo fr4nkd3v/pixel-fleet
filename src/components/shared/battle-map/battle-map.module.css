@@ -52,6 +52,8 @@
   font-size: clamp(var(--size-8), 1vw + 0.65rem, var(--size-24));
   border-left: rgba(0, 0, 0, 0.15) 1px solid;
   border-top: rgba(0, 0, 0, 0.15) 1px solid;
+
+  touch-action: none;
 }
 
 .BattleMap-tile.is-player {

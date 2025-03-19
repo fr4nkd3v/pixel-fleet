@@ -3,12 +3,14 @@ import type {
   TCoordinate,
   TEmptyCoordinate,
   TPerspective,
+  TCursorLocation,
 } from "~/types";
 
 export interface IBattleMapProps {
   perspective: TPerspective;
   className?: string;
   onFinishesShot: () => void;
+  setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
 
 export interface ITileProps {
@@ -20,6 +22,7 @@ export interface ITileProps {
   onMouseEnter?: (event: React.MouseEvent) => void;
   onMouseLeave?: (event: React.MouseEvent) => void;
   onContextMenu?: (event: React.MouseEvent) => void;
+  setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
 
 export interface ISightProps {

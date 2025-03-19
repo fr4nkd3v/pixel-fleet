@@ -12,6 +12,7 @@ import {
   getNextCoordinates,
   getPlayerTilesByCoordinates,
   hasCoordinateCovered,
+  isTile,
 } from "~/utils";
 import { TMap, TOrientationType, TShipId } from "~/types";
 import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
@@ -97,7 +98,7 @@ export const FleetMenuItem = ({
 
     const shipLength: number = SHIP_TYPES[shipOnDeployId].length;
 
-    if (!target.classList.contains(battleMapCSS["BattleMap-tile"])) return;
+    if (!isTile(target)) return;
 
     const { coordinateX, coordinateY } = (target as HTMLElement).dataset;
     if (!coordinateX || !coordinateY) return;
@@ -157,7 +158,7 @@ export const FleetMenuItem = ({
       !shipOnDeployId ||
       !shipOnDeployOrientation ||
       !target ||
-      !target.classList.contains(battleMapCSS["BattleMap-tile"])
+      !isTile(target)
     ) {
       clearShipOnDeploy();
       return;
@@ -208,10 +209,7 @@ export const FleetMenuItem = ({
     if (type === "pointerdown") {
       onDeploying(shipId, { locationX: x, locationY: y });
     } else if (type === "pointermove") {
-      setCursorLocation({
-        left: x,
-        top: y,
-      });
+      setCursorLocation({ left: x, top: y });
       handlePointerMove(target, mapCoordinates);
     } else if (type === "pointerup") {
       handlePointerUp(target, mapCoordinates);

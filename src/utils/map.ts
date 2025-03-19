@@ -1,6 +1,8 @@
 import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
 import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
+import { parseNumberCoordinateX } from "./coordinates";
+import { MAP_SIZE } from "~/constants";
 
 export const attackMap = (
   targetCoordinates: TCoordinate,
@@ -98,4 +100,22 @@ export const getPlayerTilesByCoordinates = (
     )
     .filter((tile) => tile !== null);
   return tiles;
+};
+
+export const isAxisXTile = (coordinates: TCoordinate) => {
+  const { x, y: coordinateY } = coordinates;
+  const coordinateX = parseNumberCoordinateX(x);
+
+  return coordinateY === 0 && coordinateX > 0 && coordinateX < MAP_SIZE + 1;
+};
+
+export const isAxisYTile = (coordinates: TCoordinate) => {
+  const { x, y: coordinateY } = coordinates;
+  const coordinateX = parseNumberCoordinateX(x);
+
+  return coordinateX === 0 && coordinateY > 0 && coordinateY < MAP_SIZE + 1;
+};
+
+export const isTile = (element: Element) => {
+  return element.classList.contains(battleMapCSS["BattleMap-tile"]);
 };
