@@ -14,7 +14,7 @@ import {
   hasCoordinateCovered,
   isTile,
 } from "~/utils";
-import { TMap, TOrientationType, TShipId } from "~/types";
+import { TCoordinate, TShipId } from "~/types";
 import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 import { useRef } from "react";
 
@@ -25,14 +25,10 @@ export const FleetMenuItem = ({
   onDeploying,
   setCursorLocation,
 }: IFleetMenuItemProps) => {
-  const hoveredTile = useRef<Element | null>(null);
+  const hoveredTile = useRef<HTMLElement | null>(null);
 
   const { t } = useTranslation();
-  const {
-    orientation: shipOnDeployOrientation,
-    clearShipOnDeploy,
-    hasShipOnDeploy,
-  } = useShipDeployStore();
+  const { orientation: shipDeployOrientation, clearShipOnDeploy } = useShipDeployStore();
   const { deployShipInFleet, map: playerMap } = usePlayerStore();
   const { map: opponentMap } = useOpponentStore();
 
@@ -45,95 +41,42 @@ export const FleetMenuItem = ({
 
   const lives = Array.from({ length: fullHealth }, (_, index) => {
     const cssIsDead =
-      (!isPlayer && currentHealth === 0) || (isPlayer && index >= currentHealth)
-        ? css["is-dead"]
-        : null;
+      ((!isPlayer && currentHealth === 0) || (isPlayer && index >= currentHealth)) && css["is-dead"];
     const combinedClasses = clsx(css["FleetMenuItem-live"], cssIsDead);
     return <div className={combinedClasses} key={index}></div>;
   });
 
-  let combinedClasses = "";
-  if (isPlayer) {
-    combinedClasses = clsx(
-      css["FleetMenuItem"],
-      isDeployed && shipOnDeployId !== shipId && css["is-deployed"],
-      !isDeployed && shipOnDeployId !== shipId && css["not-deployed"],
-      shipOnDeployId === shipId && css["is-deploying"]
-    );
-  } else {
-    combinedClasses = clsx(
-      css["FleetMenuItem"],
-      isDeployed && css["is-deployed"],
-      !isDeployed && css["not-deployed"]
-    );
-  }
+  const combinedClasses = isPlayer
+    ? clsx(
+        css["FleetMenuItem"],
+        isDeployed && shipOnDeployId !== shipId && css["is-deployed"],
+        !isDeployed && shipOnDeployId !== shipId && css["not-deployed"],
+        shipOnDeployId === shipId && css["is-deploying"],
+      )
+    : clsx(css["FleetMenuItem"], isDeployed && css["is-deployed"], !isDeployed && css["not-deployed"]);
 
-  const handleDeployedShip = (
-    shipId: TShipId,
-    coordinateX: string,
-    coordinateY: number,
-    orientation: TOrientationType
-  ) => {
-    if (!hasShipOnDeploy) return;
+  const handlePointerMove = (target: HTMLElement, x: number, y: number) => {
+    setCursorLocation({ left: x, top: y });
 
-    const nextCoordinates = getNextCoordinates(
-      coordinateX,
-      Number(coordinateY),
-      SHIP_TYPES[shipId].length,
-      shipOnDeployOrientation
-    );
+    const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
+    if (!isTile(target) || !shipOnDeployId || !coordinateX || !strCoordinateY) return;
 
-    const coveredCoordinates = getCoveredCoordinates(
-      nextCoordinates,
-      shipId,
-      orientation
-    );
+    const coordinateY = Number(strCoordinateY);
+    const shipLength = SHIP_TYPES[shipOnDeployId].length;
 
-    deployShipInFleet(shipId, coveredCoordinates);
-    clearShipOnDeploy();
-  };
+    const cleanupPreviousTiles = (previousTile: HTMLElement) => {
+      const { coordinateX: prevX, coordinateY: strPrevY } = previousTile.dataset;
+      const prevY = Number(strPrevY);
 
-  const handlePointerMove = (target: Element | null, mapCoordinates: TMap) => {
-    if (!(shipOnDeployId && shipOnDeployOrientation) || !target) return;
-
-    const shipLength: number = SHIP_TYPES[shipOnDeployId].length;
-
-    if (!isTile(target)) return;
-
-    const { coordinateX, coordinateY } = (target as HTMLElement).dataset;
-    if (!coordinateX || !coordinateY) return;
-
-    if (hoveredTile.current && hoveredTile.current !== target) {
-      const {
-        coordinateX: previousCoordinateX,
-        coordinateY: previousCoordinateY,
-      } = (hoveredTile.current as HTMLElement).dataset;
-
-      if (previousCoordinateX && previousCoordinateY) {
-        const previousNextCoordinates = getNextCoordinates(
-          previousCoordinateX,
-          Number(previousCoordinateY),
-          shipLength,
-          shipOnDeployOrientation
-        );
-
-        const previousTiles = getPlayerTilesByCoordinates(
-          previousNextCoordinates
-        );
+      if (prevX && prevY) {
+        const previousCoordinates = getNextCoordinates(prevX, prevY, shipLength, shipDeployOrientation);
+        const previousTiles = getPlayerTilesByCoordinates(previousCoordinates);
         if (previousTiles) clearTilesAvailableStyles(previousTiles);
       }
-    }
+    };
 
-    if (
-      !hoveredTile.current ||
-      (hoveredTile.current && hoveredTile.current !== target)
-    ) {
-      const nextCoordinates = getNextCoordinates(
-        coordinateX,
-        Number(coordinateY),
-        shipLength,
-        shipOnDeployOrientation
-      );
+    const highlightNextTiles = () => {
+      const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
 
       const isOutOfArea = nextCoordinates.length < shipLength;
       const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
@@ -142,57 +85,55 @@ export const FleetMenuItem = ({
       if (!nextTiles) return;
 
       nextTiles.forEach((tile) => {
-        tile.classList.add(
-          battleMapCSS[
-            isOutOfArea || isCovered ? "is-unavailable" : "is-available"
-          ]
-        );
+        tile.classList.add(battleMapCSS[isOutOfArea || isCovered ? "is-unavailable" : "is-available"]);
       });
 
       hoveredTile.current = target;
+    };
+
+    const isAnotherTile = hoveredTile.current && hoveredTile.current !== target;
+
+    if (!hoveredTile.current || isAnotherTile) {
+      if (isAnotherTile && hoveredTile.current) cleanupPreviousTiles(hoveredTile.current);
+
+      highlightNextTiles();
     }
   };
 
-  const handlePointerUp = (target: Element | null, mapCoordinates: TMap) => {
-    if (
-      !shipOnDeployId ||
-      !shipOnDeployOrientation ||
-      !target ||
-      !isTile(target)
-    ) {
+  const handlePointerUp = (target: HTMLElement) => {
+    const deployShip = (shipId: TShipId, nextCoordinates: TCoordinate[]) => {
+      const coveredCoordinates = getCoveredCoordinates(nextCoordinates, shipId, shipDeployOrientation);
+
+      deployShipInFleet(shipId, coveredCoordinates);
+      clearShipOnDeploy();
+    };
+
+    const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
+
+    if (!isTile(target) || !shipOnDeployId || !coordinateX || !strCoordinateY) {
       clearShipOnDeploy();
       return;
     }
 
-    const { coordinateX, coordinateY } = (target as HTMLElement).dataset;
-    if (!coordinateX || !coordinateY) return;
+    const coordinateY = Number(strCoordinateY);
+    const shipLength = SHIP_TYPES[shipOnDeployId].length;
 
     // Get coordinates that form the ship deployed
-    const length: number = SHIP_TYPES[shipOnDeployId].length;
-    const nextCoordinates = getNextCoordinates(
-      coordinateX,
-      Number(coordinateY),
-      length,
-      shipOnDeployOrientation
-    );
+    const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
     const nexTiles = getPlayerTilesByCoordinates(nextCoordinates);
 
     const isCovered = hasCoordinateCovered(nextCoordinates, mapCoordinates);
+    const isOutOfArea = nextCoordinates.length < shipLength;
 
     // ❌ Is unavailable | out-of-area location or location covered by another ship
-    if (nextCoordinates.length < length || isCovered) {
+    if (isOutOfArea || isCovered) {
       clearShipOnDeploy();
       if (nexTiles) clearTilesAvailableStyles(nexTiles);
       return;
     }
 
     // ✅ Is available
-    handleDeployedShip(
-      shipOnDeployId,
-      coordinateX,
-      Number(coordinateY),
-      shipOnDeployOrientation
-    );
+    deployShip(shipOnDeployId, nextCoordinates);
     if (nexTiles) clearTilesAvailableStyles(nexTiles);
   };
 
@@ -205,14 +146,14 @@ export const FleetMenuItem = ({
     if (isDeployed) return;
 
     const target = document.elementFromPoint(x, y);
+    if (!target) return;
 
     if (type === "pointerdown") {
       onDeploying(shipId, { locationX: x, locationY: y });
     } else if (type === "pointermove") {
-      setCursorLocation({ left: x, top: y });
-      handlePointerMove(target, mapCoordinates);
+      handlePointerMove(target as HTMLElement, x, y);
     } else if (type === "pointerup") {
-      handlePointerUp(target, mapCoordinates);
+      handlePointerUp(target as HTMLElement);
     }
   });
 
@@ -226,9 +167,7 @@ export const FleetMenuItem = ({
         <div className={css["FleetMenuItem-name"]}>
           {isPlayer ? SHIP_TYPES[shipId].name : t("game:unidentified")}
         </div>
-        <div className={css["FleetMenuItem-health"]}>
-          {isPlayer ? lives : "???"}
-        </div>
+        <div className={css["FleetMenuItem-health"]}>{isPlayer ? lives : "???"}</div>
       </div>
     </div>
   );

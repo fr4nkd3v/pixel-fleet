@@ -91,9 +91,9 @@ export const Tile = ({
       const prevY = Number(strPrevY);
 
       if (prevX && prevY) {
-        const coors = getNextCoordinates(prevX, prevY, shipLength, shipDeployOrientation);
-        const prevTiles = getPlayerTilesByCoordinates(coors);
-        if (prevTiles) clearTilesAvailableStyles(prevTiles);
+        const previousCoordinates = getNextCoordinates(prevX, prevY, shipLength, shipDeployOrientation);
+        const previousTiles = getPlayerTilesByCoordinates(previousCoordinates);
+        if (previousTiles) clearTilesAvailableStyles(previousTiles);
       }
     };
 
@@ -110,7 +110,7 @@ export const Tile = ({
         tile.classList.add(css[isOutOfArea || isCovered ? "is-unavailable" : "is-available"]);
       });
 
-      hoveredTile.current = target as HTMLElement;
+      hoveredTile.current = target;
     };
 
     const isAnotherTile = hoveredTile.current && hoveredTile.current !== target;
@@ -128,7 +128,7 @@ export const Tile = ({
       clearShipOnDeploy();
     };
 
-    const redeployShip = (nextCoordinates: TCoordinate[], shipId: TShipId) => {
+    const redeployShip = (shipId: TShipId, nextCoordinates: TCoordinate[]) => {
       removeShipOnFeet(shipId);
       const coveredCoordinates = getCoveredCoordinates(nextCoordinates, shipId, shipDeployOrientation);
 
@@ -159,7 +159,7 @@ export const Tile = ({
     }
 
     // ✅ Is available
-    redeployShip(nextCoordinates, shipDeployId);
+    redeployShip(shipDeployId, nextCoordinates);
     if (nexTiles) clearTilesAvailableStyles(nexTiles);
   };
 
