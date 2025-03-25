@@ -36,7 +36,7 @@ export const Tile = ({
       ? coordinateX
       : null;
 
-  const { shipPart = "", orientation = "", isDefeated } = isCovered || {};
+  const { shipPart = "", orientation = "", isDefeated, isRedeploy } = isCovered || {};
 
   const combinedClasses = clsx(
     css["BattleMap-tile"],
@@ -44,6 +44,7 @@ export const Tile = ({
     isCovered && [css["is-covered"], css[shipPart], css[orientation]],
     isAttacked && css["is-attacked"],
     !isPlayer && !isDefeated && css["is-hidden"],
+    isRedeploy && css["is-redeploy"],
   );
 
   const bind = useDrag((state) => {

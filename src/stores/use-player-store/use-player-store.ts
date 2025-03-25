@@ -23,14 +23,27 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
   targetCoordinates: { x: null, y: null },
   setFleet: (fleet: TFleet) => set({ fleet }),
   setMap: (map: TMap) => set({ map }),
-  deployShipInFleet: (shipId: TShipId, coveredCoordinates: TMapCoordinate[]) =>
+  deployShip: (shipId: TShipId, coveredCoordinates: TMapCoordinate[]) =>
     set((state) => ({
       fleet: state.fleet.map((ship) =>
         ship.id === shipId && !ship.isDeployed ? { ...ship, isDeployed: true } : ship,
       ),
       map: [...state.map, ...coveredCoordinates],
     })),
-  removeShipOnFeet: (shipId: TShipId) =>
+  redeployShip: (redeployShipId) =>
+    set((state) => ({
+      map: state.map.map((coordinate) => {
+        if (coordinate.covered && coordinate.covered.shipId === redeployShipId) {
+          return {
+            ...coordinate,
+            covered: coordinate.covered ? { ...coordinate.covered, isRedeploy: true } : false,
+          };
+        } else {
+          return coordinate;
+        }
+      }),
+    })),
+  removeShip: (shipId: TShipId) =>
     set((state) => ({
       fleet: state.fleet.map((ship) => {
         if (ship.id === shipId) {

@@ -1,11 +1,7 @@
 // semi-random selection algorithm
 
 import { TCoordinate, TFleet, TMap, TShipId } from "~/types/game";
-import {
-  getNextCoordinates,
-  hasCoordinateCovered,
-  parseStringCoordinateX,
-} from "./coordinates";
+import { getNextCoordinates, hasCoordinateCovered, parseStringCoordinateX } from "./coordinates";
 import { getRandomInt, getRandomOrientation } from "./random";
 import { getShipPartByIndex } from "./fleet";
 
@@ -30,7 +26,7 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
       maximumNumberOfTries,
       id,
       health,
-      map
+      map,
     );
     if (!nextMapCoordinates) {
       console.error(`❌ No coordinates could be found for the ${name} ship.`);
@@ -40,16 +36,13 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
     // ✅ Deploy
 
     // Update available coordinates
-    availableCoordinates = availableCoordinates.filter(
-      (availableCoordinate) => {
-        const isMatch = nextMapCoordinates.some(
-          (nextCoordinate) =>
-            nextCoordinate.x === availableCoordinate.x &&
-            nextCoordinate.y === availableCoordinate.y
-        );
-        return !isMatch;
-      }
-    );
+    availableCoordinates = availableCoordinates.filter((availableCoordinate) => {
+      const isMatch = nextMapCoordinates.some(
+        (nextCoordinate) =>
+          nextCoordinate.x === availableCoordinate.x && nextCoordinate.y === availableCoordinate.y,
+      );
+      return !isMatch;
+    });
 
     // Save coordinates in map array
     map.push(...nextMapCoordinates);
@@ -80,26 +73,23 @@ function tryRandomCoordinate(
   triesMax: number,
   shipId: TShipId,
   shipLength: number,
-  map: TMap
+  map: TMap,
 ): TMap | null {
   let counterTries = 0;
   let isAvailable = false;
   let nextMapCoordinates: TMap = [];
 
   while (!isAvailable && counterTries < triesMax) {
-    const randomCoordinate =
-      availableCoordinates[getRandomInt(0, availableCoordinates.length - 1)];
+    const randomCoordinate = availableCoordinates[getRandomInt(0, availableCoordinates.length - 1)];
     const randomOrientation = getRandomOrientation();
 
     const nextCoordinates = getNextCoordinates(
       randomCoordinate.x,
       randomCoordinate.y,
       shipLength,
-      randomOrientation
+      randomOrientation,
     );
-    isAvailable =
-      nextCoordinates.length === shipLength &&
-      !hasCoordinateCovered(nextCoordinates, map);
+    isAvailable = nextCoordinates.length === shipLength && !hasCoordinateCovered(nextCoordinates, map);
 
     nextMapCoordinates = nextCoordinates.map((coordinate, index) => ({
       x: coordinate.x,
@@ -109,6 +99,7 @@ function tryRandomCoordinate(
         orientation: randomOrientation,
         shipPart: getShipPartByIndex(index, nextCoordinates.length),
         isDefeated: false,
+        isRedeploy: false,
       },
       attacked: false,
     }));

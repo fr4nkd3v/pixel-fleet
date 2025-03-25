@@ -14,13 +14,14 @@ import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 
 export const useShipDeployment = () => {
   const hoveredTile = useRef<HTMLElement | null>(null);
+
   const {
     orientation: shipDeployOrientation,
     shipId: shipDeployId,
     clearShipOnDeploy,
     setShipOnDeploy,
   } = useShipDeployStore();
-  const { map: playerMap, deployShipInFleet, removeShipOnFeet } = usePlayerStore();
+  const { map: playerMap, deployShip, redeployShip, removeShip } = usePlayerStore();
 
   const handleDragStart = (
     shipId: TShipId,
@@ -46,6 +47,7 @@ export const useShipDeployment = () => {
     const { shipId: targetShipId } = foundCoordinate.covered;
     const [x, y] = locationXY;
 
+    redeployShip(targetShipId);
     setShipOnDeploy(targetShipId);
     setCursorLocation({ left: x, top: y });
   };
@@ -101,23 +103,23 @@ export const useShipDeployment = () => {
   };
 
   const handleDragEnd = (target: HTMLElement, redeploy: boolean = false) => {
-    const finishDeploy = () => {
+    const clearDeployAndState = () => {
       hoveredTile.current = null;
       clearShipOnDeploy();
     };
 
-    const deployShip = (shipId: TShipId, nextCoordinates: TCoordinate[]) => {
-      if (redeploy) removeShipOnFeet(shipId);
+    const handleDeployShip = (shipId: TShipId, nextCoordinates: TCoordinate[]) => {
+      if (redeploy) removeShip(shipId);
       const coveredCoordinates = getCoveredCoordinates(nextCoordinates, shipId, shipDeployOrientation);
 
-      deployShipInFleet(shipId, coveredCoordinates);
-      finishDeploy();
+      deployShip(shipId, coveredCoordinates);
+      clearDeployAndState();
     };
 
     const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
 
     if (!isTile(target) || !coordinateX || !strCoordinateY || !shipDeployId) {
-      finishDeploy();
+      clearDeployAndState();
       return;
     }
 
@@ -132,13 +134,13 @@ export const useShipDeployment = () => {
 
     // ❌ Is unavailable | out-of-area location or location covered by another ship
     if (isOutOfArea || isCovered) {
-      finishDeploy();
+      clearDeployAndState();
       if (nexTiles) clearTilesAvailableStyles(nexTiles);
       return;
     }
 
     // ✅ Is available
-    deployShip(shipDeployId, nextCoordinates);
+    handleDeployShip(shipDeployId, nextCoordinates);
     if (nexTiles) clearTilesAvailableStyles(nexTiles);
   };
 

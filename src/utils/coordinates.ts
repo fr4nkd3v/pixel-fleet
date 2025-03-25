@@ -18,7 +18,7 @@ export const getNextCoordinates = (
   x: string,
   y: number,
   length: number,
-  orientation: TOrientationType
+  orientation: TOrientationType,
 ): TCoordinate[] => {
   const coordinates = [];
   const maxPointX = MAP_SIZE + "a".charCodeAt(0) - 1;
@@ -41,7 +41,7 @@ export const getNextCoordinates = (
 export const getCoveredCoordinates = (
   coordinatesToCover: TCoordinate[],
   coveredShipId: TShipId,
-  shipOrientation: TOrientationType
+  shipOrientation: TOrientationType,
 ): TMap => {
   const coveredCoordinates = coordinatesToCover.map((coordinate, index) => {
     const shipPart = getShipPartByIndex(index, coordinatesToCover.length);
@@ -54,6 +54,7 @@ export const getCoveredCoordinates = (
         orientation: shipOrientation,
         shipPart,
         isDefeated: false,
+        isRedeploy: false,
       },
       attacked: false,
     };
@@ -62,23 +63,16 @@ export const getCoveredCoordinates = (
   return coveredCoordinates;
 };
 
-export const hasCoordinateCovered = (
-  coordinates: TCoordinate[],
-  mapCoordinates: TMap
-): boolean => {
+export const hasCoordinateCovered = (coordinates: TCoordinate[], mapCoordinates: TMap): boolean => {
   return coordinates.some((coor) => {
     const coordinateCovered = mapCoordinates.find(
-      (mapCoor) =>
-        mapCoor.x === coor.x && mapCoor.y === coor.y && mapCoor.covered
+      (mapCoor) => mapCoor.x === coor.x && mapCoor.y === coor.y && mapCoor.covered,
     );
     return Boolean(coordinateCovered);
   });
 };
 
-export const checkCoordinateValue = (
-  coordinate: "x" | "y",
-  value: string
-): boolean => {
+export const checkCoordinateValue = (coordinate: "x" | "y", value: string): boolean => {
   if (coordinate === "y") {
     const regexCoorY = /^(10|[1-9])$/;
     return regexCoorY.test(value);

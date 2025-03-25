@@ -26,8 +26,7 @@
 }
 
 .BattleMap.is-opponent .BattleMap-background {
-  filter: hue-rotate(18deg) saturate(1.5) contrast(1.4) grayscale(0.4)
-    brightness(0.8);
+  filter: hue-rotate(18deg) saturate(1.5) contrast(1.4) grayscale(0.4) brightness(0.8);
 }
 
 /* Desktop Device */
@@ -75,12 +74,15 @@
 .BattleMap-tile.is-covered {
   background: var(--ship-pattern);
 }
+.BattleMap-tile.is-redeploy {
+  opacity: 0.6;
+}
+
 .BattleMap-tile.is-attacked {
   background: rgba(57, 57, 57, 0.5);
 }
 .BattleMap-tile.is-covered.is-attacked {
-  background: linear-gradient(rgb(219, 47, 64, 0.5), rgb(219, 47, 64, 0.5)),
-    var(--ship-pattern);
+  background: linear-gradient(rgb(219, 47, 64, 0.5), rgb(219, 47, 64, 0.5)), var(--ship-pattern);
 }
 
 .BattleMap-tile.start::after,
