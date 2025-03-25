@@ -1,4 +1,4 @@
-import { MAP_SIZE } from "~/constants/game";
+import { COORDINATES_LENGTH } from "~/constants/game";
 import { TCoordinate, TMap, TOrientationType, TShipId } from "~/types/game";
 import { getShipPartByIndex } from "./fleet";
 
@@ -21,8 +21,8 @@ export const getNextCoordinates = (
   orientation: TOrientationType,
 ): TCoordinate[] => {
   const coordinates = [];
-  const maxPointX = MAP_SIZE + "a".charCodeAt(0) - 1;
-  const maxPointY = MAP_SIZE;
+  const maxPointX = COORDINATES_LENGTH + "a".charCodeAt(0) - 1;
+  const maxPointY = COORDINATES_LENGTH;
 
   for (let index = 0; index < length; index++) {
     let coordinate;

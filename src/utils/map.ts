@@ -2,13 +2,9 @@ import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
 import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
 import { parseNumberCoordinateX } from "./coordinates";
-import { MAP_SIZE } from "~/constants";
+import { COORDINATES_LENGTH } from "~/constants";
 
-export const attackMap = (
-  targetCoordinates: TCoordinate,
-  map: TMap,
-  fleet: TFleet
-) => {
+export const attackMap = (targetCoordinates: TCoordinate, map: TMap, fleet: TFleet) => {
   const { x, y } = targetCoordinates;
   let newMap: TMap = [];
   let newFleet: TFleet = [...fleet];
@@ -73,30 +69,19 @@ export const attackMap = (
   };
 };
 
-export const clearTilesAvailableStyles = (
-  tiles: Element[] | NodeListOf<Element>
-) => {
+export const clearTilesAvailableStyles = (tiles: Element[] | NodeListOf<Element>) => {
   tiles.forEach((tile) =>
-    tile.classList.remove(
-      battleMapCSS["is-available"],
-      battleMapCSS["is-unavailable"]
-    )
+    tile.classList.remove(battleMapCSS["is-available"], battleMapCSS["is-unavailable"]),
   );
 };
 
-export const getPlayerTilesByCoordinates = (
-  coordinates: TCoordinate[]
-): Element[] | null => {
-  const playerMap = document.querySelector(
-    "." + gamePageCSS["GamePage-BattleMapPlayer"]
-  );
+export const getPlayerTilesByCoordinates = (coordinates: TCoordinate[]): Element[] | null => {
+  const playerMap = document.querySelector("." + gamePageCSS["GamePage-BattleMapPlayer"]);
   if (!playerMap) return null;
 
   const tiles = coordinates
     .map((coordinate) =>
-      playerMap.querySelector(
-        `[data-coordinate-x="${coordinate.x}"][data-coordinate-y="${coordinate.y}"]`
-      )
+      playerMap.querySelector(`[data-coordinate-x="${coordinate.x}"][data-coordinate-y="${coordinate.y}"]`),
     )
     .filter((tile) => tile !== null);
   return tiles;
@@ -106,14 +91,14 @@ export const isAxisXTile = (coordinates: TCoordinate) => {
   const { x, y: coordinateY } = coordinates;
   const coordinateX = parseNumberCoordinateX(x);
 
-  return coordinateY === 0 && coordinateX > 0 && coordinateX < MAP_SIZE + 1;
+  return coordinateY === 0 && coordinateX > 0 && coordinateX < COORDINATES_LENGTH + 1;
 };
 
 export const isAxisYTile = (coordinates: TCoordinate) => {
   const { x, y: coordinateY } = coordinates;
   const coordinateX = parseNumberCoordinateX(x);
 
-  return coordinateX === 0 && coordinateY > 0 && coordinateY < MAP_SIZE + 1;
+  return coordinateX === 0 && coordinateY > 0 && coordinateY < COORDINATES_LENGTH + 1;
 };
 
 export const isTile = (element: Element) => {

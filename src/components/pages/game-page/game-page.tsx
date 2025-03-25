@@ -1,15 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import css from "./game-page.module.css";
-import {
-  FleetMenu,
-  BattleMap,
-  CursorShadowShip,
-  ResultsModal,
-  GuideBar,
-  ActionBar,
-} from "~/components";
+import { FleetMenu, BattleMap, CursorShadowShip, ResultsModal, GuideBar, ActionBar } from "~/components";
 import { TCursorLocation, TCoordinate } from "~/types/game";
-import { AVAILABLE_FLEET_IDS, MAP_SIZE } from "~/constants/game";
+import { AVAILABLE_FLEET_IDS, COORDINATES_LENGTH } from "~/constants/game";
 import {
   attackMap,
   autoFleetDeploy,
@@ -19,12 +12,7 @@ import {
   isFleetDefeated,
   delay,
 } from "~/utils";
-import {
-  useGameStore,
-  useOpponentStore,
-  usePlayerStore,
-  useShipDeployStore,
-} from "~/stores";
+import { useGameStore, useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { useBreakpoints } from "~/hooks";
 import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
 
@@ -86,9 +74,7 @@ export const GamePage = () => {
 
   const domRoot = useMemo(() => document.querySelector(":root"), []);
 
-  const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(
-    null
-  );
+  const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(null);
   const [scrollY, setScrollY] = useState(0);
 
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
@@ -98,12 +84,7 @@ export const GamePage = () => {
     restartOpponentState();
     restartPlayerState();
     restartShipDeployState();
-  }, [
-    restartGameState,
-    restartOpponentState,
-    restartPlayerState,
-    restartShipDeployState,
-  ]);
+  }, [restartGameState, restartOpponentState, restartPlayerState, restartShipDeployState]);
 
   const handlePlayerFinishesShot = useCallback(() => {
     if (!playerTargetCoordinates.x || !playerTargetCoordinates.y) return;
@@ -111,7 +92,7 @@ export const GamePage = () => {
     const { fleet: newOpponentFleet, map: newOpponentMap } = attackMap(
       playerTargetCoordinates as TCoordinate,
       opponentMap,
-      opponentFleet
+      opponentFleet,
     );
     setOpponentMap(newOpponentMap);
     setOpponentFleet(newOpponentFleet);
@@ -150,7 +131,7 @@ export const GamePage = () => {
     const { fleet: newPlayerFleet, map: newPlayerMap } = attackMap(
       opponentTargetCoordinates as TCoordinate,
       playerMap,
-      playerFleet
+      playerFleet,
     );
     setPlayerMap(newPlayerMap);
     setPlayerFleet(newPlayerFleet);
@@ -210,17 +191,11 @@ export const GamePage = () => {
   useEffect(() => {
     if (gamePhase !== "prestart") return;
 
-    const { fleet, map } = autoFleetDeploy(MAP_SIZE, [...commonFleetArr], []);
+    const { fleet, map } = autoFleetDeploy(COORDINATES_LENGTH, [...commonFleetArr], []);
     setOpponentMap(map);
     setOpponentFleet(fleet);
     setPlayerFleet([...commonFleetArr]);
-  }, [
-    commonFleetArr,
-    gamePhase,
-    setOpponentFleet,
-    setOpponentMap,
-    setPlayerFleet,
-  ]);
+  }, [commonFleetArr, gamePhase, setOpponentFleet, setOpponentMap, setPlayerFleet]);
 
   // Calculate winner
   useEffect(() => {
@@ -306,18 +281,12 @@ export const GamePage = () => {
         )}
       </section>
       {isPlayerWins !== null ? (
-        <ResultsModal
-          onRetryClick={restartGame}
-          onToHomeClick={() => console.log("To home")}
-        />
+        <ResultsModal onRetryClick={restartGame} onToHomeClick={() => console.log("To home")} />
       ) : (
         <></>
       )}
       {cursorLocation && (
-        <CursorShadowShip
-          locationX={cursorLocation.left}
-          locationY={cursorLocation.top + scrollY}
-        />
+        <CursorShadowShip locationX={cursorLocation.left} locationY={cursorLocation.top + scrollY} />
       )}
     </>
   );

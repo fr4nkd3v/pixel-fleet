@@ -1,4 +1,4 @@
-import { MAP_SIZE } from "~/constants/game";
+import { COORDINATES_LENGTH } from "~/constants/game";
 import { parseStringCoordinateX } from "./coordinates";
 import { TCoordinate, TOrientationType } from "~/types/game";
 
@@ -9,8 +9,8 @@ export const getRandomInt = (min: number, max: number) => {
 
 export const getRandomCoordinate = (): TCoordinate => {
   return {
-    x: parseStringCoordinateX(getRandomInt(1, MAP_SIZE)),
-    y: getRandomInt(1, MAP_SIZE),
+    x: parseStringCoordinateX(getRandomInt(1, COORDINATES_LENGTH)),
+    y: getRandomInt(1, COORDINATES_LENGTH),
   };
 };
 

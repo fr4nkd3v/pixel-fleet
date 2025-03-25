@@ -1,14 +1,8 @@
 import { TOrientationType, TShipId } from "~/types/game";
 
-export const MAP_SIZE = 10;
+export const COORDINATES_LENGTH = 10;
 
-export const SHIP_IDS = [
-  "missile_launcher",
-  "battleship",
-  "destroyer",
-  "submarine",
-  "speedboat",
-] as const;
+export const SHIP_IDS = ["missile_launcher", "battleship", "destroyer", "submarine", "speedboat"] as const;
 
 type TShipType = {
   [key in (typeof SHIP_IDS)[number]]: {
