@@ -13,6 +13,7 @@ export interface IOpponentStore {
 export interface IPlayerStore extends Omit<IOpponentStore, "setTargetCoordinates"> {
   deployShip: (shipId: TShipId, coveredCoordinates: TMapCoordinate[]) => void;
   redeployShip: (redeployShipId: TShipId) => void;
+  removeRedeployShipState: (redeployShipId: TShipId) => void;
   removeShip: (shipId: TShipId) => void;
   updateTargetCoordinateX: (value: string) => void;
   updateTargetCoordinateY: (value: number) => void;

@@ -63,11 +63,18 @@ export const getCoveredCoordinates = (
   return coveredCoordinates;
 };
 
-export const hasCoordinateCovered = (coordinates: TCoordinate[], mapCoordinates: TMap): boolean => {
+export const hasCoordinateCovered = (
+  coordinates: TCoordinate[],
+  mapCoordinates: TMap,
+  shipId?: TShipId,
+): boolean => {
   return coordinates.some((coor) => {
-    const coordinateCovered = mapCoordinates.find(
-      (mapCoor) => mapCoor.x === coor.x && mapCoor.y === coor.y && mapCoor.covered,
-    );
+    const coordinateCovered = mapCoordinates.find((mapCoor) => {
+      const isCovered = Boolean(mapCoor.x === coor.x && mapCoor.y === coor.y && mapCoor.covered);
+      const isCoveredForAnotherShip = shipId ? mapCoor.covered && mapCoor.covered.shipId !== shipId : false;
+
+      return shipId ? isCovered && isCoveredForAnotherShip : isCovered;
+    });
     return Boolean(coordinateCovered);
   });
 };

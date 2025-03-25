@@ -43,6 +43,19 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
         }
       }),
     })),
+  removeRedeployShipState: (redeployShipId) =>
+    set((state) => ({
+      map: state.map.map((coordinate) => {
+        if (coordinate.covered && coordinate.covered.shipId === redeployShipId) {
+          return {
+            ...coordinate,
+            covered: coordinate.covered ? { ...coordinate.covered, isRedeploy: false } : false,
+          };
+        } else {
+          return coordinate;
+        }
+      }),
+    })),
   removeShip: (shipId: TShipId) =>
     set((state) => ({
       fleet: state.fleet.map((ship) => {

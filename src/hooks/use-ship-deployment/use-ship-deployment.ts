@@ -21,7 +21,40 @@ export const useShipDeployment = () => {
     clearShipOnDeploy,
     setShipOnDeploy,
   } = useShipDeployStore();
-  const { map: playerMap, deployShip, redeployShip, removeShip } = usePlayerStore();
+  const { map: playerMap, deployShip, redeployShip, removeShip, removeRedeployShipState } = usePlayerStore();
+
+  const cleanupPreviousTiles = (previousTile: HTMLElement) => {
+    const { coordinateX: prevX, coordinateY: strPrevY } = previousTile.dataset;
+    const prevY = Number(strPrevY);
+
+    if (prevX && prevY && shipDeployId) {
+      const shipLength = SHIP_TYPES[shipDeployId].length;
+      const previousCoordinates = getNextCoordinates(prevX, prevY, shipLength, shipDeployOrientation);
+      const previousTiles = getPlayerTilesByCoordinates(previousCoordinates);
+      if (previousTiles) clearTilesAvailableStyles(previousTiles);
+    }
+  };
+
+  const highlightNextTiles = (coordinateX: string, coordinateY: number, target: HTMLElement) => {
+    if (!shipDeployId) return;
+
+    const shipLength = SHIP_TYPES[shipDeployId].length;
+    const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
+
+    const isOutOfArea = nextCoordinates.length < shipLength;
+    const isCoveredForAnotherShip = hasCoordinateCovered(nextCoordinates, playerMap, shipDeployId);
+
+    const nextTiles = getPlayerTilesByCoordinates(nextCoordinates);
+    if (!nextTiles) return;
+
+    nextTiles.forEach((tile) => {
+      tile.classList.add(
+        battleMapCSS[isOutOfArea || isCoveredForAnotherShip ? "is-unavailable" : "is-available"],
+      );
+    });
+
+    hoveredTile.current = target;
+  };
 
   const handleDragStart = (
     shipId: TShipId,
@@ -61,44 +94,21 @@ export const useShipDeployment = () => {
     setCursorLocation({ left: x, top: y });
 
     const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
-    if (!isTile(target) || !coordinateX || !strCoordinateY || !shipDeployId) return;
+    if (!isTile(target) || !coordinateX || !strCoordinateY || !shipDeployId) {
+      if (hoveredTile.current) {
+        cleanupPreviousTiles(hoveredTile.current);
+        hoveredTile.current = null;
+      }
+      return;
+    }
 
     const coordinateY = Number(strCoordinateY);
-    const shipLength = SHIP_TYPES[shipDeployId].length;
-
-    const cleanupPreviousTiles = (previousTile: HTMLElement) => {
-      const { coordinateX: prevX, coordinateY: strPrevY } = previousTile.dataset;
-      const prevY = Number(strPrevY);
-
-      if (prevX && prevY) {
-        const previousCoordinates = getNextCoordinates(prevX, prevY, shipLength, shipDeployOrientation);
-        const previousTiles = getPlayerTilesByCoordinates(previousCoordinates);
-        if (previousTiles) clearTilesAvailableStyles(previousTiles);
-      }
-    };
-
-    const highlightNextTiles = () => {
-      const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
-
-      const isOutOfArea = nextCoordinates.length < shipLength;
-      const isCovered = hasCoordinateCovered(nextCoordinates, playerMap);
-
-      const nextTiles = getPlayerTilesByCoordinates(nextCoordinates);
-      if (!nextTiles) return;
-
-      nextTiles.forEach((tile) => {
-        tile.classList.add(battleMapCSS[isOutOfArea || isCovered ? "is-unavailable" : "is-available"]);
-      });
-
-      hoveredTile.current = target;
-    };
-
     const isAnotherTile = hoveredTile.current && hoveredTile.current !== target;
 
     if (!hoveredTile.current || isAnotherTile) {
       if (isAnotherTile && hoveredTile.current) cleanupPreviousTiles(hoveredTile.current);
 
-      highlightNextTiles();
+      highlightNextTiles(coordinateX, coordinateY, target);
     }
   };
 
@@ -119,6 +129,8 @@ export const useShipDeployment = () => {
     const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
 
     if (!isTile(target) || !coordinateX || !strCoordinateY || !shipDeployId) {
+      if (shipDeployId) removeRedeployShipState(shipDeployId);
+
       clearDeployAndState();
       return;
     }
@@ -129,13 +141,14 @@ export const useShipDeployment = () => {
     const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
     const nexTiles = getPlayerTilesByCoordinates(nextCoordinates);
 
-    const isCovered = hasCoordinateCovered(nextCoordinates, playerMap);
+    const isCoveredForAnotherShip = hasCoordinateCovered(nextCoordinates, playerMap, shipDeployId);
     const isOutOfArea = nextCoordinates.length < shipLength;
 
     // ❌ Is unavailable | out-of-area location or location covered by another ship
-    if (isOutOfArea || isCovered) {
+    if (isOutOfArea || isCoveredForAnotherShip) {
       clearDeployAndState();
       if (nexTiles) clearTilesAvailableStyles(nexTiles);
+      if (shipDeployId) removeRedeployShipState(shipDeployId);
       return;
     }
 
