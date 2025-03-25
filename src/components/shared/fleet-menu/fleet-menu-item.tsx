@@ -14,7 +14,7 @@ export const FleetMenuItem = ({
   setCursorLocation,
 }: IFleetMenuItemProps) => {
   const { t } = useTranslation();
-  const { handleDragStart, handleDragMove, handleDragEnd } = useShipDeployment();
+  const { handleDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
 
   const isPlayer = perspective === "player";
 
@@ -54,8 +54,8 @@ export const FleetMenuItem = ({
       handleDragMove(target as HTMLElement, [x, y], setCursorLocation);
     } else if (type === "pointerup") {
       handleDragEnd(target as HTMLElement);
-    } else if (type === "pointercancel") {
-      // Handle drag cancellation
+    } else {
+      handleDragCancel();
     }
 
     return false; // Prevent default drag behavior

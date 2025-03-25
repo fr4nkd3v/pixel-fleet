@@ -146,9 +146,9 @@ export const useShipDeployment = () => {
 
     // ❌ Is unavailable | out-of-area location or location covered by another ship
     if (isOutOfArea || isCoveredForAnotherShip) {
-      clearDeployAndState();
       if (nexTiles) clearTilesAvailableStyles(nexTiles);
       if (shipDeployId) removeRedeployShipState(shipDeployId);
+      clearDeployAndState();
       return;
     }
 
@@ -157,5 +157,12 @@ export const useShipDeployment = () => {
     if (nexTiles) clearTilesAvailableStyles(nexTiles);
   };
 
-  return { handleDragStart, handleDragMove, handleDragEnd, handleReDragStart };
+  const handleDragCancel = () => {
+    if (shipDeployId) removeRedeployShipState(shipDeployId);
+    if (hoveredTile.current) cleanupPreviousTiles(hoveredTile.current);
+    clearShipOnDeploy();
+    hoveredTile.current = null;
+  };
+
+  return { handleDragStart, handleDragMove, handleDragEnd, handleReDragStart, handleDragCancel };
 };

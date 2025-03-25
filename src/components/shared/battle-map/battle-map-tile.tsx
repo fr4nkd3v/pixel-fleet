@@ -20,7 +20,7 @@ export const Tile = ({
   setCursorLocation,
 }: ITileProps) => {
   // const hoveredTile = useRef<HTMLElement | null>(null);
-  const { handleReDragStart, handleDragMove, handleDragEnd } = useShipDeployment();
+  const { handleReDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
 
   const { gamePhase } = useGameStore();
 
@@ -64,8 +64,8 @@ export const Tile = ({
       handleDragMove(target as HTMLElement, [x, y], setCursorLocation);
     } else if (type === "pointerup") {
       handleDragEnd(target as HTMLElement, true);
-    } else if (type === "pointercancel") {
-      // Handle drag cancellation
+    } else {
+      handleDragCancel();
     }
 
     return false; // Prevent default drag behavior
