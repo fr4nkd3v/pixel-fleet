@@ -1,14 +1,19 @@
-import { TShipId, TCursorLocation, TShip, TPerspective } from "~/types/game";
+import { TShipId, TCursorLocation, TShip } from "~/types/game";
 
-export interface IFleetMenuProps {
-  perspective: TPerspective;
+export interface IFleetMenuPlayerProps {
   className?: string;
   setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
+export interface IFleetMenuOpponentProps {
+  className?: string;
+}
 
-export interface IFleetMenuItemProps {
+export interface IFleetMenuPlayerItemProps {
   shipData: TShip;
-  perspective: TPerspective;
   shipOnDeployId: TShipId | null;
   setCursorLocation: (cursorLocation: TCursorLocation) => void;
+}
+
+export interface IFleetMenuOpponentItemProps {
+  shipData: TShip;
 }

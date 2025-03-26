@@ -220,16 +220,8 @@ export const GamePage = () => {
       <section className={css["GamePage"]}>
         {isDesktopOrHigher ? (
           <>
-            <FleetMenu
-              perspective="player"
-              className={css["GamePage-FleetPlayer"]}
-              setCursorLocation={setCursorLocation}
-            />
-            <FleetMenu
-              perspective="opponent"
-              className={css["GamePage-FleetOpponent"]}
-              setCursorLocation={setCursorLocation}
-            />
+            <FleetMenu.player className={css["GamePage-FleetPlayer"]} setCursorLocation={setCursorLocation} />
+            <FleetMenu.opponent className={css["GamePage-FleetOpponent"]} />
             <div className={css["GamePage-BattleMapPlayer"]}>
               <BattleMap
                 perspective="player"
@@ -251,11 +243,7 @@ export const GamePage = () => {
           <>
             <GuideBar className={css["GamePage-GuideBar"]} />
             <div className={css["GamePage-Container"]}>
-              <FleetMenu
-                perspective="opponent"
-                className={css["GamePage-FleetOpponent"]}
-                setCursorLocation={setCursorLocation}
-              />
+              <FleetMenu.opponent className={css["GamePage-FleetOpponent"]} />
               <div className={css["GamePage-BattleMapOpponent"]}>
                 <BattleMap
                   perspective="opponent"
@@ -270,8 +258,7 @@ export const GamePage = () => {
                   setCursorLocation={setCursorLocation}
                 />
               </div>
-              <FleetMenu
-                perspective="player"
+              <FleetMenu.player
                 className={css["GamePage-FleetPlayer"]}
                 setCursorLocation={setCursorLocation}
               />

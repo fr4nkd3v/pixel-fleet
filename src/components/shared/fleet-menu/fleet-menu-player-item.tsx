@@ -1,41 +1,33 @@
-import type { IFleetMenuItemProps } from "./fleet-menu.types";
+import type { IFleetMenuPlayerItemProps } from "./fleet-menu.types";
 import { SHIP_TYPES } from "~/constants/game";
 import { Icon } from "~/components/shared/icon";
 import css from "./fleet-menu.module.css";
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
 import { useDrag } from "@use-gesture/react";
 import { useShipDeployment } from "~/hooks";
 
-export const FleetMenuItem = ({
+export const FleetMenuPlayerItem = ({
   shipData,
-  perspective,
   shipOnDeployId,
   setCursorLocation,
-}: IFleetMenuItemProps) => {
-  const { t } = useTranslation();
+}: IFleetMenuPlayerItemProps) => {
   const { handleDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
-
-  const isPlayer = perspective === "player";
 
   const { id: shipId, health: currentHealth, isDeployed } = shipData;
   const fullHealth = SHIP_TYPES[shipId].length;
 
   const lives = Array.from({ length: fullHealth }, (_, index) => {
-    const cssIsDead =
-      ((!isPlayer && currentHealth === 0) || (isPlayer && index >= currentHealth)) && css["is-dead"];
+    const cssIsDead = index >= currentHealth && css["is-dead"];
     const combinedClasses = clsx(css["FleetMenuItem-live"], cssIsDead);
     return <div className={combinedClasses} key={index}></div>;
   });
 
-  const combinedClasses = isPlayer
-    ? clsx(
-        css["FleetMenuItem"],
-        isDeployed && shipOnDeployId !== shipId && css["is-deployed"],
-        !isDeployed && shipOnDeployId !== shipId && css["not-deployed"],
-        shipOnDeployId === shipId && css["is-deploying"],
-      )
-    : clsx(css["FleetMenuItem"], isDeployed && css["is-deployed"], !isDeployed && css["not-deployed"]);
+  const combinedClasses = clsx(
+    css["FleetMenuItem"],
+    isDeployed && shipOnDeployId !== shipId && css["is-deployed"],
+    !isDeployed && shipOnDeployId !== shipId && css["not-deployed"],
+    shipOnDeployId === shipId && css["is-deploying"],
+  );
 
   const bind = useDrag((state) => {
     const {
@@ -68,10 +60,8 @@ export const FleetMenuItem = ({
         <div className={css["FleetMenuItem-icon"]}>
           <Icon size="100%" name="ship" />
         </div>
-        <div className={css["FleetMenuItem-name"]}>
-          {isPlayer ? SHIP_TYPES[shipId].name : t("game:unidentified")}
-        </div>
-        <div className={css["FleetMenuItem-health"]}>{isPlayer ? lives : "???"}</div>
+        <div className={css["FleetMenuItem-name"]}>{SHIP_TYPES[shipId].name}</div>
+        <div className={css["FleetMenuItem-health"]}>{lives}</div>
       </div>
     </div>
   );
