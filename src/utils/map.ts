@@ -1,5 +1,5 @@
 import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
-import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
+import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
 import { parseNumberCoordinateX } from "./coordinates";
 import { COORDINATES_LENGTH } from "~/constants";
@@ -70,9 +70,7 @@ export const attackMap = (targetCoordinates: TCoordinate, map: TMap, fleet: TFle
 };
 
 export const clearTilesAvailableStyles = (tiles: Element[] | NodeListOf<Element>) => {
-  tiles.forEach((tile) =>
-    tile.classList.remove(battleMapCSS["is-available"], battleMapCSS["is-unavailable"]),
-  );
+  tiles.forEach((tile) => tile.classList.remove(tileCSS["is-available"], tileCSS["is-unavailable"]));
 };
 
 export const getPlayerTilesByCoordinates = (coordinates: TCoordinate[]): Element[] | null => {
@@ -102,5 +100,5 @@ export const isAxisYTile = (coordinates: TCoordinate) => {
 };
 
 export const isTile = (element: Element) => {
-  return element.classList.contains(battleMapCSS["BattleMap-tile"]);
+  return element.classList.contains(tileCSS["BattleMap-tile"]);
 };

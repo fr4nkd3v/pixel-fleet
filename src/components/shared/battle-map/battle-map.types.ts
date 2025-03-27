@@ -1,27 +1,10 @@
-import type {
-  TCoveredShip,
-  TCoordinate,
-  TEmptyCoordinate,
-  TPerspective,
-  TCursorLocation,
-} from "~/types";
+import type { TCoordinate, TEmptyCoordinate, TCursorLocation } from "~/types";
 
-export interface IBattleMapProps {
-  perspective: TPerspective;
+export interface IBattleMapOpponentProps {
   className?: string;
   onFinishesShot: () => void;
-  setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
-
-export interface ITileProps {
-  coordinateX: string;
-  coordinateY: number;
-  isCovered: false | TCoveredShip;
-  isAttacked: boolean;
-  perspective: TPerspective;
-  onMouseEnter?: (event: React.MouseEvent) => void;
-  onMouseLeave?: (event: React.MouseEvent) => void;
-  onContextMenu?: (event: React.MouseEvent) => void;
+export interface IBattleMapPlayerProps extends IBattleMapOpponentProps {
   setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
 

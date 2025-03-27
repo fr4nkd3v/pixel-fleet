@@ -14,7 +14,7 @@ import {
 } from "~/utils";
 import { useGameStore, useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { useBreakpoints } from "~/hooks";
-import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
+import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 
 export const GamePage = () => {
   // Set fleet & map size for each player
@@ -166,7 +166,7 @@ export const GamePage = () => {
   }, [handleScrollInPage]);
 
   const handleResize = useCallback(() => {
-    const tile = document.querySelector("." + battleMapCSS["BattleMap-tile"]);
+    const tile = document.querySelector("." + tileCSS["BattleMap-tile"]);
 
     if (!domRoot || !tile) return;
 
@@ -223,18 +223,13 @@ export const GamePage = () => {
             <FleetMenu.player className={css["GamePage-FleetPlayer"]} setCursorLocation={setCursorLocation} />
             <FleetMenu.opponent className={css["GamePage-FleetOpponent"]} />
             <div className={css["GamePage-BattleMapPlayer"]}>
-              <BattleMap
-                perspective="player"
+              <BattleMap.player
                 onFinishesShot={handleOpponentFinishesShooting}
                 setCursorLocation={setCursorLocation}
               />
             </div>
             <div className={css["GamePage-BattleMapOpponent"]}>
-              <BattleMap
-                perspective="opponent"
-                onFinishesShot={handlePlayerFinishesShot}
-                setCursorLocation={setCursorLocation}
-              />
+              <BattleMap.opponent onFinishesShot={handlePlayerFinishesShot} />
             </div>
             <GuideBar className={css["GamePage-GuideBar"]} />
             <ActionBar className={css["GamePage-ActionBar"]} />
@@ -245,15 +240,10 @@ export const GamePage = () => {
             <div className={css["GamePage-Container"]}>
               <FleetMenu.opponent className={css["GamePage-FleetOpponent"]} />
               <div className={css["GamePage-BattleMapOpponent"]}>
-                <BattleMap
-                  perspective="opponent"
-                  onFinishesShot={handlePlayerFinishesShot}
-                  setCursorLocation={setCursorLocation}
-                />
+                <BattleMap.opponent onFinishesShot={handlePlayerFinishesShot} />
               </div>
               <div className={css["GamePage-BattleMapPlayer"]}>
-                <BattleMap
-                  perspective="player"
+                <BattleMap.player
                   onFinishesShot={handleOpponentFinishesShooting}
                   setCursorLocation={setCursorLocation}
                 />

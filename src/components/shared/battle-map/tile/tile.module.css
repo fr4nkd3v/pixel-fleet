@@ -1,0 +1,123 @@
+.BattleMap-tile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 100%;
+
+  position: relative;
+  z-index: var(--layer-10);
+
+  text-transform: uppercase;
+  font-size: clamp(var(--size-8), 1vw + 0.65rem, var(--size-24));
+  border-left: rgba(0, 0, 0, 0.15) 1px solid;
+  border-top: rgba(0, 0, 0, 0.15) 1px solid;
+
+  touch-action: none;
+}
+
+.BattleMap-tile.is-player {
+  color: var(--color-primary);
+  text-shadow: 1px 1px 0 var(--color-dark-1);
+}
+.BattleMap-tile.is-opponent {
+  color: var(--color-dark-1);
+  text-shadow: 1px 1px 0 var(--color-primary);
+}
+
+.BattleMap-tile.is-available,
+.BattleMap-tile.is-available.is-redeploy {
+  background-color: var(--color-success-400);
+}
+.BattleMap-tile.is-unavailable {
+  background-color: var(--color-error-400);
+}
+
+.BattleMap-tile.is-covered {
+  background: var(--ship-pattern);
+}
+
+.BattleMap-tile.is-attacked {
+  background: rgba(57, 57, 57, 0.5);
+}
+.BattleMap-tile.is-covered.is-attacked,
+.BattleMap-tile.is-covered.is-unavailable {
+  background: linear-gradient(rgb(219, 47, 64, 0.5), rgb(219, 47, 64, 0.5)), var(--ship-pattern);
+}
+
+.BattleMap-tile.start::after,
+.BattleMap-tile.middle::after,
+.BattleMap-tile.end:after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: solid 4px var(--white-2);
+}
+.BattleMap-tile.is-covered.is-attacked::after,
+.BattleMap-tile.is-covered.is-unavailable::after {
+  border-color: rgb(237, 149, 158);
+}
+.BattleMap-tile.start.horizontal::after {
+  border-right: none;
+}
+.BattleMap-tile.start.vertical::after {
+  border-bottom: none;
+}
+.BattleMap-tile.middle.horizontal::after {
+  border-left: none;
+  border-right: none;
+}
+.BattleMap-tile.middle.vertical::after {
+  border-top: none;
+  border-bottom: none;
+}
+.BattleMap-tile.end.horizontal::after {
+  border-left: none;
+}
+.BattleMap-tile.end.vertical::after {
+  border-top: none;
+}
+
+.BattleMap-tile.is-covered.is-hidden {
+  background: none;
+}
+.BattleMap-tile.is-covered.is-hidden::after {
+  border: none;
+}
+.BattleMap-tile.is-covered.is-attacked.is-hidden {
+  background: hsla(354deg 71% 58% / 70%);
+}
+
+.BattleMap-tile.is-redeploy {
+  background: none;
+}
+.BattleMap-tile.is-redeploy::after {
+  border: none;
+}
+
+.BattleMap-tileText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Desktop Device */
+
+@media (min-width: 1024px) {
+  .BattleMap-tile {
+    font-size: var(--size-18);
+  }
+
+  .BattleMap-tile.is-player {
+    text-shadow: 2px 2px 0 var(--color-dark-1);
+  }
+  .BattleMap-tile.is-opponent {
+    text-shadow: 2px 2px 0 var(--color-primary);
+  }
+
+  .BattleMap-tile.start::after,
+  .BattleMap-tile.middle::after,
+  .BattleMap-tile.end:after {
+    border-width: 5px;
+  }
+}

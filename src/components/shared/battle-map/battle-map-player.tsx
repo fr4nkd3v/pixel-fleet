@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { type IBattleMapProps } from "./battle-map.types";
-import { Tile } from "./battle-map-tile";
+import { type IBattleMapPlayerProps } from "./battle-map.types";
+import { TilePlayer } from "./tile";
 import { Sight } from "./battle-map-sight";
 import css from "./battle-map.module.css";
 import { parseStringCoordinateX } from "~/utils";
@@ -8,21 +8,15 @@ import { COORDINATES_LENGTH } from "~/constants";
 import clsx from "clsx";
 import { useGameStore, useOpponentStore, usePlayerStore } from "~/stores";
 
-export const BattleMap = ({ perspective, className, onFinishesShot, setCursorLocation }: IBattleMapProps) => {
-  const { map: playerMap, targetCoordinates: opponentTargetCoordinates } = usePlayerStore();
-  const { map: opponentMap, targetCoordinates: playerTargetCoordinates } = useOpponentStore();
+export const BattleMapPlayer = ({ className, onFinishesShot, setCursorLocation }: IBattleMapPlayerProps) => {
+  const { map: playerMap } = usePlayerStore();
+  const { targetCoordinates: playerTargetCoordinates } = useOpponentStore();
   const { gamePhase, isPlayerTurn, isShooting } = useGameStore();
-
-  const isPlayer = perspective === "player";
-
-  const mapCoordinates = isPlayer ? playerMap : opponentMap;
-  const targetCoordinates = isPlayer ? playerTargetCoordinates : opponentTargetCoordinates;
-  const isInTurn = isPlayer ? isPlayerTurn : !isPlayerTurn;
-  const isDisabled = !isPlayer && gamePhase !== "start";
-  const isReady = gamePhase === "start";
-
-  const sideLength = COORDINATES_LENGTH;
   const battleMapRef = useRef<null | HTMLElement>(null);
+
+  const isReady = gamePhase === "start";
+  const sideLength = COORDINATES_LENGTH;
+  const lengthCSS = `calc(100% - 100% / ${sideLength + 1})`;
 
   // const handleContextMenuTile = (event: React.MouseEvent) => {
   //   event.preventDefault();
@@ -41,18 +35,15 @@ export const BattleMap = ({ perspective, className, onFinishesShot, setCursorLoc
   const tiles = [];
   for (let h = 0; h <= sideLength; h++) {
     for (let w = 0; w <= sideLength; w++) {
-      const mapCoordinateFound = mapCoordinates.find(
-        ({ x, y }) => x === parseStringCoordinateX(w) && y === h,
-      );
+      const mapCoordinateFound = playerMap.find(({ x, y }) => x === parseStringCoordinateX(w) && y === h);
 
       tiles.push(
-        <Tile
+        <TilePlayer
           key={`${h}${w}`}
           coordinateX={parseStringCoordinateX(w)}
           coordinateY={h}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
-          perspective={perspective}
           setCursorLocation={setCursorLocation}
         />,
       );
@@ -61,31 +52,19 @@ export const BattleMap = ({ perspective, className, onFinishesShot, setCursorLoc
 
   return (
     <section
-      className={clsx(
-        css["BattleMap"],
-        isDisabled && css["is-disabled"],
-        !isPlayer && css["is-opponent"],
-        className,
-      )}
-      style={{
-        gridTemplateColumns: `repeat(${sideLength + 1}, auto)`,
-      }}
+      className={clsx(css["BattleMap"], className)}
+      style={{ gridTemplateColumns: `repeat(${sideLength + 1}, auto)` }}
       ref={battleMapRef}
     >
       {tiles}
-      <div
-        className={css["BattleMap-background"]}
-        style={{
-          width: `calc(100% - 100% / ${sideLength + 1})`,
-          height: `calc(100% - 100% / ${sideLength + 1})`,
-        }}
-      ></div>
 
-      {isReady && !isInTurn && (
+      <div className={css["BattleMap-background"]} style={{ width: lengthCSS, height: lengthCSS }}></div>
+
+      {isReady && !isPlayerTurn && (
         <Sight
-          targetCoordinates={targetCoordinates}
+          targetCoordinates={playerTargetCoordinates}
           isShooting={isShooting}
-          isInTurn={isInTurn}
+          isInTurn={isPlayerTurn}
           onFinishesShot={onFinishesShot}
         />
       )}

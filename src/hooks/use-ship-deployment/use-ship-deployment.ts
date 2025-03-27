@@ -10,7 +10,7 @@ import {
   hasCoordinateCovered,
   isTile,
 } from "~/utils";
-import battleMapCSS from "~/components/shared/battle-map/battle-map.module.css";
+import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 
 export const useShipDeployment = () => {
   const hoveredTile = useRef<HTMLElement | null>(null);
@@ -48,9 +48,7 @@ export const useShipDeployment = () => {
     if (!nextTiles) return;
 
     nextTiles.forEach((tile) => {
-      tile.classList.add(
-        battleMapCSS[isOutOfArea || isCoveredForAnotherShip ? "is-unavailable" : "is-available"],
-      );
+      tile.classList.add(tileCSS[isOutOfArea || isCoveredForAnotherShip ? "is-unavailable" : "is-available"]);
     });
 
     hoveredTile.current = target;
