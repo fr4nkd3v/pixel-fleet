@@ -1,4 +1,4 @@
-import { TCoordinate, TFleet, TMap, TMapCoordinate } from "~/types/game";
+import { TCoordinate, TFleet, TMap, TShipId } from "~/types/game";
 import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
 import { parseNumberCoordinateX } from "./coordinates";
@@ -6,67 +6,52 @@ import { COORDINATES_LENGTH } from "~/constants";
 
 export const attackMap = (targetCoordinates: TCoordinate, map: TMap, fleet: TFleet) => {
   const { x, y } = targetCoordinates;
-  let newMap: TMap = [];
-  let newFleet: TFleet = [...fleet];
-  let foundCoordinate = false;
-  let shipDestroyedId: null | string = null;
+  let foundTargetCoordinate = false;
+  let attackedShipId: null | string = null;
+  let destroyedShipId: null | string = null;
 
-  for (const coordinate of map) {
+  // Update the map and mark the coordinate as attacked.
+  const mapAttacked = map.map((coordinate) => {
     if (coordinate.x === x && coordinate.y === y) {
-      // If is the same coordinate
-      foundCoordinate = true;
-      const attackedCoordinate: TMapCoordinate = {
-        ...coordinate,
-        attacked: true,
-      };
-
-      if (coordinate.covered) {
-        // If a ship is located in the coordinate
-        const { shipId } = coordinate.covered;
-        newFleet = newFleet.map((ship) => {
-          if (ship.id !== shipId) return ship;
-
-          const newHealth = ship.health - 1;
-          if (newHealth <= 0) shipDestroyedId = shipId;
-          return { ...ship, health: newHealth };
-        });
-      }
-
-      newMap.push(attackedCoordinate);
+      foundTargetCoordinate = true;
+      if (coordinate.covered) attackedShipId = coordinate.covered.shipId;
+      return { ...coordinate, attacked: true };
     } else {
-      // If is a different coordinate
-      newMap.push({ ...coordinate });
+      return { ...coordinate };
     }
+  });
+
+  // Adds the attacked coordinate if it is not on the map
+  if (!foundTargetCoordinate) {
+    mapAttacked.push({ x, y, attacked: true, covered: false });
   }
 
-  if (!foundCoordinate) {
-    // If the coordinate was not found
-    newMap.push({
-      x,
-      y,
-      attacked: true,
-      covered: false,
-    });
-  }
+  if (!attackedShipId) return { map: mapAttacked, fleet };
 
-  if (shipDestroyedId) {
-    // If a ship was destroyed
-    newMap = newMap.map((coordinate) => {
-      if (coordinate.covered && coordinate.covered.shipId === shipDestroyedId) {
-        return {
-          ...coordinate,
-          covered: { ...coordinate.covered, isDefeated: true },
-        };
-      } else {
-        return coordinate;
-      }
-    });
-  }
+  // Upgrade the fleet with the health of the attacked ship.
+  const updatedFleet = fleet.map((ship) => {
+    if (ship.id !== attackedShipId) return ship;
 
-  return {
-    map: newMap,
-    fleet: newFleet,
-  };
+    const currentHealth = getShipCurrentHealth(attackedShipId, mapAttacked);
+    if (currentHealth <= 0) destroyedShipId = ship.id;
+    return { ...ship, health: currentHealth };
+  });
+
+  if (!destroyedShipId) return { map: mapAttacked, fleet: updatedFleet };
+
+  // Mark the coordinates of the destroyed ship as defeated.
+  const updatedMap = mapAttacked.map((coordinate) => {
+    if (coordinate.covered && coordinate.covered.shipId === destroyedShipId) {
+      return {
+        ...coordinate,
+        covered: { ...coordinate.covered, isDefeated: true },
+      };
+    } else {
+      return { ...coordinate };
+    }
+  });
+
+  return { map: updatedMap, fleet: updatedFleet };
 };
 
 export const clearTilesAvailableStyles = (tiles: Element[] | NodeListOf<Element>) => {
@@ -101,4 +86,13 @@ export const isAxisYTile = (coordinates: TCoordinate) => {
 
 export const isTile = (element: Element) => {
   return element.classList.contains(tileCSS["BattleMap-tile"]);
+};
+
+export const getShipCurrentHealth = (shipId: TShipId, map: TMap) => {
+  const coveredCoordinates = map.filter(
+    (coordinate) => coordinate.covered && coordinate.covered.shipId === shipId,
+  );
+  const attackedCoordinates = coveredCoordinates.filter((coordinate) => coordinate.attacked);
+
+  return coveredCoordinates.length - attackedCoordinates.length;
 };
