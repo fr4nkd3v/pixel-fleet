@@ -3,7 +3,6 @@ import { type IBattleMapPlayerProps } from "./battle-map.types";
 import { TilePlayer } from "./tile";
 import { Sight } from "./battle-map-sight";
 import css from "./battle-map.module.css";
-import { parseStringCoordinateX } from "~/utils";
 import { COORDINATES_LENGTH } from "~/constants";
 import clsx from "clsx";
 import { useGameStore, useOpponentStore, usePlayerStore } from "~/stores";
@@ -33,15 +32,15 @@ export const BattleMapPlayer = ({ className, onFinishesShot, setCursorLocation }
   // };
 
   const tiles = [];
-  for (let h = 0; h <= sideLength; h++) {
-    for (let w = 0; w <= sideLength; w++) {
-      const mapCoordinateFound = playerMap.find(({ x, y }) => x === parseStringCoordinateX(w) && y === h);
+  for (let column = 0; column <= sideLength; column++) {
+    for (let row = 0; row <= sideLength; row++) {
+      const mapCoordinateFound = playerMap.find(({ x, y }) => x === row && y === column);
+      const tileKey = `${column}${row}`;
 
       tiles.push(
         <TilePlayer
-          key={`${h}${w}`}
-          coordinateX={parseStringCoordinateX(w)}
-          coordinateY={h}
+          key={tileKey}
+          coordinates={{ x: row, y: column }}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
           setCursorLocation={setCursorLocation}

@@ -2,48 +2,40 @@ import { IconButton, InputGroup } from "~/components";
 import css from "../action-bar.module.css";
 import { FormEvent, useEffect, useRef } from "react";
 import { useGameStore, usePlayerStore } from "~/stores";
-import { checkCoordinateValue } from "~/utils";
+import { checkCoordinateValue, coordinateYToLabel, coordinateYToNumber } from "~/utils";
 
 export const AttackControl = () => {
   const inputX = useRef<HTMLInputElement | null>(null);
   const inputY = useRef<HTMLInputElement | null>(null);
 
-  const {
-    targetCoordinates,
-    updateTargetCoordinateX,
-    updateTargetCoordinateY,
-  } = usePlayerStore();
+  const { targetCoordinates, updateTargetCoordinateX, updateTargetCoordinateY } = usePlayerStore();
   const { startsShooting, isPlayerTurn } = useGameStore();
 
-  const changeTargetCoordinates = (
-    coordinateAxis: "x" | "y",
-    value: string
-  ) => {
-    if (coordinateAxis === "x" && checkCoordinateValue("x", value)) {
-      updateTargetCoordinateX(value);
-    } else if (coordinateAxis === "y" && checkCoordinateValue("y", value)) {
-      updateTargetCoordinateY(Number(value));
+  const changeTargetCoordinates = (axis: "x" | "y", value: string) => {
+    if (axis === "x" && checkCoordinateValue("x", value)) {
+      updateTargetCoordinateX(Number(value));
+    } else if (axis === "y" && checkCoordinateValue("y", value)) {
+      const coordinateY = coordinateYToNumber(value);
+      updateTargetCoordinateY(coordinateY);
     }
   };
 
-  const handleChangeCoordinateY = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeCoordinateY = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+
+    changeTargetCoordinates("y", value.length > 1 ? value[1] : value);
+  };
+
+  const handleChangeCoordinateX = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
     if (value.length > 2) {
-      changeTargetCoordinates("y", value[2]);
+      changeTargetCoordinates("x", value[2]);
     } else if (value.length > 1) {
-      changeTargetCoordinates("y", Number(value) === 10 ? value : value[1]);
+      changeTargetCoordinates("x", Number(value) === 10 ? value : value[1]);
     } else {
-      changeTargetCoordinates("y", value);
+      changeTargetCoordinates("x", value);
     }
-  };
-
-  const handleChangeCoordinateX = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value } = event.target;
-    changeTargetCoordinates("x", value.length > 1 ? value[1] : value);
   };
 
   const handleKeyDownInputY = (event: React.KeyboardEvent) => {
@@ -72,7 +64,7 @@ export const AttackControl = () => {
         <div className={css["ActionBar-inputWrapper"]}>
           <InputGroup
             inputClassName={css["ActionBar-input"]}
-            addonType="numeric"
+            addonType="alphabetic"
             addonLocation="leading"
             id="coordinate-y"
             variant="primary"
@@ -80,16 +72,16 @@ export const AttackControl = () => {
             onKeyDown={handleKeyDownInputY}
             onInput={handleChangeCoordinateY}
             onFocus={() => inputY && inputY.current?.select()}
-            value={targetCoordinates.y ?? "-"}
+            value={targetCoordinates.y ? coordinateYToLabel(targetCoordinates.y) : "-"}
             autoComplete="off"
           />
         </div>
         <div className={css["ActionBar-inputWrapper"]}>
           <InputGroup
             inputClassName={css["ActionBar-input"]}
-            addonType="alphabetic"
+            addonType="numeric"
             addonLocation="trailing"
-            id="coordinate-y"
+            id="coordinate-x"
             variant="primary"
             innerRef={inputX}
             onKeyDown={handleKeyDownInputX}

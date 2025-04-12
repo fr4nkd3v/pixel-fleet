@@ -23,9 +23,11 @@ export type TCoveredShip = {
   isRedeploy: boolean;
 };
 
-export type TCoordinate = {
-  x: string;
-  y: number;
+export type TCoordinates = { x: number; y: number };
+
+export type TEmptyCoordinates = {
+  x: number | null;
+  y: number | null;
 };
 
 export type TEmptyCoordinate = {
@@ -34,7 +36,7 @@ export type TEmptyCoordinate = {
 };
 
 export type TMapCoordinate = {
-  x: string;
+  x: number;
   y: number;
   covered: false | TCoveredShip;
   attacked: boolean;

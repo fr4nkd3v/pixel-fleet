@@ -1,19 +1,16 @@
 // semi-random selection algorithm
 
-import { TCoordinate, TFleet, TMap, TShipId } from "~/types/game";
-import { getNextCoordinates, hasCoordinateCovered, parseStringCoordinateX } from "./coordinates";
+import { TFleet, TMap, TCoordinates, TShipId } from "~/types/game";
+import { getNextCoordinates, hasCoordinateCovered } from "./coordinates";
 import { getRandomInt, getRandomOrientation } from "./random";
 import { getShipPartByIndex } from "./fleet";
 
 export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
   // 1. Generate available coordinates array
-  let availableCoordinates: TCoordinate[] = [];
-  for (let h = 1; h <= mapSize; h++) {
-    for (let w = 1; w <= mapSize; w++) {
-      availableCoordinates.push({
-        x: parseStringCoordinateX(w),
-        y: h,
-      });
+  let availableCoordinates: TCoordinates[] = [];
+  for (let column = 1; column <= mapSize; column++) {
+    for (let row = 1; row <= mapSize; row++) {
+      availableCoordinates.push({ x: row, y: column });
     }
   }
 
@@ -69,7 +66,7 @@ export const autoFleetDeploy = (mapSize: number, fleet: TFleet, map: TMap) => {
 };
 
 function tryRandomCoordinate(
-  availableCoordinates: TCoordinate[],
+  availableCoordinates: TCoordinates[],
   triesMax: number,
   shipId: TShipId,
   shipLength: number,
@@ -84,8 +81,7 @@ function tryRandomCoordinate(
     const randomOrientation = getRandomOrientation();
 
     const nextCoordinates = getNextCoordinates(
-      randomCoordinate.x,
-      randomCoordinate.y,
+      { x: randomCoordinate.x, y: randomCoordinate.y },
       shipLength,
       randomOrientation,
     );

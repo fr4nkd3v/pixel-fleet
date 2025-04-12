@@ -2,21 +2,16 @@ import { useEffect, useState } from "react";
 import { Icon } from "~/components/shared/icon";
 import { ISightProps } from "./battle-map.types";
 import css from "./battle-map.module.css";
-import { delay, parseNumberCoordinateX } from "~/utils";
+import { delay } from "~/utils";
 import { DEFAULT_ATTACK_DELAY } from "~/constants";
 import sprites from "~/assets/sprites-effect.png";
 import clsx from "clsx";
 
-export const Sight = ({
-  targetCoordinates,
-  isShooting: isShot,
-  onFinishesShot,
-  isInTurn,
-}: ISightProps) => {
+export const Sight = ({ targetCoordinates, isShooting, onFinishesShot, isInTurn }: ISightProps) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
   const { x: strX, y: rawY } = targetCoordinates;
-  const x = parseNumberCoordinateX(strX);
+  const x = strX ?? 0;
   const y = rawY ?? 0;
 
   const sightStyles = {
@@ -32,7 +27,7 @@ export const Sight = ({
   };
 
   useEffect(() => {
-    if (!isShot || isInTurn) return;
+    if (!isShooting || isInTurn) return;
 
     (async () => {
       await delay(DEFAULT_ATTACK_DELAY);
@@ -42,24 +37,19 @@ export const Sight = ({
       setShowAnimation(false);
       onFinishesShot();
     })();
-  }, [isInTurn, isShot, onFinishesShot]);
+  }, [isInTurn, isShooting, onFinishesShot]);
 
   return (
     <>
       {!showAnimation && (
         <div
-          className={clsx(
-            css["Sight"],
-            isShot && !isInTurn && css["is-shooting"]
-          )}
+          className={clsx(css["Sight"], isShooting && !isInTurn && css["is-shooting"])}
           style={sightStyles}
         >
           <Icon size="100%" name="sight" />
         </div>
       )}
-      {showAnimation ? (
-        <i className={css["AttackAnimation"]} style={animationStyles}></i>
-      ) : null}
+      {showAnimation ? <i className={css["AttackAnimation"]} style={animationStyles}></i> : null}
     </>
   );
 };

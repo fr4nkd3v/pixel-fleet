@@ -2,7 +2,6 @@ import { IBattleMapOpponentProps } from "./battle-map.types";
 import { TileOpponent } from "./tile";
 import { Sight } from "./battle-map-sight";
 import css from "./battle-map.module.css";
-import { parseStringCoordinateX } from "~/utils";
 import { COORDINATES_LENGTH } from "~/constants";
 import clsx from "clsx";
 import { useGameStore, useOpponentStore, usePlayerStore } from "~/stores";
@@ -20,15 +19,14 @@ export const BattleMapOpponent = ({ className, onFinishesShot }: IBattleMapOppon
   const lengthCSS = `calc(100% - 100% / ${sideLength + 1})`;
 
   const tiles = [];
-  for (let h = 0; h <= sideLength; h++) {
-    for (let w = 0; w <= sideLength; w++) {
-      const mapCoordinateFound = opponentMap.find(({ x, y }) => x === parseStringCoordinateX(w) && y === h);
+  for (let column = 0; column <= sideLength; column++) {
+    for (let row = 0; row <= sideLength; row++) {
+      const mapCoordinateFound = opponentMap.find(({ x, y }) => x === row && y === column);
 
       tiles.push(
         <TileOpponent
-          key={`${h}${w}`}
-          coordinateX={parseStringCoordinateX(w)}
-          coordinateY={h}
+          key={`${column}${row}`}
+          coordinates={{ x: row, y: column }}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
         />,

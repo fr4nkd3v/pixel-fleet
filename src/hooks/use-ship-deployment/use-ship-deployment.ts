@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { SHIP_TYPES } from "~/constants";
 import { usePlayerStore, useShipDeployStore } from "~/stores";
-import { TCoordinate, TCursorLocation, TShipId } from "~/types";
+import { TCursorLocation, TCoordinates, TShipId } from "~/types";
 import {
   clearTilesAvailableStyles,
   getCoveredCoordinates,
@@ -24,22 +24,22 @@ export const useShipDeployment = () => {
   const { map: playerMap, deployShip, redeployShip, removeShip, removeRedeployShipState } = usePlayerStore();
 
   const cleanupPreviousTiles = (previousTile: HTMLElement) => {
-    const { coordinateX: prevX, coordinateY: strPrevY } = previousTile.dataset;
-    const prevY = Number(strPrevY);
+    const { coordinateX: strPrevX, coordinateY: strPrevY } = previousTile.dataset;
+    const prevCoordinates = { x: Number(strPrevX), y: Number(strPrevY) };
 
-    if (prevX && prevY && shipDeployId) {
+    if (shipDeployId) {
       const shipLength = SHIP_TYPES[shipDeployId].length;
-      const previousCoordinates = getNextCoordinates(prevX, prevY, shipLength, shipDeployOrientation);
+      const previousCoordinates = getNextCoordinates(prevCoordinates, shipLength, shipDeployOrientation);
       const previousTiles = getPlayerTilesByCoordinates(previousCoordinates);
       if (previousTiles) clearTilesAvailableStyles(previousTiles);
     }
   };
 
-  const highlightNextTiles = (coordinateX: string, coordinateY: number, target: HTMLElement) => {
+  const highlightNextTiles = (coordinates: TCoordinates, target: HTMLElement) => {
     if (!shipDeployId) return;
 
     const shipLength = SHIP_TYPES[shipDeployId].length;
-    const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
+    const nextCoordinates = getNextCoordinates(coordinates, shipLength, shipDeployOrientation);
 
     const isOutOfArea = nextCoordinates.length < shipLength;
     const isCoveredForAnotherShip = hasCoordinateCovered(nextCoordinates, playerMap, shipDeployId);
@@ -72,7 +72,9 @@ export const useShipDeployment = () => {
     const { coordinateX, coordinateY } = target.dataset;
     if (!isTile(target) || !coordinateX || !coordinateY) return;
 
-    const foundCoordinate = playerMap.find(({ x, y }) => x === coordinateX && y === Number(coordinateY));
+    const foundCoordinate = playerMap.find(
+      ({ x, y }) => x === Number(coordinateX) && y === Number(coordinateY),
+    );
     if (!foundCoordinate || !foundCoordinate.covered) return;
 
     const { shipId: targetShipId } = foundCoordinate.covered;
@@ -91,8 +93,8 @@ export const useShipDeployment = () => {
     const [x, y] = locationXY;
     setCursorLocation({ left: x, top: y });
 
-    const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
-    if (!isTile(target) || !coordinateX || !strCoordinateY || !shipDeployId) {
+    const { coordinateX: strCoordinateX, coordinateY: strCoordinateY } = target.dataset;
+    if (!isTile(target) || !strCoordinateX || !strCoordinateY || !shipDeployId) {
       if (hoveredTile.current) {
         cleanupPreviousTiles(hoveredTile.current);
         hoveredTile.current = null;
@@ -100,13 +102,13 @@ export const useShipDeployment = () => {
       return;
     }
 
-    const coordinateY = Number(strCoordinateY);
+    const coordinates = { x: Number(strCoordinateX), y: Number(strCoordinateY) };
     const isAnotherTile = hoveredTile.current && hoveredTile.current !== target;
 
     if (!hoveredTile.current || isAnotherTile) {
       if (isAnotherTile && hoveredTile.current) cleanupPreviousTiles(hoveredTile.current);
 
-      highlightNextTiles(coordinateX, coordinateY, target);
+      highlightNextTiles(coordinates, target);
     }
   };
 
@@ -116,7 +118,7 @@ export const useShipDeployment = () => {
       clearShipOnDeploy();
     };
 
-    const handleDeployShip = (shipId: TShipId, nextCoordinates: TCoordinate[]) => {
+    const handleDeployShip = (shipId: TShipId, nextCoordinates: TCoordinates[]) => {
       if (redeploy) removeShip(shipId);
       const coveredCoordinates = getCoveredCoordinates(nextCoordinates, shipId, shipDeployOrientation);
 
@@ -124,19 +126,19 @@ export const useShipDeployment = () => {
       clearDeployAndState();
     };
 
-    const { coordinateX, coordinateY: strCoordinateY } = target.dataset;
+    const { coordinateX: strCoordinateX, coordinateY: strCoordinateY } = target.dataset;
 
-    if (!isTile(target) || !coordinateX || !strCoordinateY || !shipDeployId) {
+    if (!isTile(target) || !strCoordinateX || !strCoordinateY || !shipDeployId) {
       if (shipDeployId) removeRedeployShipState(shipDeployId);
 
       clearDeployAndState();
       return;
     }
 
-    const coordinateY = Number(strCoordinateY);
+    const coordinates = { x: Number(strCoordinateX), y: Number(strCoordinateY) };
     const shipLength = SHIP_TYPES[shipDeployId].length;
 
-    const nextCoordinates = getNextCoordinates(coordinateX, coordinateY, shipLength, shipDeployOrientation);
+    const nextCoordinates = getNextCoordinates(coordinates, shipLength, shipDeployOrientation);
     const nexTiles = getPlayerTilesByCoordinates(nextCoordinates);
 
     const isCoveredForAnotherShip = hasCoordinateCovered(nextCoordinates, playerMap, shipDeployId);

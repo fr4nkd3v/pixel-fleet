@@ -1,10 +1,10 @@
-import { TCoordinate, TFleet, TMap, TShipId } from "~/types/game";
+import { TFleet, TMap, TCoordinates, TShipId } from "~/types/game";
 import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
-import { parseNumberCoordinateX } from "./coordinates";
 import { COORDINATES_LENGTH } from "~/constants";
+import { coordinateYToLabel } from "./coordinates";
 
-export const attackMap = (targetCoordinates: TCoordinate, map: TMap, fleet: TFleet) => {
+export const attackMap = (targetCoordinates: TCoordinates, map: TMap, fleet: TFleet) => {
   const { x, y } = targetCoordinates;
   let foundTargetCoordinate = false;
   let attackedShipId: null | string = null;
@@ -58,7 +58,7 @@ export const clearTilesAvailableStyles = (tiles: Element[] | NodeListOf<Element>
   tiles.forEach((tile) => tile.classList.remove(tileCSS["is-available"], tileCSS["is-unavailable"]));
 };
 
-export const getPlayerTilesByCoordinates = (coordinates: TCoordinate[]): Element[] | null => {
+export const getPlayerTilesByCoordinates = (coordinates: TCoordinates[]): Element[] | null => {
   const playerMap = document.querySelector("." + gamePageCSS["GamePage-BattleMapPlayer"]);
   if (!playerMap) return null;
 
@@ -70,18 +70,19 @@ export const getPlayerTilesByCoordinates = (coordinates: TCoordinate[]): Element
   return tiles;
 };
 
-export const isAxisXTile = (coordinates: TCoordinate) => {
-  const { x, y: coordinateY } = coordinates;
-  const coordinateX = parseNumberCoordinateX(x);
-
-  return coordinateY === 0 && coordinateX > 0 && coordinateX < COORDINATES_LENGTH + 1;
+export const isAxisXTile = (coordinates: TCoordinates) => {
+  const { x, y } = coordinates;
+  return y === 0 && x > 0 && x < COORDINATES_LENGTH + 1;
 };
 
-export const isAxisYTile = (coordinates: TCoordinate) => {
-  const { x, y: coordinateY } = coordinates;
-  const coordinateX = parseNumberCoordinateX(x);
+export const isAxisYTile = (coordinates: TCoordinates) => {
+  const { x, y } = coordinates;
+  return x === 0 && y > 0 && y < COORDINATES_LENGTH + 1;
+};
 
-  return coordinateX === 0 && coordinateY > 0 && coordinateY < COORDINATES_LENGTH + 1;
+export const getTileLabelByCoordinates = (coordinates: TCoordinates) => {
+  const { x, y } = coordinates;
+  return isAxisYTile(coordinates) ? coordinateYToLabel(y) : isAxisXTile(coordinates) ? x : null;
 };
 
 export const isTile = (element: Element) => {

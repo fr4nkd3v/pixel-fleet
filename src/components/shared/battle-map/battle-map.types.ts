@@ -1,4 +1,4 @@
-import type { TCoordinate, TEmptyCoordinate, TCursorLocation } from "~/types";
+import type { TCursorLocation, TCoordinates, TEmptyCoordinates } from "~/types";
 
 export interface IBattleMapOpponentProps {
   className?: string;
@@ -9,7 +9,7 @@ export interface IBattleMapPlayerProps extends IBattleMapOpponentProps {
 }
 
 export interface ISightProps {
-  targetCoordinates: TCoordinate | TEmptyCoordinate;
+  targetCoordinates: TCoordinates | TEmptyCoordinates;
   isShooting: boolean;
   isInTurn: boolean;
   onFinishesShot: () => void;

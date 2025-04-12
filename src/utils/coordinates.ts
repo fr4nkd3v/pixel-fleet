@@ -1,45 +1,48 @@
 import { COORDINATES_LENGTH } from "~/constants/game";
-import { TCoordinate, TMap, TOrientationType, TShipId } from "~/types/game";
+import { TMap, TCoordinates, TOrientationType, TShipId } from "~/types/game";
 import { getShipPartByIndex } from "./fleet";
 
-export const parseStringCoordinateX = (coor: number): string => {
-  return String.fromCharCode(coor + 96);
+export const coordinateYToLabel = (coordinateX: number): string => {
+  return String.fromCharCode(coordinateX + 96);
 };
 
-export const parseNumberCoordinateX = (coor: string | null): number => {
-  return coor ? coor.toLowerCase().charCodeAt(0) - 96 : 0;
+export const coordinateYToNumber = (coordinateX: string): number => {
+  return coordinateX.toLowerCase().charCodeAt(0) - 96;
 };
 
-export const isValidCoordinate = (x: string, y: number) => {
-  return "abcdefghij".includes(x) && y > 0 && y < 11;
+export const isValidCoordinate = (coordinates: TCoordinates) => {
+  const { x, y } = coordinates;
+  const strX = coordinateYToLabel(x);
+
+  return "abcdefghij".includes(strX) && y > 0 && y < 11;
 };
 
 export const getNextCoordinates = (
-  x: string,
-  y: number,
+  coordinates: TCoordinates,
   length: number,
   orientation: TOrientationType,
-): TCoordinate[] => {
-  const coordinates = [];
-  const maxPointX = COORDINATES_LENGTH + "a".charCodeAt(0) - 1;
-  const maxPointY = COORDINATES_LENGTH;
+): TCoordinates[] => {
+  const { x, y } = coordinates;
+  const nextCoordinates = [];
+  const maxPointY = COORDINATES_LENGTH + "a".charCodeAt(0) - 1;
+  const maxPointX = COORDINATES_LENGTH;
 
   for (let index = 0; index < length; index++) {
     let coordinate;
-    if (orientation === "horizontal" && x.charCodeAt(0) + index <= maxPointX) {
-      const newCoordinateX = String.fromCharCode(x.charCodeAt(0) + index);
+    if (orientation === "horizontal" && x + index <= maxPointX) {
+      const newCoordinateX = x + index;
       coordinate = { x: newCoordinateX, y };
     } else if (orientation === "vertical" && y + index <= maxPointY) {
       const newCoordinateY = y + index;
       coordinate = { x, y: newCoordinateY };
     }
-    if (coordinate) coordinates.push(coordinate);
+    if (coordinate) nextCoordinates.push(coordinate);
   }
-  return coordinates;
+  return nextCoordinates;
 };
 
 export const getCoveredCoordinates = (
-  coordinatesToCover: TCoordinate[],
+  coordinatesToCover: TCoordinates[],
   coveredShipId: TShipId,
   shipOrientation: TOrientationType,
 ): TMap => {
@@ -48,7 +51,7 @@ export const getCoveredCoordinates = (
 
     return {
       x: coordinate.x,
-      y: Number(coordinate.y),
+      y: coordinate.y,
       covered: {
         shipId: coveredShipId,
         orientation: shipOrientation,
@@ -64,14 +67,18 @@ export const getCoveredCoordinates = (
 };
 
 export const hasCoordinateCovered = (
-  coordinates: TCoordinate[],
+  listCoordinates: TCoordinates[],
   mapCoordinates: TMap,
   shipId?: TShipId,
 ): boolean => {
-  return coordinates.some((coor) => {
-    const coordinateCovered = mapCoordinates.find((mapCoor) => {
-      const isCovered = Boolean(mapCoor.x === coor.x && mapCoor.y === coor.y && mapCoor.covered);
-      const isCoveredForAnotherShip = shipId ? mapCoor.covered && mapCoor.covered.shipId !== shipId : false;
+  return listCoordinates.some((coordinates) => {
+    const coordinateCovered = mapCoordinates.find((mapCoordinates) => {
+      const isCovered = Boolean(
+        mapCoordinates.x === coordinates.x && mapCoordinates.y === coordinates.y && mapCoordinates.covered,
+      );
+      const isCoveredForAnotherShip = shipId
+        ? mapCoordinates.covered && mapCoordinates.covered.shipId !== shipId
+        : false;
 
       return shipId ? isCovered && isCoveredForAnotherShip : isCovered;
     });
@@ -80,11 +87,6 @@ export const hasCoordinateCovered = (
 };
 
 export const checkCoordinateValue = (coordinate: "x" | "y", value: string): boolean => {
-  if (coordinate === "y") {
-    const regexCoorY = /^(10|[1-9])$/;
-    return regexCoorY.test(value);
-  } else {
-    const regexCoorX = /^[a-j]$/i;
-    return regexCoorX.test(value);
-  }
+  const regexCoordinates = { x: /^(10|[1-9])$/, y: /^[a-j]$/i };
+  return regexCoordinates[coordinate].test(value);
 };

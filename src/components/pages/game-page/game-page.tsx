@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import css from "./game-page.module.css";
 import { FleetMenu, BattleMap, CursorShadowShip, ResultsModal, GuideBar, ActionBar } from "~/components";
-import { TCursorLocation, TCoordinate } from "~/types/game";
+import { TCursorLocation, TCoordinates } from "~/types/game";
 import { AVAILABLE_FLEET_IDS, COORDINATES_LENGTH } from "~/constants/game";
 import {
   attackMap,
@@ -90,7 +90,7 @@ export const GamePage = () => {
     if (!playerTargetCoordinates.x || !playerTargetCoordinates.y) return;
 
     const { fleet: newOpponentFleet, map: newOpponentMap } = attackMap(
-      playerTargetCoordinates as TCoordinate,
+      playerTargetCoordinates as TCoordinates,
       opponentMap,
       opponentFleet,
     );
@@ -113,7 +113,7 @@ export const GamePage = () => {
   ]);
 
   const handleOpponentShoot = useCallback(async () => {
-    let targetCoordinates: null | TCoordinate = null;
+    let targetCoordinates: null | TCoordinates = null;
 
     // Opponent randomly selects a pair of coordinates after 2 seconds
     await delay(2000);
@@ -129,7 +129,7 @@ export const GamePage = () => {
     if (!opponentTargetCoordinates.x || !opponentTargetCoordinates.y) return;
 
     const { fleet: newPlayerFleet, map: newPlayerMap } = attackMap(
-      opponentTargetCoordinates as TCoordinate,
+      opponentTargetCoordinates as TCoordinates,
       playerMap,
       playerFleet,
     );
