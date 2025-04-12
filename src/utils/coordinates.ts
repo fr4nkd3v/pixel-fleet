@@ -10,11 +10,13 @@ export const coordinateYToNumber = (coordinateX: string): number => {
   return coordinateX.toLowerCase().charCodeAt(0) - 96;
 };
 
-export const isValidCoordinate = (coordinates: TCoordinates) => {
-  const { x, y } = coordinates;
+export const getCoordinatesByIndexes = (indexes: TCoordinates) => {
+  const { x, y } = indexes;
   const strX = coordinateYToLabel(x);
 
-  return "abcdefghij".includes(strX) && y > 0 && y < 11;
+  const isValidCoordinate = "abcdefghij".includes(strX) && y >= 0 && y < 10;
+
+  return isValidCoordinate ? { x, y: y + 1 } : { x: undefined, y: undefined };
 };
 
 export const getNextCoordinates = (
@@ -89,4 +91,9 @@ export const hasCoordinateCovered = (
 export const checkCoordinateValue = (coordinate: "x" | "y", value: string): boolean => {
   const regexCoordinates = { x: /^(10|[1-9])$/, y: /^[a-j]$/i };
   return regexCoordinates[coordinate].test(value);
+};
+
+export const getMapCoordinateByIndexes = (indexes: TCoordinates, map: TMap) => {
+  const { x, y } = indexes;
+  return map.find((mapCoordinate) => mapCoordinate.x === x && mapCoordinate.y === y + 1);
 };

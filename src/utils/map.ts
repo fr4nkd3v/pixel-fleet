@@ -1,4 +1,4 @@
-import { TFleet, TMap, TCoordinates, TShipId } from "~/types/game";
+import { TFleet, TMap, TCoordinates, TShipId, TEmptyCoordinates } from "~/types/game";
 import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
 import { COORDINATES_LENGTH } from "~/constants";
@@ -70,19 +70,19 @@ export const getPlayerTilesByCoordinates = (coordinates: TCoordinates[]): Elemen
   return tiles;
 };
 
-export const isAxisXTile = (coordinates: TCoordinates) => {
-  const { x, y } = coordinates;
-  return y === 0 && x > 0 && x < COORDINATES_LENGTH + 1;
+const isAxisXTile = (indexes: TCoordinates) => {
+  const { x, y } = indexes;
+  return y === COORDINATES_LENGTH && x > 0 && x < COORDINATES_LENGTH + 1;
 };
 
-export const isAxisYTile = (coordinates: TCoordinates) => {
-  const { x, y } = coordinates;
-  return x === 0 && y > 0 && y < COORDINATES_LENGTH + 1;
+const isAxisYTile = (indexes: TCoordinates) => {
+  const { x, y } = indexes;
+  return x === 0 && y >= 0 && y < COORDINATES_LENGTH;
 };
 
-export const getTileLabelByCoordinates = (coordinates: TCoordinates) => {
-  const { x, y } = coordinates;
-  return isAxisYTile(coordinates) ? coordinateYToLabel(y) : isAxisXTile(coordinates) ? x : null;
+export const getTileLabelByIndexes = (indexes: TCoordinates) => {
+  const { x, y } = indexes;
+  return isAxisYTile(indexes) ? coordinateYToLabel(y + 1) : isAxisXTile(indexes) ? x : null;
 };
 
 export const isTile = (element: Element) => {
@@ -96,4 +96,15 @@ export const getShipCurrentHealth = (shipId: TShipId, map: TMap) => {
   const attackedCoordinates = coveredCoordinates.filter((coordinate) => coordinate.attacked);
 
   return coveredCoordinates.length - attackedCoordinates.length;
+};
+
+export const getSightLocationByCoordinates = (coordinates: TCoordinates | TEmptyCoordinates) => {
+  // By default the sight starts in the bottom-left corner of the map
+  const defaultLocationX = 0;
+  const defaultLocationY = 11;
+
+  return {
+    x: coordinates.x ?? defaultLocationX,
+    y: (coordinates.y ?? defaultLocationY) - 1,
+  };
 };

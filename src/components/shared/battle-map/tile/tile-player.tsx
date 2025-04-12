@@ -1,18 +1,18 @@
 import { type ITilePlayerProps } from "./tile.types";
 import css from "./tile.module.css";
 import clsx from "clsx";
-import { getTileLabelByCoordinates, isValidCoordinate } from "~/utils";
+import { getTileLabelByIndexes, getCoordinatesByIndexes } from "~/utils";
 import { useGameStore } from "~/stores";
 import { useDrag } from "@use-gesture/react";
 import { useShipDeployment } from "~/hooks";
 
-export const TilePlayer = ({ coordinates, isCovered, isAttacked, setCursorLocation }: ITilePlayerProps) => {
+export const TilePlayer = ({ indexes, isCovered, isAttacked, setCursorLocation }: ITilePlayerProps) => {
   const { handleReDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
   const { gamePhase } = useGameStore();
 
   const canChangePosition = Boolean(gamePhase === "prestart" && isCovered);
-  const validCoordinate = isValidCoordinate(coordinates);
-  const tileLabel = getTileLabelByCoordinates(coordinates);
+  const coordinates = getCoordinatesByIndexes(indexes);
+  const tileLabel = getTileLabelByIndexes(indexes);
 
   const { shipPart = "", orientation = "", isRedeploy } = isCovered || {};
 
@@ -51,8 +51,8 @@ export const TilePlayer = ({ coordinates, isCovered, isAttacked, setCursorLocati
   return (
     <div
       className={combinedClasses}
-      data-coordinate-x={validCoordinate ? coordinates.x : undefined}
-      data-coordinate-y={validCoordinate ? coordinates.y : undefined}
+      data-coordinate-x={coordinates.x}
+      data-coordinate-y={coordinates.y}
       {...bind()}
     >
       <span className={css["BattleMap-tileText"]}>{tileLabel}</span>

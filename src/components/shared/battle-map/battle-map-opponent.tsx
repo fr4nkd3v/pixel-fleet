@@ -5,6 +5,7 @@ import css from "./battle-map.module.css";
 import { COORDINATES_LENGTH } from "~/constants";
 import clsx from "clsx";
 import { useGameStore, useOpponentStore, usePlayerStore } from "~/stores";
+import { getMapCoordinateByIndexes } from "~/utils";
 
 export const BattleMapOpponent = ({ className, onFinishesShot }: IBattleMapOpponentProps) => {
   const { targetCoordinates: opponentTargetCoordinates } = usePlayerStore();
@@ -21,12 +22,12 @@ export const BattleMapOpponent = ({ className, onFinishesShot }: IBattleMapOppon
   const tiles = [];
   for (let column = 0; column <= sideLength; column++) {
     for (let row = 0; row <= sideLength; row++) {
-      const mapCoordinateFound = opponentMap.find(({ x, y }) => x === row && y === column);
+      const mapCoordinateFound = getMapCoordinateByIndexes({ x: row, y: column }, opponentMap);
 
       tiles.push(
         <TileOpponent
           key={`${column}${row}`}
-          coordinates={{ x: row, y: column }}
+          indexes={{ x: row, y: column }}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
         />,

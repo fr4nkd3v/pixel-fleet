@@ -1,11 +1,11 @@
 import { ITileOpponentProps } from "./tile.types";
 import css from "./tile.module.css";
 import clsx from "clsx";
-import { getTileLabelByCoordinates, isValidCoordinate } from "~/utils";
+import { getTileLabelByIndexes, getCoordinatesByIndexes } from "~/utils";
 
-export const TileOpponent = ({ coordinates, isCovered, isAttacked }: ITileOpponentProps) => {
-  const validCoordinate = isValidCoordinate(coordinates);
-  const tileLabel = getTileLabelByCoordinates(coordinates);
+export const TileOpponent = ({ indexes, isCovered, isAttacked }: ITileOpponentProps) => {
+  const coordinates = getCoordinatesByIndexes(indexes);
+  const tileLabel = getTileLabelByIndexes(indexes);
 
   const { shipPart = "", orientation = "", isDefeated, isRedeploy } = isCovered || {};
 
@@ -19,11 +19,7 @@ export const TileOpponent = ({ coordinates, isCovered, isAttacked }: ITileOppone
   );
 
   return (
-    <div
-      className={combinedClasses}
-      data-coordinate-x={validCoordinate ? coordinates.x : undefined}
-      data-coordinate-y={validCoordinate ? coordinates.y : undefined}
-    >
+    <div className={combinedClasses} data-coordinate-x={coordinates.x} data-coordinate-y={coordinates.y}>
       <span className={css["BattleMap-tileText"]}>{tileLabel}</span>
     </div>
   );

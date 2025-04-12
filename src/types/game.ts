@@ -30,11 +30,6 @@ export type TEmptyCoordinates = {
   y: number | null;
 };
 
-export type TEmptyCoordinate = {
-  x: string | null;
-  y: number | null;
-};
-
 export type TMapCoordinate = {
   x: number;
   y: number;

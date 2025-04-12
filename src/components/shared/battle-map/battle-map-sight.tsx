@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "~/components/shared/icon";
 import { ISightProps } from "./battle-map.types";
 import css from "./battle-map.module.css";
-import { delay } from "~/utils";
+import { delay, getSightLocationByCoordinates } from "~/utils";
 import { DEFAULT_ATTACK_DELAY } from "~/constants";
 import sprites from "~/assets/sprites-effect.png";
 import clsx from "clsx";
@@ -10,9 +10,7 @@ import clsx from "clsx";
 export const Sight = ({ targetCoordinates, isShooting, onFinishesShot, isInTurn }: ISightProps) => {
   const [showAnimation, setShowAnimation] = useState(false);
 
-  const { x: strX, y: rawY } = targetCoordinates;
-  const x = strX ?? 0;
-  const y = rawY ?? 0;
+  const { x, y } = getSightLocationByCoordinates(targetCoordinates);
 
   const sightStyles = {
     left: `calc(var(--tile-size) * ${x})`,

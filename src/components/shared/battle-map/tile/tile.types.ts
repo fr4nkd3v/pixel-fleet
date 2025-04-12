@@ -1,7 +1,7 @@
 import { TCoveredShip, TCursorLocation, TCoordinates } from "~/types";
 
 export interface ITileOpponentProps {
-  coordinates: TCoordinates;
+  indexes: TCoordinates;
   isCovered: false | TCoveredShip;
   isAttacked: boolean;
 }

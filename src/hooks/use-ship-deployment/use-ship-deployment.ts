@@ -139,14 +139,14 @@ export const useShipDeployment = () => {
     const shipLength = SHIP_TYPES[shipDeployId].length;
 
     const nextCoordinates = getNextCoordinates(coordinates, shipLength, shipDeployOrientation);
-    const nexTiles = getPlayerTilesByCoordinates(nextCoordinates);
+    const nextTiles = getPlayerTilesByCoordinates(nextCoordinates);
 
     const isCoveredForAnotherShip = hasCoordinateCovered(nextCoordinates, playerMap, shipDeployId);
     const isOutOfArea = nextCoordinates.length < shipLength;
 
     // ❌ Is unavailable | out-of-area location or location covered by another ship
     if (isOutOfArea || isCoveredForAnotherShip) {
-      if (nexTiles) clearTilesAvailableStyles(nexTiles);
+      if (nextTiles) clearTilesAvailableStyles(nextTiles);
       if (shipDeployId) removeRedeployShipState(shipDeployId);
       clearDeployAndState();
       return;
@@ -154,7 +154,7 @@ export const useShipDeployment = () => {
 
     // ✅ Is available
     handleDeployShip(shipDeployId, nextCoordinates);
-    if (nexTiles) clearTilesAvailableStyles(nexTiles);
+    if (nextTiles) clearTilesAvailableStyles(nextTiles);
   };
 
   const handleDragCancel = () => {

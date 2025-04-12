@@ -18,7 +18,7 @@
 
 .BattleMap-background {
   position: absolute;
-  bottom: 0;
+  top: 0;
   right: 0;
   background-image: url(/src/assets/ocean-pattern.png);
   background-size: 9.375rem;

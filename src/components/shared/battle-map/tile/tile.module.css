@@ -9,6 +9,7 @@
 
   text-transform: uppercase;
   font-size: clamp(var(--size-8), 1vw + 0.65rem, var(--size-24));
+  letter-spacing: -1px;
   border-left: rgba(0, 0, 0, 0.15) 1px solid;
   border-top: rgba(0, 0, 0, 0.15) 1px solid;
 
