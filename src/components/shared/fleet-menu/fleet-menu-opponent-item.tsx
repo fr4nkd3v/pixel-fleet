@@ -28,7 +28,9 @@ export const FleetMenuOpponentItem = ({ shipData }: IFleetMenuOpponentItemProps)
         <div className={css["FleetMenuItem-icon"]}>
           <Icon size="100%" name="ship" />
         </div>
-        <div className={css["FleetMenuItem-name"]}>{t("game:unidentified")}</div>
+        <div className={css["FleetMenuItem-name"]}>
+          {isDead ? SHIP_TYPES[shipId].name : t("game:unidentified")}
+        </div>
         <div className={css["FleetMenuItem-health"]}>{isDead ? lives : "???"}</div>
       </div>
     </div>
