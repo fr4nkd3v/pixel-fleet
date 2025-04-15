@@ -1,1 +1,1 @@
-export { GamePage } from "./game-page";
+export { GamePageContainer as GamePage } from "./game-page.container";

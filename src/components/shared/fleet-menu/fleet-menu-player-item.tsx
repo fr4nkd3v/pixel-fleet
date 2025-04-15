@@ -5,13 +5,11 @@ import css from "./fleet-menu.module.css";
 import clsx from "clsx";
 import { useDrag } from "@use-gesture/react";
 import { useShipDeployment } from "~/hooks";
+import { useCursorLocation } from "~/hooks/use-cursor-location/use-cursor-location";
 
-export const FleetMenuPlayerItem = ({
-  shipData,
-  shipOnDeployId,
-  setCursorLocation,
-}: IFleetMenuPlayerItemProps) => {
+export const FleetMenuPlayerItem = ({ shipData, shipOnDeployId }: IFleetMenuPlayerItemProps) => {
   const { handleDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
+  const { setCursorLocation } = useCursorLocation();
 
   const { id: shipId, health: currentHealth, isDeployed } = shipData;
   const fullHealth = SHIP_TYPES[shipId].length;

@@ -1,14 +1,16 @@
-import { type ITilePlayerProps } from "./tile.types";
+import { type ITileBaseProps } from "./tile.types";
 import css from "./tile.module.css";
 import clsx from "clsx";
 import { getTileLabelByIndexes, getCoordinatesByIndexes } from "~/utils";
 import { useGameStore } from "~/stores";
 import { useDrag } from "@use-gesture/react";
 import { useShipDeployment } from "~/hooks";
+import { useCursorLocation } from "~/hooks/use-cursor-location/use-cursor-location";
 
-export const TilePlayer = ({ indexes, isCovered, isAttacked, setCursorLocation }: ITilePlayerProps) => {
+export const TilePlayer = ({ indexes, isCovered, isAttacked }: ITileBaseProps) => {
   const { handleReDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
   const { gamePhase } = useGameStore();
+  const { setCursorLocation } = useCursorLocation();
 
   const canChangePosition = Boolean(gamePhase === "prestart" && isCovered);
   const coordinates = getCoordinatesByIndexes(indexes);

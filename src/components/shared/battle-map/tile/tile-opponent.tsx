@@ -1,9 +1,9 @@
-import { ITileOpponentProps } from "./tile.types";
+import { ITileBaseProps } from "./tile.types";
 import css from "./tile.module.css";
 import clsx from "clsx";
 import { getTileLabelByIndexes, getCoordinatesByIndexes } from "~/utils";
 
-export const TileOpponent = ({ indexes, isCovered, isAttacked }: ITileOpponentProps) => {
+export const TileOpponent = ({ indexes, isCovered, isAttacked }: ITileBaseProps) => {
   const coordinates = getCoordinatesByIndexes(indexes);
   const tileLabel = getTileLabelByIndexes(indexes);
 

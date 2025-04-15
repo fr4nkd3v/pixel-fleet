@@ -1,11 +1,11 @@
 import css from "./fleet-menu.module.css";
-import { type IFleetMenuPlayerProps } from "./fleet-menu.types";
+import { type IFleetMenuBaseProps } from "./fleet-menu.types";
 import { FleetMenuPlayerItem } from "./fleet-menu-player-item";
 import { usePlayerStore, useShipDeployStore } from "~/stores";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 
-export const FleetMenuPlayer = ({ className, setCursorLocation }: IFleetMenuPlayerProps) => {
+export const FleetMenuPlayer = ({ className }: IFleetMenuBaseProps) => {
   const { t } = useTranslation();
   const { fleet: playerFleet } = usePlayerStore();
   const { shipId: shipOnDeployId } = useShipDeployStore();
@@ -19,12 +19,7 @@ export const FleetMenuPlayer = ({ className, setCursorLocation }: IFleetMenuPlay
       </div>
       <div className={css["FleetMenu-ships"]}>
         {playerFleet.map((ship) => (
-          <FleetMenuPlayerItem
-            key={ship.id}
-            shipData={ship}
-            shipOnDeployId={shipOnDeployId}
-            setCursorLocation={setCursorLocation}
-          />
+          <FleetMenuPlayerItem key={ship.id} shipData={ship} shipOnDeployId={shipOnDeployId} />
         ))}
       </div>
     </div>

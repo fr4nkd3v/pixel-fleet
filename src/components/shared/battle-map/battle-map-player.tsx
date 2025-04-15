@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { type IBattleMapPlayerProps } from "./battle-map.types";
+import { type IBattleMapBaseProps } from "./battle-map.types";
 import { TilePlayer } from "./tile";
 import { Sight } from "./battle-map-sight";
 import css from "./battle-map.module.css";
@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { useGameStore, useOpponentStore, usePlayerStore } from "~/stores";
 import { getMapCoordinateByIndexes } from "~/utils";
 
-export const BattleMapPlayer = ({ className, onFinishesShot, setCursorLocation }: IBattleMapPlayerProps) => {
+export const BattleMapPlayer = ({ className, onFinishesShot }: IBattleMapBaseProps) => {
   const { map: playerMap } = usePlayerStore();
   const { targetCoordinates: playerTargetCoordinates } = useOpponentStore();
   const { gamePhase, isPlayerTurn, isShooting } = useGameStore();
@@ -44,7 +44,6 @@ export const BattleMapPlayer = ({ className, onFinishesShot, setCursorLocation }
           indexes={{ x: row, y: column }}
           isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
           isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
-          setCursorLocation={setCursorLocation}
         />,
       );
     }

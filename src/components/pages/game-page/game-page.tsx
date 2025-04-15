@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import css from "./game-page.module.css";
 import { FleetMenu, BattleMap, CursorShadowShip, ResultsModal, GuideBar, ActionBar } from "~/components";
-import { TCursorLocation, TCoordinates } from "~/types/game";
+import { TCoordinates } from "~/types/game";
 import { AVAILABLE_FLEET_IDS, COORDINATES_LENGTH } from "~/constants/game";
 import {
   attackMap,
@@ -15,6 +15,7 @@ import {
 import { useGameStore, useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { useBreakpoints } from "~/hooks";
 import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
+import { useCursorLocation } from "~/hooks/use-cursor-location/use-cursor-location";
 
 export const GamePage = () => {
   // Set fleet & map size for each player
@@ -74,7 +75,7 @@ export const GamePage = () => {
 
   const domRoot = useMemo(() => document.querySelector(":root"), []);
 
-  const [cursorLocation, setCursorLocation] = useState<TCursorLocation | null>(null);
+  const { cursorLocation } = useCursorLocation();
   const [scrollY, setScrollY] = useState(0);
 
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
@@ -220,13 +221,10 @@ export const GamePage = () => {
       <section className={css["GamePage"]}>
         {isDesktopOrHigher ? (
           <>
-            <FleetMenu.player className={css["GamePage-FleetPlayer"]} setCursorLocation={setCursorLocation} />
+            <FleetMenu.player className={css["GamePage-FleetPlayer"]} />
             <FleetMenu.opponent className={css["GamePage-FleetOpponent"]} />
             <div className={css["GamePage-BattleMapPlayer"]}>
-              <BattleMap.player
-                onFinishesShot={handleOpponentFinishesShooting}
-                setCursorLocation={setCursorLocation}
-              />
+              <BattleMap.player onFinishesShot={handleOpponentFinishesShooting} />
             </div>
             <div className={css["GamePage-BattleMapOpponent"]}>
               <BattleMap.opponent onFinishesShot={handlePlayerFinishesShot} />
@@ -243,15 +241,9 @@ export const GamePage = () => {
                 <BattleMap.opponent onFinishesShot={handlePlayerFinishesShot} />
               </div>
               <div className={css["GamePage-BattleMapPlayer"]}>
-                <BattleMap.player
-                  onFinishesShot={handleOpponentFinishesShooting}
-                  setCursorLocation={setCursorLocation}
-                />
+                <BattleMap.player onFinishesShot={handleOpponentFinishesShooting} />
               </div>
-              <FleetMenu.player
-                className={css["GamePage-FleetPlayer"]}
-                setCursorLocation={setCursorLocation}
-              />
+              <FleetMenu.player className={css["GamePage-FleetPlayer"]} />
             </div>
             <ActionBar className={css["GamePage-ActionBar"]} />
           </>

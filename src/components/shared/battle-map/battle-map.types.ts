@@ -1,11 +1,8 @@
-import type { TCursorLocation, TCoordinates, TEmptyCoordinates } from "~/types";
+import type { TCoordinates, TEmptyCoordinates } from "~/types";
 
-export interface IBattleMapOpponentProps {
+export interface IBattleMapBaseProps {
   className?: string;
   onFinishesShot: () => void;
-}
-export interface IBattleMapPlayerProps extends IBattleMapOpponentProps {
-  setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
 
 export interface ISightProps {

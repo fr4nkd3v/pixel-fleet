@@ -1,11 +1,11 @@
 import css from "./fleet-menu.module.css";
-import { IFleetMenuOpponentProps } from "./fleet-menu.types";
+import { IFleetMenuBaseProps } from "./fleet-menu.types";
 import { FleetMenuOpponentItem } from "./fleet-menu-opponent-item";
 import { useOpponentStore } from "~/stores";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 
-export const FleetMenuOpponent = ({ className }: IFleetMenuOpponentProps) => {
+export const FleetMenuOpponent = ({ className }: IFleetMenuBaseProps) => {
   const { t } = useTranslation();
   const { fleet: opponentFleet } = useOpponentStore();
 

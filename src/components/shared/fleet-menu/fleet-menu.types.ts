@@ -1,11 +1,7 @@
-import { TShipId, TCursorLocation, TShip } from "~/types/game";
+import { TShipId, TShip } from "~/types/game";
 
-export interface IFleetMenuOpponentProps {
+export interface IFleetMenuBaseProps {
   className?: string;
-}
-
-export interface IFleetMenuPlayerProps extends IFleetMenuOpponentProps {
-  setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
 
 export interface IFleetMenuOpponentItemProps {
@@ -14,5 +10,4 @@ export interface IFleetMenuOpponentItemProps {
 
 export interface IFleetMenuPlayerItemProps extends IFleetMenuOpponentItemProps {
   shipOnDeployId: TShipId | null;
-  setCursorLocation: (cursorLocation: TCursorLocation) => void;
 }
