@@ -3,6 +3,7 @@ import css from "../action-bar.module.css";
 import { FormEvent, useEffect, useRef } from "react";
 import { useGameStore, usePlayerStore } from "~/stores";
 import { checkCoordinateValue, coordinateYToLabel, coordinateYToNumber } from "~/utils";
+import { TAxis } from "~/types";
 
 export const AttackControl = () => {
   const inputX = useRef<HTMLInputElement | null>(null);
@@ -11,7 +12,7 @@ export const AttackControl = () => {
   const { targetCoordinates, updateTargetCoordinateX, updateTargetCoordinateY } = usePlayerStore();
   const { startsShooting, isPlayerTurn } = useGameStore();
 
-  const changeTargetCoordinates = (axis: "x" | "y", value: string) => {
+  const changeTargetCoordinates = (axis: TAxis, value: string) => {
     if (axis === "x" && checkCoordinateValue("x", value)) {
       updateTargetCoordinateX(Number(value));
     } else if (axis === "y" && checkCoordinateValue("y", value)) {

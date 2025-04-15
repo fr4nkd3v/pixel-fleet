@@ -39,14 +39,9 @@ export type TMapCoordinate = {
 
 export type TMap = TMapCoordinate[];
 
-export type TShipOnDeploy = {
-  shipId: TShipId | null;
-  orientation: TOrientationType | null;
-};
-
 export type TCursorLocation = {
   left: number;
   top: number;
 };
 
-export type TPerspective = "player" | "opponent";
+export type TAxis = "x" | "y";

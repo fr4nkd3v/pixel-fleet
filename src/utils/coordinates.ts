@@ -1,5 +1,5 @@
 import { COORDINATES_LENGTH } from "~/constants/game";
-import { TMap, TCoordinates, TOrientationType, TShipId } from "~/types/game";
+import { TMap, TCoordinates, TOrientationType, TShipId, TAxis } from "~/types/game";
 import { getShipPartByIndex } from "./fleet";
 
 export const coordinateYToLabel = (coordinateX: number): string => {
@@ -88,7 +88,7 @@ export const hasCoordinateCovered = (
   });
 };
 
-export const checkCoordinateValue = (coordinate: "x" | "y", value: string): boolean => {
+export const checkCoordinateValue = (coordinate: TAxis, value: string): boolean => {
   const regexCoordinates = { x: /^(10|[1-9])$/, y: /^[a-j]$/i };
   return regexCoordinates[coordinate].test(value);
 };

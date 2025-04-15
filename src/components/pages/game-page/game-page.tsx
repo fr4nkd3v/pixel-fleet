@@ -22,6 +22,9 @@ export const GamePage = () => {
 
   // Generate fleet & map data for state
   const commonFleetArr = useMemo(() => prepareFleet(AVAILABLE_FLEET_IDS), []);
+  const domRoot = useMemo(() => document.querySelector(":root"), []);
+
+  const [scrollY, setScrollY] = useState(0);
 
   // ? MapArr structure
   // Is an array of coordinate objects that have been covered or attacked
@@ -70,13 +73,8 @@ export const GamePage = () => {
   } = usePlayerStore();
 
   const { restartState: restartShipDeployState } = useShipDeployStore();
-
   const { isDesktopOrHigher } = useBreakpoints();
-
-  const domRoot = useMemo(() => document.querySelector(":root"), []);
-
   const { cursorLocation } = useCursorLocation();
-  const [scrollY, setScrollY] = useState(0);
 
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
 
