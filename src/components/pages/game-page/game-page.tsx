@@ -15,7 +15,7 @@ import {
 import { useGameStore, useOpponentStore, usePlayerStore, useShipDeployStore } from "~/stores";
 import { useBreakpoints } from "~/hooks";
 import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
-import { useCursorLocation } from "~/hooks/use-cursor-location/use-cursor-location";
+import { useCursorLocation } from "~/hooks/use-cursor-location";
 
 export const GamePage = () => {
   // Set fleet & map size for each player

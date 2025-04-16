@@ -5,7 +5,7 @@ import { getTileLabelByIndexes, getCoordinatesByIndexes } from "~/utils";
 import { useGameStore } from "~/stores";
 import { useDrag } from "@use-gesture/react";
 import { useShipDeployment } from "~/hooks";
-import { useCursorLocation } from "~/hooks/use-cursor-location/use-cursor-location";
+import { useCursorLocation } from "~/hooks/use-cursor-location";
 
 export const TilePlayer = ({ indexes, isCovered, isAttacked }: ITileBaseProps) => {
   const { handleReDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();

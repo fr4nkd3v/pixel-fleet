@@ -5,7 +5,7 @@ import css from "./fleet-menu.module.css";
 import clsx from "clsx";
 import { useDrag } from "@use-gesture/react";
 import { useShipDeployment } from "~/hooks";
-import { useCursorLocation } from "~/hooks/use-cursor-location/use-cursor-location";
+import { useCursorLocation } from "~/hooks/use-cursor-location";
 
 export const FleetMenuPlayerItem = ({ shipData, shipOnDeployId }: IFleetMenuPlayerItemProps) => {
   const { handleDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();

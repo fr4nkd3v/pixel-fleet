@@ -1,13 +1,12 @@
 import { create } from "zustand";
 import { IOpponentStore, IPlayerStore } from "./use-player-store.types";
-import { TMap, TFleet, TShipId, TMapCoordinate } from "~/types/game";
 
 export const useOpponentStore = create<IOpponentStore>((set) => ({
   fleet: [],
   map: [],
   targetCoordinates: { x: null, y: null },
-  setFleet: (fleet: TFleet) => set({ fleet }),
-  setMap: (map: TMap) => set({ map }),
+  setFleet: (fleet) => set({ fleet }),
+  setMap: (map) => set({ map }),
   setTargetCoordinates: (targetCoordinates) => set({ targetCoordinates }),
   restartState: () =>
     set({
@@ -21,9 +20,9 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
   fleet: [],
   map: [],
   targetCoordinates: { x: null, y: null },
-  setFleet: (fleet: TFleet) => set({ fleet }),
-  setMap: (map: TMap) => set({ map }),
-  deployShip: (shipId: TShipId, coveredCoordinates: TMapCoordinate[]) =>
+  setFleet: (fleet) => set({ fleet }),
+  setMap: (map) => set({ map }),
+  deployShip: (shipId, coveredCoordinates) =>
     set((state) => ({
       fleet: state.fleet.map((ship) =>
         ship.id === shipId && !ship.isDeployed ? { ...ship, isDeployed: true } : ship,
@@ -56,7 +55,7 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
         }
       }),
     })),
-  removeShip: (shipId: TShipId) =>
+  removeShip: (shipId) =>
     set((state) => ({
       fleet: state.fleet.map((ship) => {
         if (ship.id === shipId) {
