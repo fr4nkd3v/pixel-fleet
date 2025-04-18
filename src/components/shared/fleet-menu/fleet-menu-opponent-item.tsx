@@ -8,8 +8,8 @@ import { SHIP_TYPES } from "~/constants";
 export const FleetMenuOpponentItem = ({ shipData }: IFleetMenuOpponentItemProps) => {
   const { t } = useTranslation();
   const { id: shipId, health: currentHealth, isDeployed } = shipData;
-
   const fullHealth = SHIP_TYPES[shipId].length;
+
   const isDead = currentHealth === 0;
   const lives = Array.from({ length: fullHealth }, (_, index) => {
     return <div className={clsx(css["FleetMenuItem-live"], css["is-dead"])} key={index}></div>;

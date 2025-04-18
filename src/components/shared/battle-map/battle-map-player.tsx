@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { type IBattleMapBaseProps } from "./battle-map.types";
 import { TilePlayer } from "./tile";
 import { Sight } from "./battle-map-sight";
@@ -6,13 +5,12 @@ import css from "./battle-map.module.css";
 import { COORDINATES_LENGTH } from "~/constants";
 import clsx from "clsx";
 import { useGameStore, useOpponentStore, usePlayerStore } from "~/stores";
-import { getMapCoordinateByIndexes } from "~/utils";
+import { generateTiles } from "~/utils";
 
 export const BattleMapPlayer = ({ className, onFinishesShot }: IBattleMapBaseProps) => {
   const { map: playerMap } = usePlayerStore();
   const { targetCoordinates: playerTargetCoordinates } = useOpponentStore();
   const { gamePhase, isPlayerTurn, isShooting } = useGameStore();
-  const battleMapRef = useRef<null | HTMLElement>(null);
 
   const isReady = gamePhase === "start";
   const sideLength = COORDINATES_LENGTH;
@@ -23,37 +21,14 @@ export const BattleMapPlayer = ({ className, onFinishesShot }: IBattleMapBasePro
   //   if (!shipOnDeployOrientation) return;
   //   const oppositeOrientation = toggleOrientation(shipOnDeployOrientation);
   //   setOrientation(oppositeOrientation);
-
-  //   if (!battleMapRef.current) return;
-  //   const tiles = battleMapRef.current.querySelectorAll(
-  //     `.${css["BattleMap-tile"]}.${css["is-available"]}, .${css["BattleMap-tile"]}.${css["is-unavailable"]}`
-  //   );
-  //   clearAvailableStyles(tiles);
-  //   // handleMouseEnterAndLeaveTile(event, "enter", oppositeOrientation);
   // };
 
-  const tiles = [];
-  for (let column = 0; column <= sideLength; column++) {
-    for (let row = 0; row <= sideLength; row++) {
-      const mapCoordinateFound = getMapCoordinateByIndexes({ x: row, y: column }, playerMap);
-      const tileKey = `${column}${row}`;
-
-      tiles.push(
-        <TilePlayer
-          key={tileKey}
-          indexes={{ x: row, y: column }}
-          isCovered={mapCoordinateFound ? mapCoordinateFound.covered : false}
-          isAttacked={mapCoordinateFound ? mapCoordinateFound.attacked : false}
-        />,
-      );
-    }
-  }
+  const tiles = generateTiles(playerMap, (tileProps) => <TilePlayer {...tileProps} key={tileProps.key} />);
 
   return (
     <section
       className={clsx(css["BattleMap"], className)}
       style={{ gridTemplateColumns: `repeat(${sideLength + 1}, auto)` }}
-      ref={battleMapRef}
     >
       {tiles}
 

@@ -2,7 +2,8 @@ import { TFleet, TMap, TCoordinates, TShipId, TEmptyCoordinates } from "~/types/
 import tileCSS from "~/components/shared/battle-map/tile/tile.module.css";
 import gamePageCSS from "~/components/pages/game-page/game-page.module.css";
 import { COORDINATES_LENGTH } from "~/constants";
-import { coordinateYToLabel } from "./coordinates";
+import { coordinateYToLabel, getMapCoordinateByIndexes } from "./coordinates";
+import { ITileBaseProps } from "~/components/shared/battle-map/tile/tile.types";
 
 export const attackMap = (targetCoordinates: TCoordinates, map: TMap, fleet: TFleet) => {
   const { x, y } = targetCoordinates;
@@ -107,4 +108,34 @@ export const getSightLocationByCoordinates = (coordinates: TCoordinates | TEmpty
     x: coordinates.x ?? defaultLocationX,
     y: (coordinates.y ?? defaultLocationY) - 1,
   };
+};
+
+export const generateTiles = (
+  map: TMap,
+  callbackTile: (
+    tileProps: ITileBaseProps & {
+      key: string;
+    },
+  ) => JSX.Element,
+) => {
+  const sideLength = COORDINATES_LENGTH;
+  const tiles: JSX.Element[] = [];
+
+  for (let column = 0; column <= sideLength; column++) {
+    for (let row = 0; row <= sideLength; row++) {
+      const mapCoordinateFound = getMapCoordinateByIndexes({ x: row, y: column }, map);
+      const tileKey = `${column}${row}`;
+
+      tiles.push(
+        callbackTile({
+          key: tileKey,
+          indexes: { x: row, y: column },
+          isCovered: mapCoordinateFound ? mapCoordinateFound.covered : false,
+          isAttacked: mapCoordinateFound ? mapCoordinateFound.attacked : false,
+        }),
+      );
+    }
+  }
+
+  return tiles;
 };

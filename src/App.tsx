@@ -6,7 +6,12 @@ import { GamePage } from "./components/pages/game-page";
 
 function App() {
   return (
-    <main className="app-container">
+    <main
+      className="app-container"
+      onContextMenu={(event) => {
+        event.preventDefault();
+      }}
+    >
       <GamePage />
     </main>
   );

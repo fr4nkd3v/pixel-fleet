@@ -16,8 +16,7 @@ export const FleetMenuPlayerItem = ({ shipData, shipOnDeployId }: IFleetMenuPlay
 
   const lives = Array.from({ length: fullHealth }, (_, index) => {
     const cssIsDead = index >= currentHealth && css["is-dead"];
-    const combinedClasses = clsx(css["FleetMenuItem-live"], cssIsDead);
-    return <div className={combinedClasses} key={index}></div>;
+    return <div className={clsx(css["FleetMenuItem-live"], cssIsDead)} key={index}></div>;
   });
 
   const combinedClasses = clsx(
