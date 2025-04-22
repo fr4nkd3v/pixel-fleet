@@ -4,10 +4,7 @@ import clsx from "clsx";
 import { useShipDeployStore } from "~/stores";
 import { SHIP_TYPES } from "~/constants";
 
-export const CursorShadowShip = ({
-  locationX,
-  locationY,
-}: ICursorShadowShipProps) => {
+export const CursorShadowShip = ({ locationX, locationY }: ICursorShadowShipProps) => {
   const { shipId, orientation } = useShipDeployStore();
   if (!shipId) return;
 
@@ -17,7 +14,7 @@ export const CursorShadowShip = ({
 
   const combinedClasses = clsx(
     css["CursorShadowShip"],
-    orientation === "vertical" ? css["vertical"] : css["horizontal"]
+    orientation === "vertical" ? css["vertical"] : css["horizontal"],
   );
 
   return (

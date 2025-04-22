@@ -13,12 +13,9 @@ export const ActionBar = ({ className }: { className?: string }) => {
   const isPlayerFleetDeployed = playerFleet.every((ship) => ship.isDeployed);
 
   const isStartControlDisabled = !isPlayerFleetDeployed;
-  const isAttackControlDisabled =
-    !isPlayerTurn || gamePhase !== "start" || isShooting;
+  const isAttackControlDisabled = !isPlayerTurn || gamePhase !== "start" || isShooting;
 
-  const isDisabled = isGameStart
-    ? isAttackControlDisabled
-    : isStartControlDisabled;
+  const isDisabled = isGameStart ? isAttackControlDisabled : isStartControlDisabled;
 
   const onStart = () => {
     if (!isPlayerFleetDeployed) return;
@@ -27,11 +24,7 @@ export const ActionBar = ({ className }: { className?: string }) => {
 
   return (
     <Card
-      cardClassName={clsx(
-        css["Container-ActionBar"],
-        className,
-        isDisabled && css["is-hidden"]
-      )}
+      cardClassName={clsx(css["Container-ActionBar"], className, isDisabled && css["is-hidden"])}
       disabled={isDisabled}
       fullWidth
     >

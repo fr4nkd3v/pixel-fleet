@@ -151,11 +151,11 @@ export const GamePage = () => {
   ]);
 
   const handleScrollInPage = useCallback(() => {
-    if (isPlayerFleetDeployed) return;
+    if (isPlayerFleetDeployed && gamePhase === "start") return;
 
     const scrollY = window.scrollY;
     setScrollY(scrollY);
-  }, [isPlayerFleetDeployed]);
+  }, [gamePhase, isPlayerFleetDeployed]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScrollInPage);
