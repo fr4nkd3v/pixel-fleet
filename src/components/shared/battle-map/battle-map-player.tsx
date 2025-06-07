@@ -16,13 +16,6 @@ export const BattleMapPlayer = ({ className, onFinishesShot }: IBattleMapBasePro
   const sideLength = COORDINATES_LENGTH;
   const lengthCSS = `calc(100% - 100% / ${sideLength + 1})`;
 
-  // const handleContextMenuTile = (event: React.MouseEvent) => {
-  //   event.preventDefault();
-  //   if (!shipOnDeployOrientation) return;
-  //   const oppositeOrientation = toggleOrientation(shipOnDeployOrientation);
-  //   setOrientation(oppositeOrientation);
-  // };
-
   const tiles = generateTiles(playerMap, (tileProps) => <TilePlayer {...tileProps} key={tileProps.key} />);
 
   return (

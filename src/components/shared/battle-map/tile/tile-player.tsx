@@ -8,7 +8,8 @@ import { useShipDeployment } from "~/hooks";
 import { useCursorLocation } from "~/hooks/use-cursor-location";
 
 export const TilePlayer = ({ indexes, isCovered, isAttacked }: ITileBaseProps) => {
-  const { handleReDragStart, handleDragMove, handleDragEnd, handleDragCancel } = useShipDeployment();
+  const { handleReDragStart, handleDragMove, handleDragEnd, handleDragCancel, handleChangeDirection } =
+    useShipDeployment();
   const { gamePhase } = useGameStore();
   const { setCursorLocation } = useCursorLocation();
 
@@ -50,12 +51,20 @@ export const TilePlayer = ({ indexes, isCovered, isAttacked }: ITileBaseProps) =
     return false; // Prevent default drag behavior
   });
 
+  const handleOnContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    const target = event.target as HTMLElement;
+    handleChangeDirection(target);
+  };
+
   return (
     <div
       className={combinedClasses}
       data-coordinate-x={coordinates.x}
       data-coordinate-y={coordinates.y}
       {...bind()}
+      onContextMenu={handleOnContextMenu}
     >
       <span className={css["BattleMap-tileText"]}>{tileLabel}</span>
     </div>

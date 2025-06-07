@@ -21,7 +21,13 @@ export const useShipDeployment = () => {
     clearShipOnDeploy,
     setShipOnDeploy,
   } = useShipDeployStore();
-  const { map: playerMap, deployShip, redeployShip, removeShip, removeRedeployShipState } = usePlayerStore();
+  const {
+    map: playerMap,
+    deployShip,
+    addRedeployShipState,
+    removeShip,
+    removeRedeployShipState,
+  } = usePlayerStore();
 
   const cleanupPreviousTiles = (previousTile: HTMLElement) => {
     const { coordinateX: strPrevX, coordinateY: strPrevY } = previousTile.dataset;
@@ -77,11 +83,11 @@ export const useShipDeployment = () => {
     );
     if (!foundCoordinate || !foundCoordinate.covered) return;
 
-    const { shipId: targetShipId } = foundCoordinate.covered;
+    const { shipId: targetShipId, orientation: targetShipOrientation } = foundCoordinate.covered;
     const [x, y] = locationXY;
 
-    redeployShip(targetShipId);
-    setShipOnDeploy(targetShipId);
+    addRedeployShipState(targetShipId);
+    setShipOnDeploy(targetShipId, targetShipOrientation);
     setCursorLocation({ left: x, top: y });
   };
 
@@ -164,5 +170,55 @@ export const useShipDeployment = () => {
     hoveredTile.current = null;
   };
 
-  return { handleDragStart, handleDragMove, handleDragEnd, handleReDragStart, handleDragCancel };
+  const handleChangeDirection = (target: HTMLElement) => {
+    const { coordinateX, coordinateY } = target.dataset;
+    if (!isTile(target) || !coordinateX || !coordinateY) return;
+
+    const foundCoordinate = playerMap.find(
+      ({ x, y }) => x === Number(coordinateX) && y === Number(coordinateY),
+    );
+    if (!foundCoordinate || !foundCoordinate.covered) return;
+
+    const { shipId: targetShipId, orientation } = foundCoordinate.covered;
+    const shipLength = SHIP_TYPES[targetShipId].length;
+
+    const shipCoordinates = playerMap.filter(({ covered }) => covered && covered.shipId === targetShipId);
+
+    shipCoordinates.sort((coordinateA, coordinateB) => 
+      orientation === "horizontal" ? 
+      coordinateA.x - coordinateB.x : 
+      coordinateA.y - coordinateB.y
+    );
+
+    const oppositeOrientation = orientation === "horizontal" ? "vertical" : "horizontal";
+
+    const startCoordinates = { x: shipCoordinates[0].x, y: shipCoordinates[0].y };
+    const newCoordinates = getNextCoordinates(startCoordinates, shipLength, oppositeOrientation);
+
+    const isCoveredForAnotherShip = hasCoordinateCovered(newCoordinates, playerMap, targetShipId);
+    const isOutOfArea = newCoordinates.length < shipLength;
+
+    if (isOutOfArea || isCoveredForAnotherShip) {
+      console.log("No se puede desplegar en esa nueva zona");
+      // TODO: mostrar un indicativo visual
+      return;
+    }
+
+    removeShip(targetShipId);
+
+    const newCoveredCoordinates = getCoveredCoordinates(newCoordinates, targetShipId, oppositeOrientation);
+    deployShip(targetShipId, newCoveredCoordinates);
+
+    // TODO: agregar indicativo de como el usuario puede cambiar de direccion
+    // TODO: retirar los comenmtarios y console.log y mandar a main remote
+  };
+
+  return {
+    handleDragStart,
+    handleDragMove,
+    handleDragEnd,
+    handleReDragStart,
+    handleDragCancel,
+    handleChangeDirection,
+  };
 };

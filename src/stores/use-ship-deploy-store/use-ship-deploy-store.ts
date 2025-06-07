@@ -6,10 +6,10 @@ export const useShipDeployStore = create<IShipDeployStore>((set) => ({
   shipId: null,
   orientation: DEFAULT_ORIENTATION,
   hasShipOnDeploy: false,
-  setShipOnDeploy: (shipId) =>
+  setShipOnDeploy: (shipId, orientation) =>
     set({
       shipId,
-      orientation: DEFAULT_ORIENTATION,
+      orientation: orientation ?? DEFAULT_ORIENTATION,
       hasShipOnDeploy: true,
     }),
   setOrientation: (orientation) => set({ orientation }),

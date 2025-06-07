@@ -20,13 +20,13 @@ export const getCoordinatesByIndexes = (indexes: TCoordinates) => {
 };
 
 export const getNextCoordinates = (
-  coordinates: TCoordinates,
+  startCoordinates: TCoordinates,
   length: number,
   orientation: TOrientationType,
 ): TCoordinates[] => {
-  const { x, y } = coordinates;
+  const { x, y } = startCoordinates;
   const nextCoordinates = [];
-  const maxPointY = COORDINATES_LENGTH + "a".charCodeAt(0) - 1;
+  const maxPointY = COORDINATES_LENGTH;
   const maxPointX = COORDINATES_LENGTH;
 
   for (let index = 0; index < length; index++) {

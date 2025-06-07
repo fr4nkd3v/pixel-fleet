@@ -29,7 +29,7 @@ export const usePlayerStore = create<IPlayerStore>((set) => ({
       ),
       map: [...state.map, ...coveredCoordinates],
     })),
-  redeployShip: (redeployShipId) =>
+  addRedeployShipState: (redeployShipId) =>
     set((state) => ({
       map: state.map.map((coordinate) => {
         if (coordinate.covered && coordinate.covered.shipId === redeployShipId) {
