@@ -2,8 +2,9 @@ import { Button } from "~/components/shared/button";
 import { ShipGraph } from "~/components/shared/graph";
 import styles from "./welcome-page.module.css";
 import { useTranslation } from "react-i18next";
+import { IWelcomePageProps } from "./welcome-page.types";
 
-export const WelcomePage = () => {
+export const WelcomePage = ({ onPlay }: IWelcomePageProps) => {
   const { t } = useTranslation();
 
   return (
@@ -27,11 +28,7 @@ export const WelcomePage = () => {
         <div className={styles["WelcomePage-buttonsGroup"]}>
           <Button
             text={t("welcome:button.play")}
-            onClick={() => console.log("click en start")}
-          />
-          <Button
-            text={t("welcome:button.settings")}
-            onClick={() => console.log("click en Settings")}
+            onClick={onPlay}
           />
         </div>
       </section>

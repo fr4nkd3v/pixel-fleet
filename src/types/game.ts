@@ -45,3 +45,5 @@ export type TCursorLocation = {
 };
 
 export type TAxis = "x" | "y";
+
+export type TView = 'welcome' | 'game';
